@@ -1,0 +1,136 @@
+﻿@{
+    @using System.Data;
+    Layout=null;
+    DataTable dt = (DataTable)ViewData["Table"];
+}
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+<!-- Our Custom CSS -->
+<link rel="stylesheet" href="~/css/style2.css"/>
+<!-- Scrollbar Custom CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css"/>
+    <title>各類資訊</title>
+</head>
+<body>
+    <div style="padding:20px;margin:0 auto;width:60%">
+        <br>        
+        <table class="table table-hover table-pro">
+            <tbody>
+                <tr>
+                    <th>產品代號</th>
+                    <td>@ViewData["ProductId"]</td>
+                </tr>                
+                <tr>
+                    <th>產品名稱</th>
+                    <td>@ViewData["ProductName"]</td>
+                </tr>                
+            </tbody>
+        </table>
+    </div> 
+    <div class="line"></div>
+    <h1 style="font-weight:bold;text-align:center">產品道次資訊</h1>
+    <div id="content">        
+        <!-- <asp:DataGrid ID="datagrid_process" CssClass="table  table-hover" ></asp:DataGrid>    -->
+        <table id="datagrid_process" class="table table-hover">            
+            <thead class="thead-light">
+                <tr>
+                <th>道次編號</th>  
+                <th>道次名稱</th>
+                <th>機台編號</th>
+                <th>機台名稱</th>                                      
+                </tr>
+            </thead>
+            <tbody>
+                    @for(int i =0;i<dt.Rows.Count;i++)
+                    {
+                        <tr>
+                            <td>@dt.Rows[i][0]</td>
+                            <td>@dt.Rows[i][1]</td>
+                            <td>@dt.Rows[i][2]</td>
+                            <td>@dt.Rows[i][3]</td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+    <div class="line"></div>
+     <!-- <h1 style="font-weight:bold;text-align:center">產品道次資訊</h1>
+        <div id="content">                        
+            <table id="Process_Table" class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                <th>人員編號</th>  
+                <th>機台編號</th>
+                <th>產品代號</th>
+                <th>產品名稱</th>
+                <th>道次編號</th>
+                <th>目前道次名稱</th>
+                <th>執行工令編號</th>                                              
+                </tr>
+            </thead>
+            <tbody id="process_body">
+
+            </tbody>
+        </table>
+        </div>             -->
+       
+    
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //增加表頭
+            $("#datagrid tr:first,#datagrid_process tr:first").wrap("<thead></thead>"); 
+            $("#datagrid thead").insertBefore("#datagrid tbody").addClass("thead-light");
+            $("#datagrid_process thead").insertBefore("#datagrid_process tbody").addClass("thead-light");
+            $("#datagrid,#datagrid_process").removeAttr("style rules cellspacing border");              
+            $("#datagrid_process tbody").addClass("process_body");
+            $("#content").css({ "position": "static", "margin": "0 auto" });
+            //表頭標籤替換
+            $('.thead-light td').replaceWith(function () {
+                return $('<th/>', {
+                    html: this.innerHTML                    
+                })
+            })            
+            //簡易資料搜尋
+            $("#Information_Input").on("keyup", function () { //Table Filter
+                var value = $(this).val().toLowerCase();
+                $("#datagrid tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            //$("#datagrid").on("click", "td", function () {
+            //    $(".process_body").html("");
+                
+            //    $(".process_body").append("");
+            //    $.ajax(
+            //    {
+            //        type: "GET",
+            //            url: "Get_Process_Data.aspx?id="+$(this).text()+"&status=Load",
+            //        success: function (data) {
+            //            $(".process_body").html(data);                        
+            //        },error: function (d) {
+                    /*console.log("error");*/
+                            //alert("404. Please wait until the File is Loaded.");
+                        //}
+            //    });
+            //});      
+
+        });
+    </script>
+</body>
+</html>

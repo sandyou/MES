@@ -1,0 +1,92 @@
+@{
+    ViewData["Title"]="工令總進度"; 
+    @using System.Data;    
+    DataTable dt  = (DataTable)ViewData["Table"];   
+}
+   <script>
+       var a = self.setInterval('Get_Information_Data();', 2000);
+       function Get_Information_Data()
+       {
+           $.ajax(
+                          {
+                              url: "@Url.Action("Get_Information_Data","Home")",
+                             method: "get",
+                             contentType: 'application/json',                                                           
+                              data:
+                              {                                  
+                                  
+                              },
+                              //dataType: "text",
+                              success: function (data) {
+                                  var result = JSON.parse(data);
+                                   $.each(result, function (i, item) {
+                                       //測試用
+                                        var val = Math.floor(Math.random()*15);
+                                        var wid = $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width");
+                                        wid = wid.substr(0,wid.indexOf("p"));
+                                        console.log(val);
+                                        var num =  new Number(wid*0.007);           
+                                        console.log(num+'a');                              
+                                        var num =Math.floor((num .toFixed(2)*100))+val;
+                                        console.log(num);                      
+                                        if(wid>=140){
+                                                $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","0%");
+                                                $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("0%");    
+                                        }                                            
+                                        else{
+                                                if(num>100){
+                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","100%");
+                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("100%");  
+                                                }
+                                                else{
+                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width",num+"%");
+                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html(num+"%");  
+                                                }                                                
+                                        }
+                                        //$("#Schedule_Table 6tbody tr:eq("+i+")").find("td").eq(8).css("width","20%");
+                                        //$(".progress .progress-bar").css("width","60%");
+                                        //$(".progress .progress-bar span").html("60%");
+                                        //$("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width",val+"%");
+                                        //$("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html(val+"%");
+                                    }); 
+                              }, error: function (d) {
+                                  /*console.log("error");*/
+                                  alert("404. Please wait until the File is Loaded.");
+                              }
+                          });
+       }
+    </script>
+    <!-- <h1 style="text-align:center">工令總進度</h1><br> -->
+    <input class="form-control" id="Schedule_Input" type="text" placeholder="請輸入工令編號..."><br>
+    <table id="Schedule_Table" class="table table-hover tablesorter">
+        <thead class="thead-light">
+            <tr>
+            <th>工令編號</th>
+            <th>產品代號</th>
+            <th>產品名稱</th>
+            <th>總數量</th>
+            <th>使用時數</th>
+            <th>開始日期</th>
+            <th>結束日期</th>
+            <th>道次途層</th>
+            <th>完成度</th>
+            </tr>
+        </thead>
+        <tbody>                          
+               @for(int i=0;i<dt.Rows.Count;i++)
+               {
+                   <tr>
+                       <td id="order-id">@dt.Rows[i][0]</td>
+                       <td id="product-id">@dt.Rows[i][1]</td>
+                       <td id="product">@dt.Rows[i][2]</td>
+                       <td>@dt.Rows[i][3]</td>
+                       <td>@dt.Rows[i][4]</td>
+                       <td>@dt.Rows[i][5]</td>
+                       <td>@dt.Rows[i][6]</td>
+                       <td>@dt.Rows[i][7]</td>
+                       <td><div class=progress><div style ="width:0%;background-color:red" aria-valuemax = 100 aria-valuemin = 0 aria-valuenow = 60 role = progressbar class="red progress-bar"><span>0%</span></div></div></td>
+                   </tr>
+               }
+        </tbody>
+    </table>
+    <div class="line"></div>

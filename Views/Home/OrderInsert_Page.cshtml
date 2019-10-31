@@ -1,0 +1,245 @@
+@{
+         ViewData["Title"]="新增工令";
+        @using System.Data;
+        DataTable Product_dt = (DataTable)ViewData["Product_Table"];
+        DataTable Process_Table = (DataTable)ViewData["Process_Table"];
+    }      
+<div class="form-group">
+        <label >工令編號</label>&nbsp;<span id="order-span" style="color:red;display:none">*工令編號不可為空</span>
+        <input  class="form-control" id="order">
+      </div>
+      <div class="form-group">
+        <label >產品代號</label>&nbsp;<span id="product-id-span" style="color:red;display:none">*產品代號必須選擇</span>
+        <select class="custom-select" id="product-id">
+          <option selected>請選擇產品代號</option>          
+          @for(int i=0;i<Product_dt.Rows.Count;i++)
+          {
+              <option value=@Product_dt.Rows[i][0]>@Product_dt.Rows[i][0]</option>
+          }
+        </select>
+      </div>
+      <div class="form-group">
+        <label >產品名稱</label>
+        <input  class="form-control" id="productname" disabled="disabled" />
+      </div>
+        <div class="form-group">
+        <label >總數量</label>&nbsp;<span id="quantity-span" style="color:red;display:none">*總數量不可為空</span>
+        <input  class="form-control" id="quantity"/>
+      </div>
+        <div class="form-group">
+        <label >使用時數(小時)</label>
+        <span id="CT" style="display:none"></span>
+        <input  class="form-control" id="time" value="0" disabled="disabled" />
+      </div>      
+      <div class="form-group">
+        <label >道次流程</label>&nbsp;<span id="process-id-span" style="color:red;display:none">*道次流程必須選擇</span>
+        <select class="custom-select" id="process-id">
+            <option selected>請選擇道次流程</option>          
+            @for(int i=0;i<Process_Table.Rows.Count;i++)
+            {
+              <option value=@Process_Table.Rows[i][0]>@Process_Table.Rows[i][0]</option>
+            }
+          </select>
+        </div>  
+        <div class="form-group">
+            <label >開始日期</label>&nbsp;<span id="st-date-span" style="color:red;display:none">*開始日期不可為空</span>
+            <input type="date"  class="form-control" id="st_date"  style="width:500px"/>
+        </div>
+        <div class="form-group">
+            <label >結束日期</label>&nbsp;<span id="end-date-span" style="color:red;display:none">*結束日期不可為空</span>
+            <input type="date"  class="form-control" id="end_date" style="width:500px"/>
+      </div>  
+      <div style="text-align:center">
+          <button type="button" id="Data_Insert_btn" class="btn btn-secondary btn-lg" style="width:150px">送出</button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" id="Data_Clear_btn" class="btn btn-secondary btn-lg" style="width:150px">清除</button>
+      </div>     
+      
+      <script>      
+          $("#product-id").change(function () {
+              var checkText = $("#product-id").find("option:selected").text();
+              judge("product-id-span",checkText);
+              var productid = document.getElementById("product-id").value;
+              $.ajax(
+                  {
+                      url: "@Url.Action("Get_ProductName","Home")",
+                      method: "get",
+                      contentType: 'application/json',                                                                                 
+                      data:
+                        {                          
+                            productid: productid
+                        },                      
+                      //dataType:"text",                      
+                      success: function (data) {        
+                          console.log(data);                                             
+                          var result = JSON.parse(data);                                 
+                          var quantity = document.getElementById("quantity").value;                          
+                          /*$.each(result, function (i, item) {
+                              //console.log(i+'\t'+item+'\t'+result.productname+'\t'+result.producttime);
+                              document.getElementById("productname").value = item.productname;                              
+                              document.getElementById("CT").innerHTML = item.producttime; 
+                          }); */
+                          document.getElementById("productname").value = result.productname;                              
+                          document.getElementById("CT").innerHTML = result.producttime; 
+                          if (quantity != '0') {
+                              document.getElementById("time").value = (document.getElementById("CT").innerHTML*quantity);
+                          } else {
+                              document.getElementById("time").value = 0;
+                          }
+                      }, error: function (d) {
+                                  /*console.log("error");*/
+                                  alert("404. Please wait until the File is Loaded.");
+                              }
+                  });
+          });
+        
+        $("#order").on('input', function () {
+              var order = document.getElementById('order').value;
+              judge("order-span", order);
+          });
+
+        $("#quantity").on('input', function () {                    
+              this.value = this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+              var productname = document.getElementById("productname").value
+              var quantity = document.getElementById("quantity").value;      
+              var time = document.getElementById("CT").innerHTML;
+              if (productname != '' && quantity != '' && time != '') {
+                  document.getElementById("time").value = (quantity * time).toFixed(1);
+              }
+              else {
+                  document.getElementById("time").value = 0;
+              }
+              judge("quantity-span", quantity);
+          });
+          
+        //ubuntu無法使用keyup
+        /* 
+          $("#order").on('keyup', function () {   
+              var order = document.getElementById('order').value;
+              judge("order-span", order);
+          });
+
+          $("#quantity").on('keyup', function () {                    
+              this.value = this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+              var productname = document.getElementById("productname").value
+              var quantity = document.getElementById("quantity").value;      
+              var time = document.getElementById("CT").innerHTML;
+              if (productname != '' && quantity != '' && time != '') {
+                  document.getElementById("time").value = (quantity * time).toFixed(1);
+              }
+              else {
+                  document.getElementById("time").value = 0;
+              }
+              judge("quantity-span", quantity);
+          });
+        */
+
+          $("#process-id").change(function(){
+               var checkText = $("#process-id").find("option:selected").text();
+               judge("process-id-span",checkText);
+          });
+
+          $("#st_date").change(function () {
+              var st_date = $("#st_date").val();
+              var end_date = $("#end_date").val();
+              if (end_date != '') {
+                  var st = Date.parse(st_date).valueOf();
+                  var end = Date.parse(end_date).valueOf();
+                  if (st > end) {
+                      alert('開始日期不可以大於結束日期');
+                      document.getElementById("st_date").value = '';
+                      //$("#st_date").val('');
+                  }
+              }
+              judge("st-date-span", st_date);
+          });
+
+          $("#end_date").change(function () {
+              var st_date = $("#st_date").val();
+              var end_date = $("#end_date").val();
+              if (st_date != '') {
+                  var st = Date.parse(st_date).valueOf();
+                  var end = Date.parse(end_date).valueOf();
+                  if (st > end) {
+                      alert('開始日期不可以大於結束日期');
+                      document.getElementById("end_date").value = '';
+                      //$("#end_date").val('');
+                  }
+              }
+              judge("end-date-span", end_date);
+          });
+
+          $('#Data_Insert_btn').on('click', function () {
+              var order = document.getElementById("order").value;
+              var productid = document.getElementById("product-id").value;
+              var productname = document.getElementById("productname").value;
+              var quantity = document.getElementById("quantity").value;
+              var time = document.getElementById("time").value;
+              var processid = document.getElementById("process-id").value;
+              var st_date = document.getElementById("st_date").value;
+              var end_date = document.getElementById("end_date").value;    
+              if (order != '' && productid != '請選擇產品代號' && productname != '' && quantity != '' && time != '0' && st_date != '' && end_date != '' && processid!='請選擇道次流程') {
+                  var x = window.confirm("請確認資料是否正確:\n" +
+                      "工令編號:" + order + "\n產品代號:" + productid + "\n產品名稱:" + productname + "\n總數量:" + quantity + "\n使用時數:" + time + "\n道次流程"+processid+"\n開始日期:" + st_date + "\n結束日期:" + end_date);
+                  if (x == true) {
+                      $.ajax(
+                          {
+                              url: "@Url.Action("Insert_Order_Data","Home")",
+                             method: "get",
+                             contentType: 'application/json',                                                           
+                              data:
+                              {                                  
+                                  order: order,
+                                  productid: productid,
+                                  productname:productname,
+                                  quantity: quantity,
+                                  time: time,
+                                  processid:processid,
+                                  st_date: st_date,
+                                  end_date:end_date
+                              },
+                              //dataType: "text",
+                              success: function (data) {
+                                  alert(data);
+                              }, error: function (d) {
+                                  /*console.log("error");*/
+                                  alert("404. Please wait until the File is Loaded.");
+                              }
+                          });
+                      document.getElementById("order").value = '';
+                      document.getElementById("product-id").value = '請選擇產品代號';
+                      document.getElementById("productname").value = '';
+                      document.getElementById("quantity").value = '';
+                      document.getElementById("time").value = 0;
+                      document.getElementById("process-id").value = '請選擇道次流程';
+                      document.getElementById("st_date").value = '';
+                      document.getElementById("end_date").value = '';
+                      $("span[id!='CT']").hide();
+                  }
+              }
+              else {
+                  alert('有欄位尚未填寫');
+              }
+
+          });
+
+          $("#Data_Clear_btn").on('click', function () {
+              document.getElementById("order").value = '';
+              document.getElementById("product-id").value = '請選擇產品代號';
+              document.getElementById("productname").value = '';
+              document.getElementById("quantity").value = '';
+              document.getElementById("time").value = 0;
+              document.getElementById("process-id").value = '請選擇道次流程';
+              document.getElementById("st_date").value = '';
+              document.getElementById("end_date").value = '';
+              $("span[id!='CT']").hide();
+          });          
+
+          function judge(id,val) {
+              if (val == '' || val == '請選擇產品代號'  || val=='請選擇道次流程') {                  
+                  $("span[id=" + id + "]").show();
+              } else {
+                  $("span[id=" + id + "]").hide();
+              }
+          }
+      </script>
