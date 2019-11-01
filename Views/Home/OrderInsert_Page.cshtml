@@ -31,7 +31,7 @@
         <span id="CT" style="display:none"></span>
         <input  class="form-control" id="time" value="0" disabled="disabled" />
       </div>      
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label >道次流程</label>&nbsp;<span id="process-id-span" style="color:red;display:none">*道次流程必須選擇</span>
         <select class="custom-select" id="process-id">
             <option selected>請選擇道次流程</option>          
@@ -40,7 +40,7 @@
               <option value=@Process_Table.Rows[i][0]>@Process_Table.Rows[i][0]</option>
             }
           </select>
-        </div>  
+        </div>   -->
         <div class="form-group">
             <label >開始日期</label>&nbsp;<span id="st-date-span" style="color:red;display:none">*開始日期不可為空</span>
             <input type="date"  class="form-control" id="st_date"  style="width:500px"/>
@@ -175,12 +175,12 @@
               var productname = document.getElementById("productname").value;
               var quantity = document.getElementById("quantity").value;
               var time = document.getElementById("time").value;
-              var processid = document.getElementById("process-id").value;
+              //var processid = document.getElementById("process-id").value;
               var st_date = document.getElementById("st_date").value;
               var end_date = document.getElementById("end_date").value;    
-              if (order != '' && productid != '請選擇產品代號' && productname != '' && quantity != '' && time != '0' && st_date != '' && end_date != '' && processid!='請選擇道次流程') {
+              if (order != '' && productid != '請選擇產品代號' && productname != '' && quantity != '' && time != '0' && st_date != '' && end_date != '' ) {
                   var x = window.confirm("請確認資料是否正確:\n" +
-                      "工令編號:" + order + "\n產品代號:" + productid + "\n產品名稱:" + productname + "\n總數量:" + quantity + "\n使用時數:" + time + "\n道次流程"+processid+"\n開始日期:" + st_date + "\n結束日期:" + end_date);
+                      "工令編號:" + order + "\n產品代號:" + productid + "\n產品名稱:" + productname + "\n總數量:" + quantity + "\n使用時數:" + time +"\n開始日期:" + st_date + "\n結束日期:" + end_date);
                   if (x == true) {
                       $.ajax(
                           {
@@ -194,7 +194,7 @@
                                   productname:productname,
                                   quantity: quantity,
                                   time: time,
-                                  processid:processid,
+                                  //processid:processid,
                                   st_date: st_date,
                                   end_date:end_date
                               },
@@ -211,7 +211,7 @@
                       document.getElementById("productname").value = '';
                       document.getElementById("quantity").value = '';
                       document.getElementById("time").value = 0;
-                      document.getElementById("process-id").value = '請選擇道次流程';
+                      //document.getElementById("process-id").value = '請選擇道次流程';
                       document.getElementById("st_date").value = '';
                       document.getElementById("end_date").value = '';
                       $("span[id!='CT']").hide();
@@ -229,7 +229,7 @@
               document.getElementById("productname").value = '';
               document.getElementById("quantity").value = '';
               document.getElementById("time").value = 0;
-              document.getElementById("process-id").value = '請選擇道次流程';
+              //document.getElementById("process-id").value = '請選擇道次流程';
               document.getElementById("st_date").value = '';
               document.getElementById("end_date").value = '';
               $("span[id!='CT']").hide();

@@ -1,5 +1,118 @@
 @{
     ViewData["Title"]="派工";    
+    @using System.Data;
+    DataTable Order_dt = (DataTable)ViewData["Order_Table"];
 }
-   
+    <div class="form-group">
+    <label >工令編號</label>&nbsp;<span id="order-span" style="color:red;display:none">*工令編號必須選擇</span>
+    <select class="custom-select" id="order">
+        <option selected>請選擇工令編號</option>          
+        @for(int i=0;i<Order_dt.Rows.Count;i++)
+        {
+            <option value=@Order_dt.Rows[i][0]>@Order_dt.Rows[i][0]</option>
+        }
+    </select>
+    </div>
+    <table id="Dispatch_Table" class="table table-hover tablesorter">
+        <thead class="thead-light">
+            <tr>
+            <th>道次流程</th>
+            <th>道次名稱</th>
+            <th>產品代號</th>
+            <th>產品名稱</th>
+            <th>作業人員</th>
+            <th>作業時間</th>
+            </tr>
+        </thead>
+        <tbody>                          
+              
+        </tbody>
+    </table>
     <div class="line"></div>
+    <script>
+        $("#order").change(function(){
+                var order = document.getElementById("order").value;
+                judge("order-span",order);
+                if(order!='請選擇工令編號'){
+                    $.ajax(
+                        {
+                            url: "@Url.Action("Get_Dispatch_Data","Home")",
+                            method: "get",
+                            contentType: 'application/json',                                                                                 
+                            data:
+                            {                          
+                                order:order
+                            },  
+                            success:function(data){
+                                $("tbody").html("");
+                                var result = JSON.parse(data);
+                                var str = '';
+                                $.each(result,function(i,item){
+                                    console.log(i+"\t"+item.Process+"\t"+item.ProcessName+"\t"+item.productid+"\t"+item.product+"\t"+item.StaffName);
+                                    var cou = $("tbody tr").length;
+                                    //$("tbody").append("<tr>");                                    
+                                    /*
+                                    $("tbody").append("<td>"+item.Process+"</td>");
+                                    $("tbody").append("<td>"+item.ProcessName+"</td>");
+                                    $("tbody").append("<td>"+item.productid+"</td>");
+                                    $("tbody").append("<td>"+item.product+"</td>");
+                                    $("tbody").append("<td><select class=\"custom-select\" id=\"staff\"><option selected>請選擇作業</option></td>");
+                                    $("tbody").append("<td>"+item.StaffName+"</td>");
+                                    */                                    
+                                    if(i!=0){
+                                        if(item.Process.toString().indexOf(str)==-1){
+                                            $("tbody").append(function(){
+                                            return "<tr>"+
+                                                        "<td>"+item.Process+"</td>"+
+                                                        "<td>"+item.ProcessName+"</td>"+
+                                                        "<td>"+item.productid+"</td>"+
+                                                        "<td>"+item.product+"</td>"+
+                                                        "<td><select class=\"custom-select\" id=\"staff\"><option selected>請選擇作業</option></td>"+
+                                                        "<td>"+item.StaffName+"</td>"+
+                                                        "</tr>";
+                                        });
+                                            if(item.StaffName!=''){
+                                                $("tbody tr:eq("+(cou)+") td select").append("<option selected>"+item.StaffName+"</option>");    
+                                            }
+                                        }
+                                        else{
+                                            $("tbody tr:eq("+(cou-1)+") td select").append("<option selected>"+item.StaffName+"</option>");
+                                        }                                        
+                                    } 
+                                    else{             
+                                        $("tbody").append(function(){
+                                            return "<tr>"+
+                                                        "<td>"+item.Process+"</td>"+
+                                                        "<td>"+item.ProcessName+"</td>"+
+                                                        "<td>"+item.productid+"</td>"+
+                                                        "<td>"+item.product+"</td>"+
+                                                        "<td><select class=\"custom-select\" id=\"staff\"><option selected>請選擇作業</option></td>"+
+                                                        "<td>"+item.StaffName+"</td>"+
+                                                        "</tr>";
+                                        });                                        
+                                        if(item.StaffName!=''){
+                                            $("#staff").append("<option selected>"+item.StaffName+"</option>");    
+                                        }
+                                    }                                                            
+                                    str = item.Process;
+                                });
+                            },
+                            error:function(d){
+                                alert("404. Please wait until the File is Loaded.");
+                                $("tbody").html("");
+                            }
+                        });
+                }
+                else{
+                    $("tbody").html("");
+                }
+        });
+
+        function judge(id,val) {
+              if (val == '' || val == '請選擇工令編號' ) {                  
+                  $("span[id=" + id + "]").show();
+              } else {
+                  $("span[id=" + id + "]").hide();
+              }
+          }
+    </script>

@@ -89,6 +89,10 @@ namespace MES_MVC.Controllers
 
         public IActionResult Dispatch_Page()
         {
+            conn = new SQL(this.configuration);
+            ViewData["Order_Table"] = conn.Get_Information_Data(@"SELECT distinct  [order-id]                                                                                                                                           
+                                                                                                                                        FROM [MES-Table ].[dbo].[order] order by [order-id]");                                                                                                                                                
+            
             return View();
         }
 
@@ -104,12 +108,12 @@ namespace MES_MVC.Controllers
 
         public IActionResult Machine_Inf_Page()
         {
-            conn = new SQL(this.configuration);
+            conn = new SQL(this.configuration);            
             ViewData["Table"] = conn.Get_Information_Data(@"  SELECT a.[Machine-Num],a.[Machine-Name],a.[Local-Process],b.[Status-Type]
                                                                                                                 FROM [MES-Table ].[dbo].[Machine_Inf] a
                                                                                                                 left join
                                                                                                                 [MES-Table ].[dbo].[Machine-Status] b
-                                                                                                                on a.[Machine-Num] = b.[Machine-Num]");
+                                                                                                                on a.[Machine-Num] = b.[Machine-Num]");                                                                                                                            
             return View();
         }
 
@@ -153,12 +157,33 @@ namespace MES_MVC.Controllers
             return  Json(json);
         }       
 
-        public IActionResult Insert_Order_Data(string order,string productid,string productname,string quantity,string time ,string processid,string st_date,string end_date)
+        public IActionResult Insert_Order_Data(string order,string productid,string productname,string quantity,string time ,string st_date,string end_date)
         {            
             conn = new SQL(this.configuration);  
             string response = conn.Insert(order, productid, productname, quantity, time, st_date, end_date);
             return Content(response);
         }
+
+        public IActionResult Get_Dispatch_Data(string order)
+        {
+            conn = new SQL(this.configuration);
+            DataTable dt =conn.Get_Information_Data(string.Format(@"select b.Process,d.[Process-Name] as 'ProcessName',a.[product-id] as 'productid',b.product,c.[Staff-Name]  as 'StaffName'
+                                                                                                                                    from [MES-Table].[dbo].[order] a
+                                                                                                                                    left join 
+                                                                                                                                    [MES-Table].[dbo].[product_Inf] b
+                                                                                                                                    on a.[product-id] = b.[product-id] 
+                                                                                                                                    left join 
+                                                                                                                                    [MES-Table ].dbo.[Staff-Inf] c
+                                                                                                                                    on b.[Process] = c.[Process]
+                                                                                                                                    left join 
+                                                                                                                                    [MES-Table ].[dbo].[Process_Inf] d
+                                                                                                                                    on b.[Process] = d.[Process]
+                                                                                                                                    where a.[order-id] = '{0}'
+                                                                                                                                    order by a.[order-id] desc",order));
+            string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Json(json);
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
