@@ -28,6 +28,11 @@
               
         </tbody>
     </table>
+     <div style="text-align:center">
+          <button type="button" id="Data_Dispatch_btn" class="btn btn-secondary btn-lg" style="width:150px">派工</button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" id="Data_Clear_btn" class="btn btn-secondary btn-lg" style="width:150px">清除</button>
+      </div>   
     <div class="line"></div>
     <script>
         $("#order").change(function(){
@@ -67,16 +72,17 @@
                                                         "<td>"+item.ProcessName+"</td>"+
                                                         "<td>"+item.productid+"</td>"+
                                                         "<td>"+item.product+"</td>"+
-                                                        "<td><select class=\"custom-select\" id=\"staff\"><option selected>請選擇作業</option></td>"+
-                                                        "<td>"+item.StaffName+"</td>"+
+                                                        "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>"+
+                                                        "<td style=\"width:200px\"><input  class=\"form-control\" id=\"time\"/></td>"+
                                                         "</tr>";
                                         });
                                             if(item.StaffName!=''){
-                                                $("tbody tr:eq("+(cou)+") td select").append("<option selected>"+item.StaffName+"</option>");    
+                                                $("tbody tr:eq("+(cou)+") td select").append("<option>"+item.StaffName+"</option>");        
+                                                //$("tbody tr:eq("+(cou)+") td select").val("請選擇作業人員");                                                                                            
                                             }
                                         }
                                         else{
-                                            $("tbody tr:eq("+(cou-1)+") td select").append("<option selected>"+item.StaffName+"</option>");
+                                            $("tbody tr:eq("+(cou-1)+") td select").append("<option>"+item.StaffName+"</option>");                                            
                                         }                                        
                                     } 
                                     else{             
@@ -86,16 +92,16 @@
                                                         "<td>"+item.ProcessName+"</td>"+
                                                         "<td>"+item.productid+"</td>"+
                                                         "<td>"+item.product+"</td>"+
-                                                        "<td><select class=\"custom-select\" id=\"staff\"><option selected>請選擇作業</option></td>"+
-                                                        "<td>"+item.StaffName+"</td>"+
+                                                        "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>"+
+                                                        "<td style=\"width:200px\"><input  class=\"form-control\" id=\"time\"/></td>"+
                                                         "</tr>";
                                         });                                        
                                         if(item.StaffName!=''){
-                                            $("#staff").append("<option selected>"+item.StaffName+"</option>");    
+                                            $("#staff").append("<option>"+item.StaffName+"</option>");                                                
                                         }
                                     }                                                            
-                                    str = item.Process;
-                                });
+                                    str = item.Process;                                    
+                                });                                
                             },
                             error:function(d){
                                 alert("404. Please wait until the File is Loaded.");
@@ -107,6 +113,19 @@
                     $("tbody").html("");
                 }
         });
+
+        $("#Dispatch_Table").on("input", "td", function () {                    
+                    var id = $(this).find("input").val();                                                                            
+                    $(this).find("input").val(function(n,c){
+                        return c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+                    });
+                    //this.value = this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+                });
+
+        $("#time").on('input', function () {             
+              console.log(this.value);       
+              this.value = this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+          });
 
         function judge(id,val) {
               if (val == '' || val == '請選擇工令編號' ) {                  
