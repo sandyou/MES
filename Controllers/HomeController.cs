@@ -147,7 +147,7 @@ namespace MES_MVC.Controllers
         {
             conn = new SQL(this.configuration);
             string  id = conn.Get_ProductName(productid);
-            string time = conn.Get_ProductTime(productid);
+            string time = conn.Get_ProductTime(productid);            
             item _item = new item()
             {
                 productname=id,
@@ -184,6 +184,12 @@ namespace MES_MVC.Controllers
             return Json(json);
         }
 
+        public  IActionResult Dispatch_Data(string data)
+        {                       
+             //json = JsonConvert.SerializeObject(data);
+            List<Dispatch_Item> item = JsonConvert.DeserializeObject<List<Dispatch_Item>>(data);
+             return Content(data);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
