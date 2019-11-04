@@ -22,10 +22,10 @@
             <th>產品代號</th>
             <th>產品名稱</th>
             <th>作業人員</th>
-            <th>作業時間</th>
+            <th>作業時間(小時))</th>
             </tr>
         </thead>
-        <tbody>                          
+        <tbody id="Dispatch_Tbody">                          
               
         </tbody>
     </table>
@@ -34,6 +34,24 @@
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <button type="button" id="Data_Clear_btn" class="btn btn-secondary btn-lg" style="width:150px">清除</button>
       </div>   
+    <div class="line"></div>
+    <h1>已派工資訊</h1>
+    <table id="Dispatch_Y_Table" class="table table-hover tablesorter">
+        <thead class="thead-light">
+            <tr>
+            <th>工令編號</th>
+            <th>道次流程</th>
+            <th>道次名稱</th>
+            <th>產品代號</th>
+            <th>產品名稱</th>
+            <th>作業人員</th>
+            <th>作業時間(小時))</th>
+            </tr>
+        </thead>
+        <tbody id="Dispatch_Y_Tbody">                          
+
+        </tbody>
+    </table>
     <div class="line"></div>
     <script>
         $("#order").change(function(){
@@ -50,16 +68,16 @@
                                 order:order
                             },  
                             success:function(data){
-                                $("tbody").html("");
+                                $("#Dispatch_Tbody").html("");
                                 var result = JSON.parse(data);
                                 var str = '';
                                 $.each(result,function(i,item){
                                     console.log(i+"\t"+item.Process+"\t"+item.ProcessName+"\t"+item.productid+"\t"+item.product+"\t"+item.StaffName);
-                                    var cou = $("tbody tr").length;                             
+                                    var cou = $("#Dispatch_Tbody tr").length;                             
                                     if(i!=0){
                                         if(item.Process.toString().indexOf(str)==-1){
-                                            $("tbody").append(function(){
-                                            return "<tr>"+
+                                            $("#Dispatch_Tbody").append(function(){
+                                            return "<tr role=\"row\">"+
                                                         //"<td><input type=\"checkbox\"  class=\"form-check-input\" id=\"time\"  /></td>"+
                                                         "<td>"+item.Process+"</td>"+
                                                         "<td>"+item.ProcessName+"</td>"+
@@ -70,17 +88,17 @@
                                                         "</tr>";
                                         });
                                             if(item.StaffName!=''){
-                                                $("tbody tr:eq("+(cou)+") td select").append("<option>"+item.StaffName+"</option>");        
+                                                $("#Dispatch_Tbody tr:eq("+(cou)+") td select").append("<option>"+item.StaffName+"</option>");        
                                                 //$("tbody tr:eq("+(cou)+") td select").val("請選擇作業人員");                                                                                            
                                             }
                                         }
                                         else{
-                                            $("tbody tr:eq("+(cou-1)+") td select").append("<option>"+item.StaffName+"</option>");                                            
+                                            $("#Dispatch_Tbody tr:eq("+(cou-1)+") td select").append("<option>"+item.StaffName+"</option>");                                            
                                         }                                        
                                     } 
                                     else{             
-                                        $("tbody").append(function(){
-                                            return "<tr>"+
+                                        $("#Dispatch_Tbody").append(function(){
+                                            return "<tr role=\"row\">"+
                                                         //"<td><input type=\"checkbox\"  class=\"form-check-input\" id=\"time\"  /></td>"+
                                                         "<td>"+item.Process+"</td>"+
                                                         "<td>"+item.ProcessName+"</td>"+
@@ -99,12 +117,12 @@
                             },
                             error:function(d){
                                 alert("404. Please wait until the File is Loaded.");
-                                $("tbody").html("");
+                                $("#Dispatch_Tbody").html("");
                             }
-                        });
+                        });                        
                 }
                 else{
-                    $("tbody").html("");
+                    $("#Dispatch_Tbody").html("");
                 }
         });
 
@@ -128,19 +146,29 @@
             $("#order").trigger("change");
         });
 
-        $("#Data_Dispatch_btn").on('click',function(){
-            var val = document.getElementsByTagName("tr");
-            var order = document.getElementById("order").value;            
+        $("#Data_Dispatch_btn").on('click',function(){            
+            //var val = document.getElementsByTagName("tr"); $("#Dispatch_Tbody")[0].children[0].children[4].children[0].value
+            var val = $("#Dispatch_Tbody");
+            var order = document.getElementById("order").value;                        
             if(order != '請選擇工令編號'){
                 var arr = new Array();
-                $.each(val,function(i,item){
-                    if(i!=0){
+                $.each(val,function(i,item){                              
+                    for(j=0;j<item.childElementCount;j++)
+                    {
+                        var process = item.children[j].children[0].innerText;
+                        var processname = item.children[j].children[1].innerText;
+                        var productid = item.children[j].children[2].innerText;
+                        var product = item.children[j].children[3].innerText;
+                        var staff = item.children[j].children[4].children[0].value;
+                        var time = item.children[j].children[5].children[0].value;
+                        /*
                         var process = item.children[0].innerText;
                         var processname = item.children[1].innerText;
                         var productid = item.children[2].innerText;
                         var product = item.children[3].innerText;
                         var staff = item.children[4].children[0].value;
                         var time = item.children[5].children[0].value;
+                        */
                         if(staff != '請選擇作業人員' && time !=''){
                             var obj = new Object();
                             obj.order = order;
@@ -156,8 +184,8 @@
                             alert('有資料尚未輸入完成,請確認');
                             exit;
                         }                    
-                        console.log(order+'\t'+process+'\t'+processname+'\t'+productid+'\t'+product+'\t'+staff+'\t'+time);                    
-                    }                
+                        console.log(order+'\t'+process+'\t'+processname+'\t'+productid+'\t'+product+'\t'+staff+'\t'+time);
+                    }                                                               
                 });  
                 if(arr.length==0){
                     alert('請選擇欲派工之道次人員資料');
@@ -173,12 +201,26 @@
                             data:JSON.stringify(arr)
                         },
                         success:function(data){
-                            alert(data);
+                            var result = JSON.parse(data);
+                            $.each(result,function(i,item){                                
+                                $("#Dispatch_Y_Tbody").append(function(){
+                                    return "<tr role=\"row\">"+                                                
+                                                "<td>"+item.order+"</td>"+
+                                                "<td>"+item.process+"</td>"+
+                                                "<td>"+item.processname+"</td>"+
+                                                "<td>"+item.productid+"</td>"+
+                                                "<td>"+item.product+"</td>"+
+                                                "<td>"+item.staff+"</td>"+
+                                                "<td>"+item.time+"</td>"+
+                                                "</tr>";
+                                });
+                            });                                                        
+                            //alert(data);
                         },
                         error:function(d){
                             alert('error');
                         }
-                    });
+                    });                    
                 }                                       
             }
             else{
