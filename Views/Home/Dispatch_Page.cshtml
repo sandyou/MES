@@ -129,8 +129,16 @@
         $("#Dispatch_Table").on("input", "td", function () {                    
                     var value = $(this).find("select").val();         
                     var ind = $(this).parent("tr").index();                                                                                                                    
-                    $(this).find("input").val(function(n,c){                        
-                        return c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+                    $(this).find("input").val(function(n,c){ 
+                        c=c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+                        if(c!='' && c<=12){
+                           return c; 
+                        }           
+                        else  if(c=='' || c>12){
+                            alert('作業時數不可超過12小時');
+                            return '';
+                        }        
+                        //return c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
                     });                    
                     if(value == '請選擇作業人員'){
                         $("tbody tr:eq("+ind+") td:eq(5) input").attr('disabled','true');

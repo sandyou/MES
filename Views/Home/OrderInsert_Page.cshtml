@@ -56,6 +56,8 @@
       </div>     
       
       <script>      
+          var date = new  Date();
+          var today_date = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
           $("#product-id").change(function () {
               var checkText = $("#product-id").find("option:selected").text();
               judge("product-id-span",checkText);
@@ -141,31 +143,41 @@
 
           $("#st_date").change(function () {
               var st_date = $("#st_date").val();
-              var end_date = $("#end_date").val();
-              if (end_date != '') {
+              var end_date = $("#end_date").val();                            
+              var today = Date.parse(today_date).valueOf();              
+              //if (end_date != '') {
                   var st = Date.parse(st_date).valueOf();
                   var end = Date.parse(end_date).valueOf();
-                  if (st > end) {
+                  if (st > end && end !=0) {
                       alert('開始日期不可以大於結束日期');
                       document.getElementById("st_date").value = '';
                       //$("#st_date").val('');
                   }
-              }
+                  else if(st<today){
+                      alert('開始日期不可以小於當日時間');
+                      document.getElementById("st_date").value = '';
+                  }
+              //}
               judge("st-date-span", st_date);
           });
 
           $("#end_date").change(function () {
               var st_date = $("#st_date").val();
               var end_date = $("#end_date").val();
-              if (st_date != '') {
+              var today = Date.parse(today_date).valueOf();
+              //if (st_date != '') {
                   var st = Date.parse(st_date).valueOf();
                   var end = Date.parse(end_date).valueOf();
-                  if (st > end) {
+                  if (st > end && st!=0) {
                       alert('開始日期不可以大於結束日期');
                       document.getElementById("end_date").value = '';
                       //$("#end_date").val('');
                   }
-              }
+                  else if(end<today){
+                      alert('結束日期不可以小於當日時間');
+                      document.getElementById("end_date").value = '';
+                  }
+              //}
               judge("end-date-span", end_date);
           });
 
