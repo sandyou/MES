@@ -36,13 +36,24 @@ namespace MES_MVC.Controllers
             string connectionstring =  configuration.GetConnectionString("DefaultConnectionStrings");
             SqlConnection con = new SqlConnection(connectionstring);
             con.Open();
-            SqlCommand cmd =new SqlCommand(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+            // SqlCommand cmd =new SqlCommand(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+            //                                                                                     ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
+            //                                                                                     ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'
+            //                                                                                     ,b.Process,60 as 'id' from [MES-Table].[dbo].[order] a
+            //                                                                                     left join 
+            //                                                                                     [MES-Table].[dbo].[product_Inf] b
+            //                                                                                     on a.[product-id] = b.[product-id] order by a.[order-id] desc",con);        
+            SqlCommand cmd =new SqlCommand(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+                                                                                                ,SUM(b.ProductTime) as 'Time'
                                                                                                 ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
-                                                                                                ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'
-                                                                                                ,b.Process,60 as 'id' from [MES-Table].[dbo].[order] a
+                                                                                                ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'                                                                                                
+                                                                                                 from [MES-Table].[dbo].[order] a
                                                                                                 left join 
                                                                                                 [MES-Table].[dbo].[product_Inf] b
-                                                                                                on a.[product-id] = b.[product-id] order by a.[order-id] desc",con);        
+                                                                                                on a.[product-id] = b.[product-id] 
+                                                                                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,120)
+                                                                                                ,CONVERT(varchar(20),a.End_Date,120)
+                                                                                                order by a.[order-id] desc",con);
             SqlDataAdapter ada =new SqlDataAdapter();
             System.Data.DataTable dt =new System.Data.DataTable();    
             ada.SelectCommand = cmd;

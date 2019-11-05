@@ -5,7 +5,7 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 body {
     font-family: 'Poppins', sans-serif;
-    background: #fafafa;
+    background: #fafafa;        
 }
 
 body::-webkit-scrollbar{
@@ -193,6 +193,11 @@ a.article:hover {
     font-weight:bold;
 }
 
+.sidebar-header{
+    cursor: pointer;
+    font-size: 30px;
+    font-weight: bold;
+}
 
 /*
     Td
