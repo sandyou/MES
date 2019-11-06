@@ -6,7 +6,7 @@
     }      
 <div class="form-group">
         <label >工令編號</label>&nbsp;<span id="order-span" style="color:red;display:none">*工令編號不可為空</span>
-        <input  class="form-control" id="order">
+        <input  class="form-control" id="order" value=@ViewData["OrderID"] disabled="disabled">
       </div>
       <div class="form-group">
         <label >產品代號</label>&nbsp;<span id="product-id-span" style="color:red;display:none">*產品代號必須選擇</span>
@@ -21,6 +21,9 @@
       <div class="form-group">
         <label >產品名稱</label>
         <input  class="form-control" id="productname" disabled="disabled" />
+      </div>
+      <div class="form-group form_img" style="text-align:center ;display:none">
+          <img src="" class="img-rounded" alt="Cinque Terre" width="560" height="300">
       </div>
         <div class="form-group">
         <label >總數量</label>&nbsp;<span id="quantity-span" style="color:red;display:none">*總數量不可為空</span>
@@ -88,6 +91,16 @@
                           } else {
                               document.getElementById("time").value = 0;
                           }
+                          if(result.productname != ''){
+                                if(result.productname=='T91'){
+                                    $("img").attr("src","/product_img/"+result.productname+".png");
+                                }else{
+                                    $("img").attr("src","/product_img/Other.png");
+                                }
+                                $(".form_img").show();
+                          }else{
+                                $(".form_img").hide();
+                          }                          
                       }, error: function (d) {
                                   /*console.log("error");*/
                                   alert("404. Please wait until the File is Loaded.");
@@ -212,13 +225,13 @@
                               },
                               //dataType: "text",
                               success: function (data) {
-                                  alert(data);
+                                  alert(data.split(",")[0]);
+                                  document.getElementById("order").value = data.split(",")[1];
                               }, error: function (d) {
                                   /*console.log("error");*/
                                   alert("404. Please wait until the File is Loaded.");
                               }
-                          });
-                      document.getElementById("order").value = '';
+                          });                      
                       document.getElementById("product-id").value = '請選擇產品代號';
                       document.getElementById("productname").value = '';
                       document.getElementById("quantity").value = '';
@@ -226,6 +239,7 @@
                       //document.getElementById("process-id").value = '請選擇道次流程';
                       document.getElementById("st_date").value = '';
                       document.getElementById("end_date").value = '';
+                      $(".form_img").hide();
                       $("span[id!='CT']").hide();
                   }
               }
@@ -236,7 +250,7 @@
           });
 
           $("#Data_Clear_btn").on('click', function () {
-              document.getElementById("order").value = '';
+              //document.getElementById("order").value = '';
               document.getElementById("product-id").value = '請選擇產品代號';
               document.getElementById("productname").value = '';
               document.getElementById("quantity").value = '';
@@ -244,6 +258,7 @@
               //document.getElementById("process-id").value = '請選擇道次流程';
               document.getElementById("st_date").value = '';
               document.getElementById("end_date").value = '';
+              $(".form_img").hide();
               $("span[id!='CT']").hide();
           });          
 

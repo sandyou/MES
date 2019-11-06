@@ -56,6 +56,7 @@
     <script>
         $("#order").change(function(){
                 var order = document.getElementById("order").value;
+                var dispatch_table = $("#Dispatch_Table").tablesorter({sortList: [[0,0],[1,0]]})                
                 judge("order-span",order);
                 if(order!='請選擇工令編號'){
                     $.ajax(
@@ -113,7 +114,10 @@
                                         }
                                     }                                                            
                                     str = item.Process;                                    
-                                });                                
+                                });    
+                                var resort = true,
+                                callback = function(){ console.log('table updated'); };
+                                dispatch_table.trigger("update", [ resort, callback ]);                                                            
                             },
                             error:function(d){
                                 alert("404. Please wait until the File is Loaded.");
@@ -157,7 +161,8 @@
         $("#Data_Dispatch_btn").on('click',function(){            
             //var val = document.getElementsByTagName("tr"); $("#Dispatch_Tbody")[0].children[0].children[4].children[0].value
             var val = $("#Dispatch_Tbody");
-            var order = document.getElementById("order").value;                        
+            var order = document.getElementById("order").value;                    
+            var dispatch_y_table = $("#Dispatch_Y_Table").tablesorter({sortList: [[0,0],[1,0]]})    
             if(order != '請選擇工令編號'){
                 var arr = new Array();
                 $.each(val,function(i,item){                              
@@ -224,6 +229,9 @@
                                 });
                             });                                                        
                             //alert(data);
+                            var resort = true,
+                            callback = function(){ console.log('table updated'); };
+                            dispatch_y_table.trigger("update", [ resort, callback ]);
                         },
                         error:function(d){
                             alert('error');

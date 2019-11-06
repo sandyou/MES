@@ -99,6 +99,24 @@ namespace MES_MVC.Data
                 conn.Close();
                 return "此工令已存在，請重新輸入";                
             }                        
+        }
+
+        public string Order_Repeat(string order)
+        {
+            conn.Open();
+            SqlCommand cmd =new SqlCommand(string.Format("select [order-id] from [dbo].[order] where [order-id]='{0}' ",order),conn);
+            string judge = "";
+            try
+            {
+                judge = cmd.ExecuteScalar().ToString();
+                conn.Close();
+                return "Fail";
+            }
+            catch (Exception)
+            {                
+                conn.Close();
+                return "Success";
+            }            
         }        
 
     }

@@ -90,7 +90,16 @@ namespace MES_MVC.Controllers
 
         public IActionResult OrderInsert_Page()
         {
-            conn = new SQL(this.configuration);
+            conn = new SQL(this.configuration);            
+            DateTime time = DateTime.Now;
+            string order  = time.ToString("yyyy-MM-dd HH:mm:ss").Replace("-","").Replace(":","").Replace(" ","");
+            order = order.Substring(2,order.Length-2);
+            string judge = conn.Order_Repeat(order);            
+            while(judge!="Success"){
+                order  = time.ToString("yyyy-MM-dd HH:mm:ss").Replace("-","").Replace(":","").Replace(" ","");
+                judge = conn.Order_Repeat(order);            
+            }                          
+            ViewData["OrderID"] = order;  
             ViewData["Product_Table"] = conn.Get_Information_Data(@"SELECT distinct [product-id]
                                                          FROM[MES-Table].[dbo].[product_Inf] order by [product-id]");
             ViewData["Process_Table"]=conn.Get_Information_Data(@"SELECT distinct [Process]
@@ -142,13 +151,17 @@ namespace MES_MVC.Controllers
         public IActionResult Get_Information_Data()
         {
             conn = new SQL(this.configuration);      
-            DataTable dt = conn.Get_Information_Data(@"select a.[order-id] as orderid,a.[product-id] as productid,b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+            DataTable dt = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+                                                                                                ,SUM(b.ProductTime) as 'Time'
                                                                                                 ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
-                                                                                                ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'
-                                                                                                ,b.Process,80 as 'id' from [MES-Table].[dbo].[order] a
+                                                                                                ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'                                                                                                
+                                                                                                 from [MES-Table].[dbo].[order] a
                                                                                                 left join 
                                                                                                 [MES-Table].[dbo].[product_Inf] b
-                                                                                                on a.[product-id] = b.[product-id] order by a.[order-id] desc");      
+                                                                                                on a.[product-id] = b.[product-id] 
+                                                                                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,120)
+                                                                                                ,CONVERT(varchar(20),a.End_Date,120)
+                                                                                                order by a.[order-id] desc");      
             string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             //string json = JsonConvert.SerializeObject(_item);
             return  Json(json);
@@ -172,7 +185,17 @@ namespace MES_MVC.Controllers
         {            
             conn = new SQL(this.configuration);  
             string response = conn.Insert(order, productid, productname, quantity, time, st_date, end_date);
-            return Content(response);
+            DateTime timeid = DateTime.Now;
+            string orderid  = timeid.ToString("yyyy-MM-dd HH:mm:ss").Replace("-","").Replace(":","").Replace(" ","");               
+            if(response=="工令新增成功"){
+                orderid = orderid.Substring(2,orderid.Length-2);
+                string judge = conn.Order_Repeat(orderid);            
+                while(judge!="Success"){
+                    orderid  = timeid.ToString("yyyy-MM-dd HH:mm:ss").Replace("-","").Replace(":","").Replace(" ","");
+                    judge = conn.Order_Repeat(orderid);            
+                }      
+            }            
+            return Content(response+","+orderid);
         }
 
         public IActionResult Get_Dispatch_Data(string order)
