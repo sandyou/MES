@@ -85,7 +85,7 @@
                                                         "<td>"+item.productid+"</td>"+
                                                         "<td>"+item.product+"</td>"+
                                                         "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>"+
-                                                        "<td style=\"width:200px\"><input  class=\"form-control\" id=\"time\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>"+
+                                                        "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>"+
                                                         "</tr>";
                                         });
                                             if(item.StaffName!=''){
@@ -106,7 +106,7 @@
                                                         "<td>"+item.productid+"</td>"+
                                                         "<td>"+item.product+"</td>"+
                                                         "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>"+
-                                                        "<td style=\"width:200px\"><input  class=\"form-control\" id=\"time\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>"+
+                                                        "<td style=\"width:200px\"><input type=\"number\"  class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>"+
                                                         "</tr>";
                                         });                                        
                                         if(item.StaffName!=''){
@@ -120,7 +120,12 @@
                                 dispatch_table.trigger("update", [ resort, callback ]);                                                            
                             },
                             error:function(d){
-                                alert("404. Please wait until the File is Loaded.");
+                                $.alert({
+                                    icon:"fas fa-exclamation-triangle",
+                                    title: "錯誤",
+                                    content: "404. Please wait until the File is Loaded.",
+                                });
+                                //alert("404. Please wait until the File is Loaded.");
                                 $("#Dispatch_Tbody").html("");
                             }
                         });                        
@@ -134,12 +139,21 @@
                     var value = $(this).find("select").val();         
                     var ind = $(this).parent("tr").index();                                                                                                                    
                     $(this).find("input").val(function(n,c){ 
-                        c=c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+                        //c=c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
+                        c=c.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g, '');
                         if(c!='' && c<=12){
                            return c; 
                         }           
-                        else  if(c=='' || c>12){
-                            alert('作業時數不可超過12小時');
+                        else  if(c>12){
+                            $.alert({
+                                icon:"fas fa-exclamation-triangle",
+                                title: "錯誤",
+                                content: "作業時數不可超過12小時",
+                            });
+                            //alert('作業時數不可超過12小時');
+                            return '';
+                        }
+                        else{
                             return '';
                         }        
                         //return c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
@@ -194,14 +208,24 @@
                             arr = arr.concat(obj);
                         }
                         else{
-                            alert('有資料尚未輸入完成,請確認');
+                            $.alert({
+                                icon:"fas fa-exclamation-triangle",
+                                title: "錯誤",
+                                content: "有資料尚未輸入完成,請確認",
+                            });
+                            //alert('有資料尚未輸入完成,請確認');
                             exit;
                         }                    
                         console.log(order+'\t'+process+'\t'+processname+'\t'+productid+'\t'+product+'\t'+staff+'\t'+time);
                     }                                                               
                 });  
                 if(arr.length==0){
-                    alert('請選擇欲派工之道次人員資料');
+                    $.alert({
+                                icon:"fas fa-exclamation-triangle",
+                                title: "錯誤",
+                                content: "請選擇欲派工之道次人員資料",
+                            });
+                    //alert('請選擇欲派工之道次人員資料');
                 }   
                 else{
                     $.ajax(
@@ -240,7 +264,12 @@
                 }                                       
             }
             else{
-                alert('請選擇欲派工之工令編號');
+                $.alert({
+                                icon:"fas fa-exclamation-triangle",
+                                title: "錯誤",
+                                content: "請選擇欲派工之工令編號",
+                            });
+                //alert('請選擇欲派工之工令編號');
             }
             
         });

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/style2.css" />
-
+    <link rel="stylesheet" href="~/lib/jquery_confirm/dist/jquery-confirm.min.css">
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
     <!-- Our Custom CSS -->
@@ -33,6 +33,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>    
     <!-- load jQuery and tablesorter scripts -->
     <script src="~/lib/tablesorter/js/jquery.tablesorter.js"></script>
+    <script src="~/lib/jquery_confirm/dist/jquery-confirm.min.js"></script>
 </head>
 <body>
      <div class="wrapper">
@@ -102,6 +103,13 @@
                 $("#Schedule_Input").on("input", function () { //Table Filter
                     var value = $(this).val().toLowerCase();
                     $("#Schedule_Table tbody tr").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+
+                $("#WorkStatus_Input").on("input", function () { //Table Filter
+                    var value = $(this).val().toLowerCase();
+                    $("#WorkStatus_Table tbody tr").filter(function () {
                         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                     });
                 });

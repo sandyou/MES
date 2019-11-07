@@ -51,7 +51,12 @@
                                     }); 
                               }, error: function (d) {
                                   /*console.log("error");*/
-                                  alert("404. Please wait until the File is Loaded.");
+                                  $.alert({
+                                    icon:"fas fa-exclamation-triangle",
+                                    title: "錯誤",
+                                    content: "404. Please wait until the File is Loaded.",
+                                });
+                                  //alert("404. Please wait until the File is Loaded.");
                               }
                           });
        }

@@ -37,22 +37,22 @@ namespace MES_MVC.Controllers
             SqlConnection con = new SqlConnection(connectionstring);
             con.Open();
             // SqlCommand cmd =new SqlCommand(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
-            //                                                                                     ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
-            //                                                                                     ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'
+            //                                                                                     ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+            //                                                                                     ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
             //                                                                                     ,b.Process,60 as 'id' from [MES-Table].[dbo].[order] a
             //                                                                                     left join 
             //                                                                                     [MES-Table].[dbo].[product_Inf] b
             //                                                                                     on a.[product-id] = b.[product-id] order by a.[order-id] desc",con);        
             SqlCommand cmd =new SqlCommand(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
                                                                                                 ,SUM(b.ProductTime) as 'Time'
-                                                                                                ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
-                                                                                                ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'                                                                                                
+                                                                                                ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+                                                                                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'                                                                                                
                                                                                                  from [MES-Table].[dbo].[order] a
                                                                                                 left join 
                                                                                                 [MES-Table].[dbo].[product_Inf] b
                                                                                                 on a.[product-id] = b.[product-id] 
-                                                                                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,120)
-                                                                                                ,CONVERT(varchar(20),a.End_Date,120)
+                                                                                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+                                                                                                ,CONVERT(varchar(20),a.End_Date,23)
                                                                                                 order by a.[order-id] desc",con);
             SqlDataAdapter ada =new SqlDataAdapter();
             System.Data.DataTable dt =new System.Data.DataTable();    
@@ -118,6 +118,18 @@ namespace MES_MVC.Controllers
 
         public IActionResult WorkStatus_Page()
         {
+            conn = new SQL(this.configuration);
+            ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product
+                                                                                                                                            ,c.[Machine-Num] as 'MachineNum'
+                                                                                                                                            ,c.[Machine-Name] as 'MachineName'
+                                                                                                                                            ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'        
+                                                                                                                                            ,a.RequestQuantity                                                                                         
+                                                                                                                                            from [MES-Table].[dbo].[order] a
+                                                                                                                                            left join 
+                                                                                                                                            [MES-Table].[dbo].[product_Inf] b on a.[product-id] = b.[product-id] 
+                                                                                                                                            left join 
+                                                                                                                                            [MES-Table].[dbo].[Machine_Inf] c on b.Process = c.[Local-Process]
+                                                                                                                                            order by a.[order-id] desc");
             return View();
         }
 
