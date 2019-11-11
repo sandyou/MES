@@ -119,5 +119,23 @@ namespace MES_MVC.Data
             }            
         }        
 
+        public void Insert_Machine_Inf(string machine_num, string machine_name, string process, string status) 
+        {
+            conn.Open();
+            SqlCommand cmd = new SqlCommand(string.Format(@"insert into [dbo].[Machine_Inf]([Machine-Num],[Machine-Name],[Local-Process],[Status])
+                                                            values('{0}',N'{1}','{2}',N'{3}')",machine_num,machine_name,process,status),conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+        public void Insert_Staff_Inf(string staff_num, string staff_name, string process, string status)
+        {
+            conn.Open();
+            SqlCommand cmd = new SqlCommand(string.Format(@"insert into [dbo].[Staff-Inf]([Staff-Num],[Staff-Name],[Process],[Status])
+                                                            values('{0}',N'{1}','{2}',N'{3}')", staff_num, staff_name, process, status), conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+
     }
 }

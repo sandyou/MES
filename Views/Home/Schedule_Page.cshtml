@@ -10,7 +10,7 @@
            $.ajax(
                           {
                               url: "@Url.Action("Get_Information_Data","Home")",
-                             method: "get",
+                             method: "post",
                              contentType: 'application/json',                                                           
                               data:
                               {                                  
@@ -29,7 +29,7 @@
                                         console.log(num+'a');                              
                                         var num =Math.floor((num .toFixed(2)*100))+val;
                                         console.log(num);                      
-                                        if(wid>=140){
+                                        if(wid>=110){
                                                 $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","0%");
                                                 $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("0%");    
                                         }                                            

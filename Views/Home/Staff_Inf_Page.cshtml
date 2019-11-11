@@ -3,25 +3,98 @@
     @using System.Data;    
     DataTable dt  = (DataTable)ViewData["Table"];   
 }
-   <table id="Staff_Table" class="table table-hover tablesorter">
-        <thead class="thead-light">
-            <tr>
-            <th>人員編號</th>
-            <th>姓名</th>
-            <th>執行道次</th>
-            <th>假況</th>          
-            </tr>
-        </thead>
-        <tbody>                          
-               @for(int i=0;i<dt.Rows.Count;i++)
-               {
-                   <tr>
-                       <td>@dt.Rows[i][0]</td>
-                       <td>@dt.Rows[i][1]</td>
-                       <td>@dt.Rows[i][2]</td>
-                       <td>@dt.Rows[i][3]</td>                                              
-                   </tr>
-               }
-        </tbody>
-    </table>
-    <div class="line"></div>
+   
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>人員編號:<input type="text" /></td>
+                        <td>姓名:<input type="text" /></td>
+                        <td>執行道次:<input type="text" /></td>
+                        <td>假況:<input type="text" /></td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div style="text-align:center">
+                <button type="button" id="Data_Insert_btn" class="btn btn-secondary btn-lg" style="width:150px">送出</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" id="Data_Clear_btn" class="btn btn-secondary btn-lg" style="width:150px">清除</button>
+            </div>
+            <br>
+            <table id="Staff_Table" class="table table-hover tablesorter">
+
+                <thead class="thead-light">
+                    <tr>
+                        <th>人員編號</th>
+                        <th>姓名</th>
+                        <th>執行道次</th>
+                        <th>假況</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        <tr>
+                            <td>@dt.Rows[i][0]</td>
+                            <td>@dt.Rows[i][1]</td>
+                            <td>@dt.Rows[i][2]</td>
+                            <td>@dt.Rows[i][3]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="line"></div>
+            <script>
+    $("#Data_Insert_btn").on('click', function () {
+        var num = $("input").eq(0).val();
+        var name = $("input").eq(1).val();
+        var process = $("input").eq(2).val();
+        var status = $("input").eq(3).val();
+        $.confirm(
+        {
+            title: "資料確認",
+            content: "請確認資料是否正確<br>人員編號:" + num + "<br>姓名:" + name + "<br>執行道次:" + process + "<br>假況:" + status,
+            buttons:
+            {
+                "新增": function () {
+                    $.ajax(
+                    {
+                        url: "@Url.Action("Uptate_Staff_Inf","Home")",
+                        method: "get",
+                        contenType: 'application/json',
+                        data:
+                        {
+                            staff_num: num,
+                            staff_name: name,
+                            process: process,
+                            status:status
+                        },
+                        success: function (data) {
+                            $.alert({
+                                icon:"fas fa-exclamation-triangle",
+                                title: "結果",
+                                content: data,
+                            });
+                                //location.reload();
+                        },
+                        error: function (e) {
+                            $.alert({
+                                icon:"fas fa-exclamation-triangle",
+                                title: "錯誤",
+                                content: "404. Please wait until the File is Loaded.",
+                            });
+                        }
+                    });
+                },
+                "取消": function () {
+
+                }
+            }
+        });
+    });
+
+    $("#Data_Clear_btn").on('click', function () {
+        $("input").val('');
+    });
+
+            </script>

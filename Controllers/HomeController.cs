@@ -13,7 +13,7 @@ using System.Web;
 using System.IO;
 using System.Net;
 using MES_MVC.Data;
-using MES_MVC.Models;
+//using MES_MVC.Models;
 using Newtonsoft.Json;
 
 
@@ -24,13 +24,13 @@ namespace MES_MVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration configuration;
         SQL conn;
-
+        
         public HomeController(ILogger<HomeController> logger,IConfiguration config)
         {
             _logger = logger;            
             this.configuration = config;
-        }        
-
+        }
+        
         public IActionResult Schedule_Page()
         {
             string connectionstring =  configuration.GetConnectionString("DefaultConnectionStrings");
@@ -43,7 +43,7 @@ namespace MES_MVC.Controllers
             //                                                                                     left join 
             //                                                                                     [MES-Table].[dbo].[product_Inf] b
             //                                                                                     on a.[product-id] = b.[product-id] order by a.[order-id] desc",con);        
-            SqlCommand cmd =new SqlCommand(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+            SqlCommand cmd = new SqlCommand(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
                                                                                                 ,SUM(b.ProductTime) as 'Time'
                                                                                                 ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
                                                                                                 ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'                                                                                                
@@ -53,7 +53,7 @@ namespace MES_MVC.Controllers
                                                                                                 on a.[product-id] = b.[product-id] 
                                                                                                 GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
                                                                                                 ,CONVERT(varchar(20),a.End_Date,23)
-                                                                                                order by a.[order-id] desc",con);
+                                                                                                order by a.[order-id] desc", con);
             SqlDataAdapter ada =new SqlDataAdapter();
             System.Data.DataTable dt =new System.Data.DataTable();    
             ada.SelectCommand = cmd;
@@ -110,8 +110,7 @@ namespace MES_MVC.Controllers
         public IActionResult Dispatch_Page()
         {
             conn = new SQL(this.configuration);
-            ViewData["Order_Table"] = conn.Get_Information_Data(@"SELECT distinct  [order-id]                                                                                                                                           
-                                                                                                                                        FROM [MES-Table ].[dbo].[order] order by [order-id]");                                                                                                                                                
+            ViewData["Order_Table"] = conn.Get_Information_Data(@"SELECT distinct [order-id] FROM [MES-Table ].[dbo].[order] order by [order-id]");                                                                                                                                                
             
             return View();
         }
@@ -120,16 +119,16 @@ namespace MES_MVC.Controllers
         {
             conn = new SQL(this.configuration);
             ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product
-                                                                                                                                            ,c.[Machine-Num] as 'MachineNum'
-                                                                                                                                            ,c.[Machine-Name] as 'MachineName'
-                                                                                                                                            ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'        
-                                                                                                                                            ,a.RequestQuantity                                                                                         
-                                                                                                                                            from [MES-Table].[dbo].[order] a
-                                                                                                                                            left join 
-                                                                                                                                            [MES-Table].[dbo].[product_Inf] b on a.[product-id] = b.[product-id] 
-                                                                                                                                            left join 
-                                                                                                                                            [MES-Table].[dbo].[Machine_Inf] c on b.Process = c.[Local-Process]
-                                                                                                                                            order by a.[order-id] desc");
+                                                                    ,c.[Machine-Num] as 'MachineNum'
+                                                                    ,c.[Machine-Name] as 'MachineName'
+                                                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'        
+                                                                    ,a.RequestQuantity                                                                                         
+                                                                    from [MES-Table].[dbo].[order] a
+                                                                    left join 
+                                                                    [MES-Table].[dbo].[product_Inf] b on a.[product-id] = b.[product-id] 
+                                                                    left join 
+                                                                    [MES-Table].[dbo].[Machine_Inf] c on b.Process = c.[Local-Process]
+                                                                    order by a.[order-id] desc");
             return View();
         }
 
@@ -141,11 +140,7 @@ namespace MES_MVC.Controllers
         public IActionResult Machine_Inf_Page()
         {
             conn = new SQL(this.configuration);            
-            ViewData["Table"] = conn.Get_Information_Data(@"  SELECT a.[Machine-Num],a.[Machine-Name],a.[Local-Process],b.[Status-Type]
-                                                                                                                FROM [MES-Table ].[dbo].[Machine_Inf] a
-                                                                                                                left join
-                                                                                                                [MES-Table ].[dbo].[Machine-Status] b
-                                                                                                                on a.[Machine-Num] = b.[Machine-Num]");                                                                                                                            
+            ViewData["Table"] = conn.Get_Information_Data(@"  SELECT * FROM [MES-Table ].[dbo].[Machine_Inf] ");                                                                                                                            
             return View();
         }
 
@@ -160,6 +155,7 @@ namespace MES_MVC.Controllers
             return View();
         }
 
+        [HttpPost]
         public IActionResult Get_Information_Data()
         {
             conn = new SQL(this.configuration);      
@@ -214,18 +210,18 @@ namespace MES_MVC.Controllers
         {
             conn = new SQL(this.configuration);
             DataTable dt =conn.Get_Information_Data(string.Format(@"select b.Process,d.[Process-Name] as 'ProcessName',a.[product-id] as 'productid',b.product,c.[Staff-Name]  as 'StaffName'
-                                                                                                                                    from [MES-Table].[dbo].[order] a
-                                                                                                                                    left join 
-                                                                                                                                    [MES-Table].[dbo].[product_Inf] b
-                                                                                                                                    on a.[product-id] = b.[product-id] 
-                                                                                                                                    left join 
-                                                                                                                                    [MES-Table ].dbo.[Staff-Inf] c
-                                                                                                                                    on b.[Process] = c.[Process]
-                                                                                                                                    left join 
-                                                                                                                                    [MES-Table ].[dbo].[Process_Inf] d
-                                                                                                                                    on b.[Process] = d.[Process]
-                                                                                                                                    where a.[order-id] = '{0}'
-                                                                                                                                    order by a.[order-id] desc",order));
+                                                        from [MES-Table].[dbo].[order] a
+                                                        left join 
+                                                        [MES-Table].[dbo].[product_Inf] b
+                                                        on a.[product-id] = b.[product-id] 
+                                                        left join 
+                                                        [MES-Table ].dbo.[Staff-Inf] c
+                                                        on b.[Process] = c.[Process]
+                                                        left join 
+                                                        [MES-Table ].[dbo].[Process_Inf] d
+                                                        on b.[Process] = d.[Process]
+                                                        where a.[order-id] = '{0}'
+                                                        order by a.[order-id] desc",order));
             string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Json(json);
         }
@@ -235,6 +231,20 @@ namespace MES_MVC.Controllers
              //json = JsonConvert.SerializeObject(data);
             List<Dispatch_Item> item = JsonConvert.DeserializeObject<List<Dispatch_Item>>(data);
              return Content(data);
+        }
+
+        public IActionResult Uptate_Machine_Inf(string machine_num,string machine_name,string process,string status)
+        {
+            conn = new SQL(this.configuration);
+            conn.Insert_Machine_Inf(machine_num, machine_name, process, status);
+            return Content("新增成功");
+        }
+
+        public IActionResult Uptate_Staff_Inf(string staff_num, string staff_name, string process, string status)
+        {
+            conn = new SQL(this.configuration);
+            conn.Insert_Staff_Inf(staff_num, staff_name, process, status);
+            return Content("新增成功");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

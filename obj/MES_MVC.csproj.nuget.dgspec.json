@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/home/q11/桌面/MES/MES_MVC/MES_MVC.csproj": {}
+    "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\MES_MVC.csproj": {}
   },
   "projects": {
-    "/home/q11/桌面/MES/MES_MVC/MES_MVC.csproj": {
+    "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\MES_MVC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/q11/桌面/MES/MES_MVC/MES_MVC.csproj",
+        "projectUniqueName": "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\MES_MVC.csproj",
         "projectName": "MES_MVC",
-        "projectPath": "/home/q11/桌面/MES/MES_MVC/MES_MVC.csproj",
-        "packagesPath": "/home/q11/.nuget/packages/",
-        "outputPath": "/home/q11/桌面/MES/MES_MVC/obj/",
+        "projectPath": "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\MES_MVC.csproj",
+        "packagesPath": "C:\\Users\\ai-pc11\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
-          "/home/q11/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\ai-pc11\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -36,9 +42,9 @@
       "frameworks": {
         "netcoreapp3.0": {
           "dependencies": {
-            "Microsoft.AspNet.Mvc": {
+            "Microsoft.AspNetCore.Mvc": {
               "target": "Package",
-              "version": "[5.2.7, )"
+              "version": "[2.2.0, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -71,7 +77,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
