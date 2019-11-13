@@ -33,32 +33,56 @@ namespace MES_MVC.Controllers
         
         public IActionResult Schedule_Page()
         {
-            string connectionstring =  configuration.GetConnectionString("DefaultConnectionStrings");
-            SqlConnection con = new SqlConnection(connectionstring);
-            con.Open();
-            // SqlCommand cmd =new SqlCommand(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
-            //                                                                                     ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
-            //                                                                                     ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
-            //                                                                                     ,b.Process,60 as 'id' from [MES-Table].[dbo].[order] a
-            //                                                                                     left join 
-            //                                                                                     [MES-Table].[dbo].[product_Inf] b
-            //                                                                                     on a.[product-id] = b.[product-id] order by a.[order-id] desc",con);        
-            SqlCommand cmd = new SqlCommand(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
-                                                                                                ,SUM(b.ProductTime) as 'Time'
-                                                                                                ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
-                                                                                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'                                                                                                
-                                                                                                 from [MES-Table].[dbo].[order] a
-                                                                                                left join 
-                                                                                                [MES-Table].[dbo].[product_Inf] b
-                                                                                                on a.[product-id] = b.[product-id] 
-                                                                                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
-                                                                                                ,CONVERT(varchar(20),a.End_Date,23)
-                                                                                                order by a.[order-id] desc", con);
-            SqlDataAdapter ada =new SqlDataAdapter();
-            System.Data.DataTable dt =new System.Data.DataTable();    
-            ada.SelectCommand = cmd;
-            ada.Fill(dt);                        
-            con.Close();
+            //string connectionstring =  configuration.GetConnectionString("DefaultConnectionStrings");
+            //SqlConnection con = new SqlConnection(connectionstring);
+            //con.Open();
+            //SqlCommand cmd = new SqlCommand(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+            //                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+            //                                    ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
+            //                                    ,b.Process from [MES-Table].[dbo].[order] a
+            //                                    left join 
+            //                                    [MES-Table].[dbo].[product_Inf] b
+            //                                    on a.[product-id] = b.[product-id] order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process ", con);
+            //SqlCommand cmd = new SqlCommand(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+            //                                ,SUM(b.ProductTime) as 'Time'
+            //                                ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+            //                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
+            //                                ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+            //                                    from [MES-Table].[dbo].[order] a
+            //                                left join 
+            //                                [MES-Table].[dbo].[product_Inf] b
+            //                                on a.[product-id] = b.[product-id] 
+            //                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+            //                                ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
+            //                                order by CONVERT(varchar(20),a.ST_Date,23) desc", con);
+            //SqlDataAdapter ada =new SqlDataAdapter();
+            //DataTable dt = new DataTable();  
+            //ada.SelectCommand = cmd;
+            //ada.Fill(dt);                        
+            //con.Close();
+            conn = new SQL(this.configuration);
+            DataTable[] dt = new DataTable[2];
+            dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+                                            ,SUM(b.ProductTime) as 'Time'
+                                            ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+                                            ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
+                                            ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+                                                from [MES-Table].[dbo].[order] a
+                                            left join 
+                                            [MES-Table].[dbo].[product_Inf] b
+                                            on a.[product-id] = b.[product-id] 
+                                            GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+                                            ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
+                                            order by CONVERT(varchar(20),a.ST_Date,23) desc");
+
+            dt[1] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',
+                                                b.product,b.Process,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+                                                ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+                                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
+                                                 from [MES-Table].[dbo].[order] a
+                                                left join 
+                                                [MES-Table].[dbo].[product_Inf] b
+                                                on a.[product-id] = b.[product-id] order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
             ViewData["Table"]=dt;
 
             return View();
@@ -66,7 +90,7 @@ namespace MES_MVC.Controllers
 
         public IActionResult Information_Page(string  id,string status)
         {        
-             conn = new SQL(this.configuration);                        
+            conn = new SQL(this.configuration);                        
             ViewData["Table"] =conn.Get_Information_Data(string.Format(
             @"select
             distinct
@@ -158,18 +182,38 @@ namespace MES_MVC.Controllers
         [HttpPost]
         public IActionResult Get_Information_Data()
         {
-            conn = new SQL(this.configuration);      
+            conn = new SQL(this.configuration);
+            //DataTable dt = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+            //                                                                                    ,SUM(b.ProductTime) as 'Time'
+            //                                                                                    ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
+            //                                                                                    ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'                                                                                                
+            //                                                                                     from [MES-Table].[dbo].[order] a
+            //                                                                                    left join 
+            //                                                                                    [MES-Table].[dbo].[product_Inf] b
+            //                                                                                    on a.[product-id] = b.[product-id] 
+            //                                                                                    GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,120)
+            //                                                                                    ,CONVERT(varchar(20),a.End_Date,120)
+            //                                                                                    order by a.[order-id] desc");
+            
+            //測試用
             DataTable dt = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
-                                                                                                ,SUM(b.ProductTime) as 'Time'
-                                                                                                ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
-                                                                                                ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'                                                                                                
-                                                                                                 from [MES-Table].[dbo].[order] a
-                                                                                                left join 
-                                                                                                [MES-Table].[dbo].[product_Inf] b
-                                                                                                on a.[product-id] = b.[product-id] 
-                                                                                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,120)
-                                                                                                ,CONVERT(varchar(20),a.End_Date,120)
-                                                                                                order by a.[order-id] desc");      
+                                                    ,SUM(b.ProductTime) as 'Time'
+                                                    ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
+                                                    ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'                                                                                                
+                                                    from [MES-Table].[dbo].[order] a
+                                                    left join 
+                                                    [MES-Table].[dbo].[product_Inf] b
+                                                    on a.[product-id] = b.[product-id] 
+                                                    GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,120)
+                                                    ,CONVERT(varchar(20),a.End_Date,120)
+                                                    UNION All
+                                                    select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+                                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+                                                    ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
+                                                    from [MES-Table].[dbo].[order] a
+                                                    left join 
+                                                    [MES-Table].[dbo].[product_Inf] b
+                                                    on a.[product-id] = b.[product-id] ");
             string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             //string json = JsonConvert.SerializeObject(_item);
             return  Json(json);
