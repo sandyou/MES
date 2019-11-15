@@ -26,14 +26,22 @@ namespace MES_MVC.Data
         {
             conn.Open();
             DataTable dt = new DataTable();
-            SqlCommand cmd = new SqlCommand();
-            SqlDataAdapter ada = new SqlDataAdapter();
-            cmd.Connection = conn;
-            cmd.CommandText = str;
-            ada.SelectCommand = cmd;
-            ada.Fill(dt);
-            conn.Close();
-            return dt;            
+            try
+            {                
+                SqlCommand cmd = new SqlCommand();
+                SqlDataAdapter ada = new SqlDataAdapter();
+                cmd.Connection = conn;
+                cmd.CommandText = str;
+                ada.SelectCommand = cmd;
+                ada.Fill(dt);
+                conn.Close();
+                return dt;
+            }
+            catch (Exception e)
+            {
+                conn.Close();
+                return  dt;
+            }                                   
         }
 
         public string Get_ProductName(string id)

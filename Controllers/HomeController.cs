@@ -71,6 +71,7 @@ namespace MES_MVC.Controllers
                                             left join 
                                             [MES-Table].[dbo].[product_Inf] b
                                             on a.[product-id] = b.[product-id] 
+                                            where a.Dispatch <> 0 
                                             GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
                                             ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
                                             order by CONVERT(varchar(20),a.ST_Date,23) desc");
@@ -82,7 +83,9 @@ namespace MES_MVC.Controllers
                                                  from [MES-Table].[dbo].[order] a
                                                 left join 
                                                 [MES-Table].[dbo].[product_Inf] b
-                                                on a.[product-id] = b.[product-id] order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
+                                                on a.[product-id] = b.[product-id] 
+                                                where a.Dispatch <> 0
+                                                order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
             ViewData["Table"]=dt;
 
             return View();
@@ -154,17 +157,44 @@ namespace MES_MVC.Controllers
         public IActionResult WorkStatus_Page()
         {
             conn = new SQL(this.configuration);
-            ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product
-                                                                    ,c.[Machine-Num] as 'MachineNum'
-                                                                    ,c.[Machine-Name] as 'MachineName'
-                                                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'        
-                                                                    ,a.RequestQuantity                                                                                         
-                                                                    from [MES-Table].[dbo].[order] a
-                                                                    left join 
-                                                                    [MES-Table].[dbo].[product_Inf] b on a.[product-id] = b.[product-id] 
-                                                                    left join 
-                                                                    [MES-Table].[dbo].[Machine_Inf] c on b.Process = c.[Local-Process]
-                                                                    order by a.[order-id] desc");
+            //ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product
+            //                                                        ,c.[Machine-Num] as 'MachineNum'
+            //                                                        ,c.[Machine-Name] as 'MachineName'
+            //                                                        ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'        
+            //                                                        ,a.RequestQuantity                                                                                         
+            //                                                        from [MES-Table].[dbo].[order] a
+            //                                                        left join 
+            //                                                        [MES-Table].[dbo].[product_Inf] b on a.[product-id] = b.[product-id] 
+            //                                                        left join 
+            //                                                        [MES-Table].[dbo].[Machine_Inf] c on b.Process = c.[Local-Process]
+            //                                                        order by a.[order-id] desc");
+            ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"SELECT DISTINCT a.[order-id]
+            --,a.[Process-Num]
+            --,d.[Process-Name]
+            ,b.[product-id]
+            ,c.product
+            --,e.[Staff-Name]
+            --,a.[Schedule-Hour]
+            ,f.[Machine-Num]
+            ,f.[Machine-Name]
+            ,CONVERT(varchar(20),b.ST_Date,23) as 'ST_Date'
+            ,b.RequestQuantity
+            FROM [dbo].[Schedule-Inf] a
+            LEFT JOIN 
+            dbo.[order] b
+            on a.[order-id] = b.[order-id]
+            LEFT JOIN 
+            dbo.product_Inf c 
+            on b.[product-id] = c.[product-id]
+            LEFT JOIN 
+            dbo.Process_Inf d
+            on a.[Process-Num] = d.Process
+            LEFT JOIN 
+            dbo.[Staff-Inf] e
+            on a.[Staff-Num] = e.[Staff-Num]
+            LEFT JOIN 
+            dbo.Machine_Inf f
+            on a.[Process-Num] = f.[Local-Process]");
             return View();
         }
 
