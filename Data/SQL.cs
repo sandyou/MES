@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Data.Sql;
 using Microsoft.Extensions.Configuration;
+using MES_MVC.Models;
 
 namespace MES_MVC.Data
 {
@@ -118,6 +119,30 @@ namespace MES_MVC.Data
                 return "Success";
             }            
         }        
+
+        public string Dispatch_Data(List<Dispatch_Item>list)
+        {
+            conn.Open();
+            for(int i=0;i<list.Count;i++)
+            {
+                SqlCommand cmd = new SqlCommand(string.Format(
+                    @"
+                    declare @Q INT
+                    set @Q = (SELECT RequestQuantity FROM dbo.[order] where [order-id]='{0}')
+                    declare @S INT
+                    set @S = (SELECT [Staff-Num] FROM dbo.[Staff-Inf] where [Staff-Name]=N'{3}')
+                    INSERT INTO [dbo].[Schedule-Inf]([order-id],Quantity,[Process-Num],[Schedule-Hour],[Staff-Num])
+                    VALUES('{0}', @Q, '{1}', '{2}', @S)", list[i].order,list[i].process,list[i].time,list[i].staff),conn);
+                cmd.ExecuteNonQuery();
+                if(i==list.Count-1)
+                {
+                    SqlCommand cmd_ = new SqlCommand(string.Format(@"update [dbo].[order] set Dispatch = 1 where [order-id]='{0}'",list[i].order),conn);
+                    cmd_.ExecuteNonQuery();
+                }
+            }
+            conn.Close();
+            return "派工成功";
+        }
 
         public void Insert_Machine_Inf(string machine_num, string machine_name, string process, string status) 
         {

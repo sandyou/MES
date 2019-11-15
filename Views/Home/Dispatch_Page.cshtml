@@ -2,6 +2,7 @@
     ViewData["Title"]="每日派工";    
     @using System.Data;
     DataTable Order_dt = (DataTable)ViewData["Order_Table"];
+    DataTable Dispatch_dt = (DataTable)ViewData["Dispatch_Table"];
 }
     <div class="form-group">
     <label >工令編號</label>&nbsp;<span id="order-span" style="color:red;display:none">*工令編號必須選擇</span>
@@ -48,8 +49,19 @@
             <th>作業時間(小時)</th>
             </tr>
         </thead>
-        <tbody id="Dispatch_Y_Tbody">                          
-
+        <tbody id="Dispatch_Y_Tbody">
+            @for (int i = 0; i < Dispatch_dt.Rows.Count; i++)
+            {
+                <tr>
+                    <td>@Dispatch_dt.Rows[i][0]</td>
+                    <td>@Dispatch_dt.Rows[i][1]</td>
+                    <td>@Dispatch_dt.Rows[i][2]</td>
+                    <td>@Dispatch_dt.Rows[i][3]</td>
+                    <td>@Dispatch_dt.Rows[i][4]</td>
+                    <td>@Dispatch_dt.Rows[i][5]</td>
+                    <td>@Dispatch_dt.Rows[i][6]</td>
+                </tr>
+            }
         </tbody>
     </table>
     <div class="line"></div>
@@ -227,40 +239,59 @@
                             });
                     //alert('請選擇欲派工之道次人員資料');
                 }   
-                else{
-                    $.ajax(
-                    {
-                        url: "@Url.Action("Dispatch_Data","Home")",
-                        method: "get",
-                        contentType: 'application/json',      
-                        data:
-                        {
-                            data:JSON.stringify(arr)
-                        },
-                        success:function(data){
-                            var result = JSON.parse(data);
-                            $.each(result,function(i,item){                                
-                                $("#Dispatch_Y_Tbody").append(function(){
-                                    return "<tr role=\"row\">"+                                                
-                                                "<td>"+item.order+"</td>"+
-                                                "<td>"+item.process+"</td>"+
-                                                "<td>"+item.processname+"</td>"+
-                                                "<td>"+item.productid+"</td>"+
-                                                "<td>"+item.product+"</td>"+
-                                                "<td>"+item.staff+"</td>"+
-                                                "<td>"+item.time+"</td>"+
-                                                "</tr>";
-                                });
-                            });                                                        
-                            //alert(data);
-                            var resort = true,
-                            callback = function(){ console.log('table updated'); };
-                            dispatch_y_table.trigger("update", [ resort, callback ]);
-                        },
-                        error:function(d){
-                            alert('error');
+                else {
+                    $.confirm({
+                        title: "派工資料確認",
+                        content: "請確認派工資料是否正確",
+                        buttons: {
+                            "派工": function () {
+                                $.ajax(
+                                {
+                                    url: "@Url.Action("Dispatch_Data","Home")",
+                                    method: "get",
+                                    contentType: 'application/json',      
+                                    data:
+                                    {
+                                        data:JSON.stringify(arr)
+                                    },
+                                    success:function(data){
+                                        //var result = JSON.parse(data);
+                                        //$.each(result,function(i,item){                                
+                                        //    $("#Dispatch_Y_Tbody").append(function(){
+                                        //        return "<tr role=\"row\">"+                                                
+                                        //                    "<td>"+item.order+"</td>"+
+                                        //                    "<td>"+item.process+"</td>"+
+                                        //                    "<td>"+item.processname+"</td>"+
+                                        //                    "<td>"+item.productid+"</td>"+
+                                        //                    "<td>"+item.product+"</td>"+
+                                        //                    "<td>"+item.staff+"</td>"+
+                                        //                    "<td>"+item.time+"</td>"+
+                                        //                    "</tr>";
+                                        //    });
+                                        //});                                                                                                
+                                        //var resort = true,
+                                        //callback = function(){ console.log('table updated'); };
+                                        //dispatch_y_table.trigger("update", [ resort, callback ]);
+                                        $.alert({
+                                            title: "派工結果",
+                                            content: data,
+                                        });
+                                        location.reload();
+                                    },
+                                    error:function(d){
+                                        $.alert({
+                                            icon:"fas fa-exclamation-triangle",
+                                            title: "錯誤",
+                                            content: "404. Please wait until the File is Loaded.",
+                                        });
+                                    }
+                                }); 
+                            },
+                            "取消": function () {
+
+                            }
                         }
-                    });                    
+                    });                                       
                 }                                       
             }
             else{

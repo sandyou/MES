@@ -134,8 +134,20 @@ namespace MES_MVC.Controllers
         public IActionResult Dispatch_Page()
         {
             conn = new SQL(this.configuration);
-            ViewData["Order_Table"] = conn.Get_Information_Data(@"SELECT distinct [order-id] FROM [MES-Table ].[dbo].[order] order by [order-id]");                                                                                                                                                
-            
+            ViewData["Order_Table"] = conn.Get_Information_Data(@"SELECT distinct [order-id] FROM [MES-Table ].[dbo].[order] WHERE Dispatch <> 1 order by [order-id]");
+            ViewData["Dispatch_Table"] = conn.Get_Information_Data(@"SELECT DISTINCT a.[order-id],a.[Process-Num],d.[Process-Name],b.[product-id],c.product,e.[Staff-Name],a.[Schedule-Hour] FROM [dbo].[Schedule-Inf] a
+                                                                    LEFT JOIN 
+                                                                    dbo.[order] b
+                                                                    on a.[order-id] = b.[order-id]
+                                                                    LEFT JOIN 
+                                                                    dbo.product_Inf c 
+                                                                    on b.[product-id] = c.[product-id]
+                                                                    LEFT JOIN 
+                                                                    dbo.Process_Inf d
+                                                                    on a.[Process-Num] = d.Process
+                                                                    LEFT JOIN 
+                                                                    dbo.[Staff-Inf] e
+                                                                    on a.[Staff-Num] = e.[Staff-Num]");
             return View();
         }
 
@@ -271,10 +283,11 @@ namespace MES_MVC.Controllers
         }
 
         public  IActionResult Dispatch_Data(string data)
-        {                       
-             //json = JsonConvert.SerializeObject(data);
-            List<Dispatch_Item> item = JsonConvert.DeserializeObject<List<Dispatch_Item>>(data);
-             return Content(data);
+        {
+            //json = JsonConvert.SerializeObject(data);
+            conn = new SQL(this.configuration);
+            List<Dispatch_Item> item = JsonConvert.DeserializeObject<List<Dispatch_Item>>(data);            
+            return Content(conn.Dispatch_Data(item));
         }
 
         public IActionResult Uptate_Machine_Inf(string machine_num,string machine_name,string process,string status)
