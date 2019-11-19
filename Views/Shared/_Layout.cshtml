@@ -56,10 +56,10 @@
                     <a asp-area="" asp-controller="Home" asp-action="OrderInsert_Page">新增工令</a>
                 </li>
                 <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Dispatch_Page">派工</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Dispatch_Page">當日派工</a>
                 </li>
                 <li>
-                    <a asp-area="" asp-controller="Home" asp-action="WorkStatus_Page">產線派工情況</a>
+                    <a asp-area="" asp-controller="Home" asp-action="WorkStatus_Page">當日產線即時情況</a>
                 </li>
                 <li>
                     <a asp-area="" asp-controller="Home" asp-action="Machine_Inf_Page">機台資訊</a>
@@ -68,7 +68,7 @@
                     <a asp-area="" asp-controller="Home" asp-action="Staff_Inf_Page">人員資訊</a>
                 </li>
                  <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Work_Page">報工</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Work_Page">當日報工</a>
                 </li> 
             </ul>
         </nav>
@@ -144,27 +144,14 @@
             $("#Schedule_Table").on("click", "td", function () {
                 var x = $(this).attr('id');
                 var id = $(this).text();
-
-                //if (x == 'order') {
-                //    var newwin = window.open();   //此行一定要如此書寫,否則失效
-                //    newwin.location = 'Information_Page?id=1';
-                //}
-                //else if (x == 'product-id') {
-                //    var newwin = window.open();   //此行一定要如此書寫,否則失效
-                //    newwin.location = 'http://google.com';
-                //}
-                //else if (x == 'product') {
-                //    var newwin = window.open();   //此行一定要如此書寫,否則失效
-                //    newwin.location = 'http://google.com';
-                //}
-                if (x == 'product-id') {
-                    var newwin = window.open();   //此行一定要如此書寫,否則失效
+                var newwin = window.open();   //此行一定要如此書寫,否則失效
+                if (x == 'product-id') {                    
                     //newwin.location = 'Information_Page?id=' + id;
                     newwin.location = '/Home/Information_Page?id=' + id + '&status=Initial';
                 }
-                //else if (x == 'order-id') {
-
-                //}
+                else if (x == 'order-id') {
+                    //newwin.location = '/Home/Information_Page';
+                }
                 //alert($(this).text());
             });
         });

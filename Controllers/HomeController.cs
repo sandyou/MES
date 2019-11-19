@@ -64,18 +64,18 @@ namespace MES_MVC.Controllers
             DataTable[] dt = new DataTable[2];
             dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
                                             ,SUM(b.ProductTime) as 'Time'
-                                            ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+                                            --,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
                                             ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
                                             ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
                                                 from [MES-Table].[dbo].[order] a
                                             left join 
                                             [MES-Table].[dbo].[product_Inf] b
                                             on a.[product-id] = b.[product-id] 
-                                            where a.Dispatch <> 0 
+                                            --where a.Dispatch <> 0 
                                             GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
                                             ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
                                             order by CONVERT(varchar(20),a.ST_Date,23) desc");
-
+            //要在修改
             dt[1] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',
                                                 b.product,b.Process,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
                                                 ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
@@ -84,7 +84,7 @@ namespace MES_MVC.Controllers
                                                 left join 
                                                 [MES-Table].[dbo].[product_Inf] b
                                                 on a.[product-id] = b.[product-id] 
-                                                where a.Dispatch <> 0
+                                                --where a.Dispatch <> 0
                                                 order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
             ViewData["Table"]=dt;
 
@@ -138,7 +138,7 @@ namespace MES_MVC.Controllers
         {
             conn = new SQL(this.configuration);
             ViewData["Order_Table"] = conn.Get_Information_Data(@"SELECT distinct [order-id] FROM [MES-Table ].[dbo].[order] WHERE Dispatch <> 1 order by [order-id]");
-            ViewData["Dispatch_Table"] = conn.Get_Information_Data(@"SELECT DISTINCT a.[order-id],a.[Process-Num],d.[Process-Name],b.[product-id],c.product,e.[Staff-Name],a.[Schedule-Hour] FROM [dbo].[Schedule-Inf] a
+            ViewData["Dispatch_Table"] = conn.Get_Information_Data(@"SELECT distinct a.[order-id],a.[Process-Num],d.[Process-Name],b.[product-id],c.product,e.[Staff-Name],a.[Schedule-Hour],a.Quantity,a.Dispatch_Time FROM [dbo].[Schedule-Inf] a
                                                                     LEFT JOIN 
                                                                     dbo.[order] b
                                                                     on a.[order-id] = b.[order-id]
@@ -240,14 +240,14 @@ namespace MES_MVC.Controllers
             //測試用
             DataTable dt = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
                                                     ,SUM(b.ProductTime) as 'Time'
-                                                    ,CONVERT(varchar(20),a.ST_Date,120) as 'ST_Date'
-                                                    ,CONVERT(varchar(20),a.End_Date,120) as 'End_Date'                                                                                                
+                                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+                                                    ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'                                                                                                
                                                     from [MES-Table].[dbo].[order] a
                                                     left join 
                                                     [MES-Table].[dbo].[product_Inf] b
                                                     on a.[product-id] = b.[product-id] 
-                                                    GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,120)
-                                                    ,CONVERT(varchar(20),a.End_Date,120)
+                                                    GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+                                                    ,CONVERT(varchar(20),a.End_Date,23)
                                                     UNION All
                                                     select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
                                                     ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
@@ -293,22 +293,79 @@ namespace MES_MVC.Controllers
         }
 
         public IActionResult Get_Dispatch_Data(string order)
-        {
+        {            
             conn = new SQL(this.configuration);
-            DataTable dt =conn.Get_Information_Data(string.Format(@"select b.Process,d.[Process-Name] as 'ProcessName',a.[product-id] as 'productid',b.product,c.[Staff-Name]  as 'StaffName'
-                                                        from [MES-Table].[dbo].[order] a
-                                                        left join 
-                                                        [MES-Table].[dbo].[product_Inf] b
-                                                        on a.[product-id] = b.[product-id] 
-                                                        left join 
-                                                        [MES-Table ].dbo.[Staff-Inf] c
-                                                        on b.[Process] = c.[Process]
-                                                        left join 
-                                                        [MES-Table ].[dbo].[Process_Inf] d
-                                                        on b.[Process] = d.[Process]
-                                                        where a.[order-id] = '{0}'
-                                                        order by a.[order-id] desc",order));
-            string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            //DataTable dt = conn.Get_Information_Data(string.Format(@"SELECT * FROM
+            //(
+            //select DENSE_RANK() OVER(ORDER BY CONVERT(varchar(20),e.Dispatch_Time,20) DESC) AS ROWID,a.[order-id],a.RequestQuantity
+            //,case when e.Quantity is NULL
+            //then 0
+            //ELSE e.Quantity
+            //END 'Quantity'
+            //,a.RequestQuantity-case when e.Quantity is NULL
+            //then 0
+            //ELSE e.Quantity
+            //END 'Leave_Quantity'
+            //,b.Process,d.[Process-Name] as 'ProcessName',a.[product-id] as 'productid',b.product,c.[Staff-Name]  as 'StaffName',CONVERT(varchar(20),e.Dispatch_Time,20) as 'Dispatch_Time'
+            //from [MES-Table].[dbo].[order] a
+            //left join 
+            //[MES-Table].[dbo].[product_Inf] b
+            //on a.[product-id] = b.[product-id] 
+            //left join 
+            //[MES-Table ].dbo.[Staff-Inf] c
+            //on b.[Process] = c.[Process]
+            //left join 
+            //[MES-Table ].[dbo].[Process_Inf] d
+            //on b.[Process] = d.[Process]
+            //left join
+            //[MES-Table].dbo.[Schedule-Inf] e
+            //on a.[order-id] = e.[order-id] and b.[process] = e.[Process-Num]
+            //where a.[order-id] = '{0}' 
+            //)aa
+            //where aa.[Leave_Quantity] <> '0' and aa.ROWID = 1
+            //order by aa.Dispatch_Time desc", order));
+            List<Dispatch_Item> list = new List<Dispatch_Item>();
+            DataTable dt_dis = conn.Get_Information_Data(string.Format(@"SELECT * FROM
+            (
+            select a.[order-id],b.Process,d.[Process-Name],a.[product-id],b.product,a.RequestQuantity
+            ,SUM(e.Quantity) as 'Quantity'
+            ,a.RequestQuantity-CASE WHEN SUM(e.Quantity) is NULL
+            THEN 0
+            ELSE SUM(e.Quantity)
+            END 'Leave_Quantity'
+            from [MES-Table].[dbo].[order] a
+            left join 
+            [MES-Table].[dbo].[product_Inf] b
+            on a.[product-id] = b.[product-id] 
+            left join 
+            [MES-Table ].[dbo].[Process_Inf] d
+            on b.[Process] = d.[Process]
+            left join
+            [MES-Table].dbo.[Schedule-Inf] e
+            on a.[order-id] = e.[order-id] and b.[process] = e.[Process-Num]
+            where a.[order-id] = '{0}'
+            GROUP BY  a.[order-id],b.Process,d.[Process-Name],a.[product-id],b.product,a.RequestQuantity
+            )aa
+            WHERE aa.Leave_Quantity > 0 
+            order by aa.Process ", order));
+            for(int i = 0;i<dt_dis.Rows.Count;i++)
+            {
+                DataTable dt_staff = conn.Get_Information_Data(string.Format(@"SELECT [Staff-Name] FROM [dbo].[Staff-Inf]
+                where Process={0}",dt_dis.Rows[i][1]));                
+                list.Add(new Dispatch_Item() 
+                {
+                    order = dt_dis.Rows[i][0].ToString(),
+                    process = dt_dis.Rows[i][1].ToString(),
+                    processname = dt_dis.Rows[i][2].ToString(),
+                    productid = dt_dis.Rows[i][3].ToString(),
+                    product = dt_dis.Rows[i][4].ToString(),
+                    quantity = dt_dis.Rows[i][7].ToString(),
+                    staff_name = dt_staff.Rows.OfType<DataRow>().Select(k => k[0].ToString()).ToArray()
+                });
+            }
+            var json = JsonConvert.SerializeObject(list);
+
+            //string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Json(json);
         }
 

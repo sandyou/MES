@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"]="每日派工";    
+    ViewData["Title"]="當日派工";    
     @using System.Data;
     DataTable Order_dt = (DataTable)ViewData["Order_Table"];
     DataTable Dispatch_dt = (DataTable)ViewData["Dispatch_Table"];
@@ -17,13 +17,14 @@
     <table id="Dispatch_Table" class="table table-hover tablesorter">
         <thead class="thead-light">
             <tr>
-            <!-- <th></th> -->
-            <th>道次流程</th>
-            <th>道次名稱</th>
-            <th>產品代號</th>
-            <th>產品名稱</th>
-            <th>作業人員</th>
-            <th>作業時間(小時)</th>
+                <!-- <th></th> -->
+                <th>道次流程</th>
+                <th>道次名稱</th>
+                <th>產品代號</th>
+                <th>產品名稱</th>
+                <th>作業人員</th>
+                <th>預計作業時間(小時)</th>
+                <th>預計作業數量</th>
             </tr>
         </thead>
         <tbody id="Dispatch_Tbody">                          
@@ -36,17 +37,18 @@
           <button type="button" id="Data_Clear_btn" class="btn btn-secondary btn-lg" style="width:150px">清除</button>
       </div>   
     <div class="line"></div>
-    <h1>已派工資訊</h1>
+    <h1>當日已派工資訊</h1>
     <table id="Dispatch_Y_Table" class="table table-hover tablesorter">
         <thead class="thead-light">
             <tr>
-            <th>工令編號</th>
-            <th>道次流程</th>
-            <th>道次名稱</th>
-            <th>產品代號</th>
-            <th>產品名稱</th>
-            <th>作業人員</th>
-            <th>作業時間(小時)</th>
+                <th>工令編號</th>
+                <th>道次流程</th>
+                <th>道次名稱</th>
+                <th>產品代號</th>
+                <th>產品名稱</th>
+                <th>預計作業人員</th>
+                <th>預計作業時間(小時)</th>
+                <th>預計作業數量</th>
             </tr>
         </thead>
         <tbody id="Dispatch_Y_Tbody">
@@ -60,6 +62,7 @@
                     <td>@Dispatch_dt.Rows[i][4]</td>
                     <td>@Dispatch_dt.Rows[i][5]</td>
                     <td>@Dispatch_dt.Rows[i][6]</td>
+                    <td>@Dispatch_dt.Rows[i][7]</td>
                 </tr>
             }
         </tbody>
@@ -85,47 +88,65 @@
                                 var result = JSON.parse(data);
                                 var str = '';
                                 $.each(result,function(i,item){
-                                    console.log(i+"\t"+item.Process+"\t"+item.ProcessName+"\t"+item.productid+"\t"+item.product+"\t"+item.StaffName);
+                                    console.log(i+"\t"+item.process+"\t"+item.processname+"\t"+item.productid+"\t"+item.product+"\t"+item.staff_name[0]+"\t"+item.quantity);
                                     var cou = $("#Dispatch_Tbody tr").length;                             
-                                    if(i!=0){
-                                        if(item.Process.toString().indexOf(str)==-1){
-                                            $("#Dispatch_Tbody").append(function(){
-                                            return "<tr role=\"row\">"+
-                                                        //"<td><input type=\"checkbox\"  class=\"form-check-input\" id=\"time\"  /></td>"+
-                                                        "<td>"+item.Process+"</td>"+
-                                                        "<td>"+item.ProcessName+"</td>"+
+                                    //if(i!=0){
+                                    //    if(item.Process.toString().indexOf(str)==-1){
+                                    //        $("#Dispatch_Tbody").append(function(){
+                                    //        return "<tr role=\"row\">"+
+                                    //                    //"<td><input type=\"checkbox\"  class=\"form-check-input\" id=\"time\"  /></td>"+
+                                    //                    "<td>"+item.process+"</td>"+
+                                    //                    "<td>"+item.processname+"</td>"+
+                                    //                    "<td>"+item.productid+"</td>"+
+                                    //                    "<td>"+item.product+"</td>"+
+                                    //                    "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>" +
+                                    //                    "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>" +                                                        
+                                    //                    "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"quantity\"  step=\"1\" disabled=\"true\" placeholder=\"剩餘數量"+item.quantity+"個...\" /><span id=\"qn\" style=\"display:none\">"+item.Leave_Quantity+"</span></td>"+                                                        
+                                    //                    "</tr>";
+                                    //    });
+                                    //        if(item.StaffName!=''){
+                                    //            $("#Dispatch_Tbody tr:eq("+(cou)+") td select").append("<option>"+item.StaffName+"</option>");        
+                                    //            //$("tbody tr:eq("+(cou)+") td select").val("請選擇作業人員");                                                                                            
+                                    //        }
+                                    //    }
+                                    //    else{
+                                    //        $("#Dispatch_Tbody tr:eq("+(cou-1)+") td select").append("<option>"+item.StaffName+"</option>");                                            
+                                    //    }                                        
+                                    //} 
+                                    //else{             
+                                    //    $("#Dispatch_Tbody").append(function(){
+                                    //        return "<tr role=\"row\">"+
+                                    //                    //"<td><input type=\"checkbox\"  class=\"form-check-input\" id=\"time\"  /></td>"+
+                                    //                    "<td>"+item.process+"</td>"+
+                                    //                    "<td>"+item.processname+"</td>"+
+                                    //                    "<td>"+item.productid+"</td>"+
+                                    //                    "<td>"+item.product+"</td>"+
+                                    //                    "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>" +
+                                    //                    "<td style=\"width:200px\"><input type=\"number\"  class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>" +                                                        
+                                    //                    "<td style=\"width:200px\"><input type=\"number\" class=\"form-control\" id=\"quantity\"  step=\"1\" disabled=\"true\" placeholder=\"剩餘數量"+item.quantity+"個...\" /><span id=\"qn\" style=\"display:none\">"+item.Leave_Quantity+"</span></td>"+                                                        
+                                    //                    "</tr>";
+                                    //    });                                        
+                                    //    if(item.StaffName!=''){
+                                    //        $("#staff").append("<option>"+item.StaffName+"</option>");                                                
+                                    //    }
+                                    //}                                                            
+                                    //str = item.Process;  
+
+                                    $("#Dispatch_Tbody").append(function(){
+                                            return "<tr role=\"row\">"+                                                        
+                                                        "<td>"+item.process+"</td>"+
+                                                        "<td>"+item.processname+"</td>"+
                                                         "<td>"+item.productid+"</td>"+
                                                         "<td>"+item.product+"</td>"+
-                                                        "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>"+
-                                                        "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>"+
+                                                        "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>" +
+                                                        "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>" +                                                        
+                                                        "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"quantity\"  step=\"1\" disabled=\"true\" placeholder=\"剩餘數量"+item.quantity+"個...\" /><span id=\"qn\" style=\"display:none\">"+item.quantity+"</span></td>"+                                                        
                                                         "</tr>";
-                                        });
-                                            if(item.StaffName!=''){
-                                                $("#Dispatch_Tbody tr:eq("+(cou)+") td select").append("<option>"+item.StaffName+"</option>");        
-                                                //$("tbody tr:eq("+(cou)+") td select").val("請選擇作業人員");                                                                                            
-                                            }
-                                        }
-                                        else{
-                                            $("#Dispatch_Tbody tr:eq("+(cou-1)+") td select").append("<option>"+item.StaffName+"</option>");                                            
-                                        }                                        
-                                    } 
-                                    else{             
-                                        $("#Dispatch_Tbody").append(function(){
-                                            return "<tr role=\"row\">"+
-                                                        //"<td><input type=\"checkbox\"  class=\"form-check-input\" id=\"time\"  /></td>"+
-                                                        "<td>"+item.Process+"</td>"+
-                                                        "<td>"+item.ProcessName+"</td>"+
-                                                        "<td>"+item.productid+"</td>"+
-                                                        "<td>"+item.product+"</td>"+
-                                                        "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>"+
-                                                        "<td style=\"width:200px\"><input type=\"number\"  class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>"+
-                                                        "</tr>";
-                                        });                                        
-                                        if(item.StaffName!=''){
-                                            $("#staff").append("<option>"+item.StaffName+"</option>");                                                
-                                        }
-                                    }                                                            
-                                    str = item.Process;                                    
+                                    });
+                                    $.each(item.staff_name, function (j, content) {
+                                        $("#Dispatch_Tbody tr:eq("+cou+") td select").append("<option>"+content+"</option>");
+                                    });                                    
+
                                 });    
                                 var resort = true,
                                 callback = function(){ console.log('table updated'); };
@@ -149,33 +170,56 @@
 
         $("#Dispatch_Table").on("input", "td", function () {                    
                     var value = $(this).find("select").val();         
-                    var ind = $(this).parent("tr").index();                                                                                                                    
+                    var ind = $(this).parent("tr").index();      
+                    var max_value = parseInt($(this).find("span").text());
+                    var ID = $(this).find("input").attr("id");
                     $(this).find("input").val(function(n,c){ 
                         //c=c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
-                        c=c.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g, '');
-                        if(c!='' && c<=12){
-                           return c; 
-                        }           
-                        else  if(c>12){
-                            $.alert({
-                                icon:"fas fa-exclamation-triangle",
-                                title: "錯誤",
-                                content: "作業時數不可超過12小時",
-                            });
-                            //alert('作業時數不可超過12小時');
-                            return '';
+                        c = c.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g, '');
+                        if (ID == "time") {
+                            if(c!='' && c<=12){
+                               return c; 
+                            }           
+                            else  if(c>12){
+                                $.alert({
+                                    icon:"fas fa-exclamation-triangle",
+                                    title: "錯誤",
+                                    content: "作業時數不可超過12小時",
+                                });                                
+                                return '';
+                            }
+                            else{
+                                return '';
+                            } 
                         }
-                        else{
-                            return '';
-                        }        
+                        else {
+                            c = parseInt(c);
+                            if(c!='' && c<=max_value){
+                               return c; 
+                            }           
+                            else  if(c>max_value){
+                                $.alert({
+                                    icon:"fas fa-exclamation-triangle",
+                                    title: "錯誤",
+                                    content: "作業數量不可超過工令作業數量:"+max_value+"個",
+                                });                                
+                                return '';
+                            }
+                            else{
+                                return '';
+                            } 
+                        }                               
                         //return c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
                     });                    
                     if(value == '請選擇作業人員'){
                         $("tbody tr:eq("+ind+") td:eq(5) input").attr('disabled','true');
-                        $("tbody tr:eq("+ind+") td:eq(5) input").val('');
+                        $("tbody tr:eq(" + ind + ") td:eq(5) input").val('');
+                        $("tbody tr:eq("+ind+") td:eq(6) input").attr('disabled','true');
+                        $("tbody tr:eq("+ind+") td:eq(7) input").val('');
                     }
                     else{
                         $("tbody tr:eq("+ind+") td:eq(5) input").removeAttr('disabled');
+                        $("tbody tr:eq("+ind+") td:eq(6) input").removeAttr('disabled');
                     }
                     //this.value = this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
                 });
@@ -200,6 +244,8 @@
                         var product = item.children[j].children[3].innerText;
                         var staff = item.children[j].children[4].children[0].value;
                         var time = item.children[j].children[5].children[0].value;
+                        var quantity = item.children[j].children[6].children[0].value;
+                        
                         /*
                         var process = item.children[0].innerText;
                         var processname = item.children[1].innerText;
@@ -208,7 +254,7 @@
                         var staff = item.children[4].children[0].value;
                         var time = item.children[5].children[0].value;
                         */
-                        if(staff != '請選擇作業人員' && time !=''){
+                        if(staff != '請選擇作業人員' && time !='' && quantity != ''){
                             var obj = new Object();
                             obj.order = order;
                             obj.process = process;
@@ -217,6 +263,7 @@
                             obj.product = product;
                             obj.staff = staff;
                             obj.time = time;
+                            obj.quantity = quantity;
                             arr = arr.concat(obj);
                         }
                         else{
@@ -228,7 +275,7 @@
                             //alert('有資料尚未輸入完成,請確認');
                             exit;
                         }                    
-                        console.log(order+'\t'+process+'\t'+processname+'\t'+productid+'\t'+product+'\t'+staff+'\t'+time);
+                        console.log(order+'\t'+process+'\t'+processname+'\t'+productid+'\t'+product+'\t'+staff+'\t'+time+'\t'+quantity);
                     }                                                               
                 });  
                 if(arr.length==0){

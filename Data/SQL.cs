@@ -133,18 +133,50 @@ namespace MES_MVC.Data
             conn.Open();
             for(int i=0;i<list.Count;i++)
             {
+                //SqlCommand cmd = new SqlCommand(string.Format(
+                //    @"
+                //    declare @Q INT
+                //    set @Q = (SELECT RequestQuantity FROM dbo.[order] where [order-id]='{0}')
+                //    declare @S INT
+                //    set @S = (SELECT [Staff-Num] FROM dbo.[Staff-Inf] where [Staff-Name]=N'{3}')
+                //    INSERT INTO [dbo].[Schedule-Inf]([order-id],Quantity,[Process-Num],[Schedule-Hour],[Staff-Num])
+                //    VALUES('{0}', @Q, '{1}', '{2}', @S)", list[i].order,list[i].process,list[i].time,list[i].staff),conn);
                 SqlCommand cmd = new SqlCommand(string.Format(
-                    @"
-                    declare @Q INT
-                    set @Q = (SELECT RequestQuantity FROM dbo.[order] where [order-id]='{0}')
+                    @"                    
                     declare @S INT
-                    set @S = (SELECT [Staff-Num] FROM dbo.[Staff-Inf] where [Staff-Name]=N'{3}')
+                    set @S = (SELECT [Staff-Num] FROM dbo.[Staff-Inf] where [Staff-Name]=N'{4}')
                     INSERT INTO [dbo].[Schedule-Inf]([order-id],Quantity,[Process-Num],[Schedule-Hour],[Staff-Num])
-                    VALUES('{0}', @Q, '{1}', '{2}', @S)", list[i].order,list[i].process,list[i].time,list[i].staff),conn);
+                    VALUES('{0}',{1}, '{2}', '{3}', @S)", list[i].order,list[i].quantity, list[i].process, list[i].time, list[i].staff), conn);
                 cmd.ExecuteNonQuery();
                 if(i==list.Count-1)
                 {
-                    SqlCommand cmd_ = new SqlCommand(string.Format(@"update [dbo].[order] set Dispatch = 1 where [order-id]='{0}'",list[i].order),conn);
+                    //SqlCommand cmd_ = new SqlCommand(string.Format(@"update [dbo].[order] set Dispatch = 1 where [order-id]='{0}'",list[i].order),conn);
+                    SqlCommand cmd_ = new SqlCommand(string.Format(@"declare @C INT
+                    set @C = (SELECT COUNT(*) FROM product_Inf where [product-id] = '{1}')
+                    declare @C_ INT
+                    set @C_ = (SELECT COUNT(*) from	
+                    (
+                    SELECT a.*,b.RequestQuantity
+                    ,CASE WHEN b.RequestQuantity - a.Quantity <=0
+                    THEN 1
+                    ELSE 0
+                    END 
+                    'Status'
+                    FROM
+                    (
+                    SELECT [order-id],[Process-Num],SUM(Quantity) as 'Quantity' FROM dbo.[Schedule-Inf]
+                    where [order-id] = '{0}'
+                    GROUP BY [order-id],[Process-Num]
+                    )a
+                    LEFT JOIN 
+                    dbo.[order] b
+                    on a.[order-id] = b.[order-id]
+                    )aa
+                    where aa.Status = 1)
+                    IF @C = @C_
+                    BEGIN
+	                    update [dbo].[order] set Dispatch = 1 where [order-id]='{0}'
+                    END", list[i].order,list[i].productid), conn);
                     cmd_.ExecuteNonQuery();
                 }
             }

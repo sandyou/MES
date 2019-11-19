@@ -23,7 +23,9 @@ namespace MES_MVC.Models
         public string processname { get; set; }
         public string productid { get; set; }
         public string product { get; set; }
+        public string quantity { get; set; }
         public string staff { get; set; }
         public string time { get; set; }
+        public string[] staff_name { get; set; }
     }
 }
