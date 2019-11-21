@@ -4,14 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MES系統</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-4.3.1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/style2.css" />
     <link rel="stylesheet" href="~/lib/jquery_confirm/dist/jquery-confirm.min.css">
     <!-- Font Awesome CSS CDN-->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.0.13/css/all.css">
     <!-- Bootstrap CSS CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
+    @*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />*@
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="~/css/style2.css" />
     <!-- Tablesorter CSS -->
@@ -25,14 +25,14 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
     <!-- <script src="~/lib/jquery/dist/jquery.min.js"></script> -->
     <script src="~/lib/jquery/dist/jquery-3.3.1.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap-4.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
     <!-- Popper.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap-4.3.1/dist/js/bootstrap.min.js"></script>
     <!-- jQuery Custom Scroller CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
     <!-- load jQuery and tablesorter scripts -->
@@ -79,7 +79,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
                         <i class="fas fa-align-left"></i>
 
                     </button>
@@ -143,30 +143,19 @@
 
             $("#Schedule_Table").on("click", "td", function () {
                 var x = $(this).attr('id');
-                var id = $(this).text();
-                var newwin = window.open();   //此行一定要如此書寫,否則失效
-                if (x == 'product-id') {                    
-                    //newwin.location = 'Information_Page?id=' + id;
-                    newwin.location = '/Home/Information_Page?id=' + id + '&status=Initial';
+                var id = $(this).text();                
+                if (x == 'product-id') {                                        
+                    var order = $(this).parent("tr").find("td").eq(0).text();
+                    var newwin = window.open();   //此行一定要如此書寫,否則失效
+                    newwin.location = '/Home/Information_Page?order='+order+'&productid=' + id+'&status=product';
                 }
-                else if (x == 'order-id') {
-                    //newwin.location = '/Home/Information_Page';
-                }
-                //alert($(this).text());
+                else if (x == 'order-id') {     
+                    var productid = $(this).parent("tr").find("td").eq(1).text();
+                    var newwin = window.open();   //此行一定要如此書寫,否則失效
+                    newwin.location = '/Home/Information_Page?order='+id+'&productid=' + productid+'&status=order';
+                }                
             });
         });
     </script>
-
-
-
-
-
-
-    <!-- <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - MES_MVC- <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer> -->
-
 </body>
 </html>

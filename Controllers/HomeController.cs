@@ -77,13 +77,16 @@ namespace MES_MVC.Controllers
                                             order by CONVERT(varchar(20),a.ST_Date,23) desc");
             //要在修改
             dt[1] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',
-                                                b.product,b.Process,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+                                                b.product,b.Process,c.[Process-Name],a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
                                                 ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
                                                 ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
-                                                 from [MES-Table].[dbo].[order] a
+                                                from [MES-Table].[dbo].[order] a
                                                 left join 
                                                 [MES-Table].[dbo].[product_Inf] b
                                                 on a.[product-id] = b.[product-id] 
+                                                LEFT JOIN
+                                                [MES-Table].dbo.Process_Inf c
+                                                on b.Process = c.Process
                                                 --where a.Dispatch <> 0
                                                 order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
             ViewData["Table"]=dt;
@@ -91,9 +94,9 @@ namespace MES_MVC.Controllers
             return View();
         }
 
-        public IActionResult Information_Page(string  id,string status)
+        public IActionResult Information_Page(string  order,string productid,string status)
         {        
-            conn = new SQL(this.configuration);                        
+            conn = new SQL(this.configuration);               
             ViewData["Table"] =conn.Get_Information_Data(string.Format(
             @"select
             distinct
@@ -109,9 +112,20 @@ namespace MES_MVC.Controllers
             dbo.Machine_Inf c
             on b.[Machine-Num] = c.[Machine-Num]
             where a.[product-id]='{0}'
-            order by a.Process",id));            
-            ViewData["ProductId"] = id;
-            ViewData["ProductName"]=conn.Get_ProductName(id);
+            order by a.Process", productid));
+            ViewData["Order"] = order;
+            ViewData["ProductId"] = productid;
+            ViewData["ProductName"]=conn.Get_ProductName(productid);
+            if (status == "order")
+            {
+                ViewData["Order_dis"] = "inline";
+                ViewData["Product_dis"] = "none";
+            }
+            else
+            {
+                ViewData["Order_dis"] = "none";
+                ViewData["Product_dis"] = "inline";
+            }
             return View();
         }
 

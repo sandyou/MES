@@ -227,6 +227,55 @@ a.article:hover {
     box-shadow: 0 0 1px #111 inset, 0 0 4px green;
 }
 
+/* Informatione_Page*/
+#Information_Contet {
+    width: calc(100% - 250px);
+    padding: 40px;
+    margin: 0 auto;
+    /*min-height: 100vh;*/
+    transition: all 0.3s;
+    top: 0;
+    right: 0;
+}
+
+#card {
+    width: calc(100% - 15px);
+    margin: 6px auto;
+}
+
+#card-title {
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    text-align: center;
+    background: rgba(0,0,0,.125);
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Microsoft JhengHei;
+    height: 100%;
+}
+
+#card-body {
+    border-bottom: 1px solid rgba(0,0,0,.125);    
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Microsoft JhengHei;
+    height:100%;
+}
+
+
+
+#card-body #row {
+    padding: 18px 25px;
+    font-weight: bold;
+    font-size: 1.5rem
+}
+
+#Order_Information {
+    width: calc(100% - 15px);
+    margin: 0 auto;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
 /*
     Td
 */
@@ -244,7 +293,7 @@ Table th,td{
     cursor: pointer;
 } */
 
-#Schedule_Table  td#product-id {
+#Schedule_Table  td#product-id,td#order-id{
     cursor: pointer;
 }
 

@@ -137,7 +137,6 @@ C:\Users\ai-pc10\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\runtimes\win-x
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\runtimes\win-x86\native\sni.dll
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
-C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.csprojAssemblyReference.cache
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.RazorAssemblyInfo.cache
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.RazorAssemblyInfo.cs
@@ -166,3 +165,4 @@ C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.Views.
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.csproj.CopyComplete
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.dll
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.pdb
+C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.csprojAssemblyReference.cache
