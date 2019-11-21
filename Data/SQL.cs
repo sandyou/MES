@@ -44,11 +44,10 @@ namespace MES_MVC.Data
             }                                   
         }
 
-        public string Get_ProductName(string id)
+        public string Get_ColumnData(string cmd_str)
         {
             conn.Open();
-            SqlCommand cmd = new SqlCommand(string.Format(@"SELECT [product]      
-                            FROM[MES-Table].[dbo].[product_Inf] where[product-id] = {0}", id), conn);
+            SqlCommand cmd = new SqlCommand(cmd_str, conn);
             try
             {
                 string str = cmd.ExecuteScalar().ToString();

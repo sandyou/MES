@@ -98,24 +98,68 @@ namespace MES_MVC.Controllers
         {        
             conn = new SQL(this.configuration);               
             ViewData["Table"] =conn.Get_Information_Data(string.Format(
-            @"select
-            distinct
-            a.[Process] as '道次編號',
-            b.[Process-Name] as '道次名稱',
-            c.[Machine-Num] as '機台編號',
-            c.[Machine-Name] as '機台名稱'
-            from dbo.product_Inf a
-            left join 
-            dbo.Process_Inf b
-            on a.Process = b.Process
-            left join 
-            dbo.Machine_Inf c
-            on b.[Machine-Num] = c.[Machine-Num]
-            where a.[product-id]='{0}'
-            order by a.Process", productid));
+                                                                        @"select
+                                                                        distinct
+                                                                        a.[Process] as '道次編號',
+                                                                        b.[Process-Name] as '道次名稱',
+                                                                        c.[Machine-Num] as '機台編號',
+                                                                        c.[Machine-Name] as '機台名稱'
+                                                                        from dbo.product_Inf a
+                                                                        left join 
+                                                                        dbo.Process_Inf b
+                                                                        on a.Process = b.Process
+                                                                        left join 
+                                                                        dbo.Machine_Inf c
+                                                                        on b.[Machine-Num] = c.[Machine-Num]
+                                                                        where a.[product-id]='{0}'
+                                                                        order by a.Process", productid));
+            ViewData["Today_Table"] = conn.Get_Information_Data(string.Format(@"SELECT DISTINCT a.[Schedule-Num],a.[order-id],c.product,f.[Staff-Name],d.[Process-Name],e.[Machine-Name],a.Quantity,a.[Process-Num] FROM [dbo].[Schedule-Inf] a
+                                                                                LEFT JOIN 
+                                                                                [order] b
+                                                                                on a.[order-id] = b.[order-id]
+                                                                                LEFT JOIN
+                                                                                product_Inf c
+                                                                                on b.[product-id] = c.[product-id]
+                                                                                LEFT JOIN
+                                                                                Process_Inf d
+                                                                                on a.[Process-Num] = d.Process
+                                                                                LEFT JOIN
+                                                                                Machine_Inf e
+                                                                                on d.[Machine-Num] = e.[Machine-Num]
+                                                                                LEFT JOIN
+                                                                                [Staff-Inf] f
+                                                                                on a.[Staff-Num] = f.[Staff-Num]
+                                                                                where a.[order-id]='{0}' and a.Status=0
+                                                                                order by a.[Process-Num]", order));
+            ViewData["History_Table"] = conn.Get_Information_Data(string.Format(@"SELECT DISTINCT a.[Schedule-Num],a.[order-id],c.product,f.[Staff-Name],d.[Process-Name],e.[Machine-Name],a.Quantity
+                                                                                ,CONVERT(nvarchar(20),b.ST_Date,23) as 'ST_Date'
+                                                                                ,CONVERT(nvarchar(20),b.End_Date,23) as 'End_Date'
+                                                                                ,a.[Process-Num] FROM [dbo].[Schedule-Inf] a
+                                                                                LEFT JOIN 
+                                                                                [order] b
+                                                                                on a.[order-id] = b.[order-id]
+                                                                                LEFT JOIN
+                                                                                product_Inf c
+                                                                                on b.[product-id] = c.[product-id]
+                                                                                LEFT JOIN
+                                                                                Process_Inf d
+                                                                                on a.[Process-Num] = d.Process
+                                                                                LEFT JOIN
+                                                                                Machine_Inf e
+                                                                                on d.[Machine-Num] = e.[Machine-Num]
+                                                                                LEFT JOIN
+                                                                                [Staff-Inf] f
+                                                                                on a.[Staff-Num] = f.[Staff-Num]
+                                                                                where a.[order-id]='{0}' and a.Status<>0
+                                                                                ORDER BY a.[Process-Num]",order));
             ViewData["Order"] = order;
             ViewData["ProductId"] = productid;
-            ViewData["ProductName"]=conn.Get_ProductName(productid);
+            ViewData["ProductName"]= conn.Get_ColumnData(string.Format(@"SELECT [product]      
+                                                                        FROM [MES-Table].[dbo].[product_Inf] where[product-id] = {0}",productid));
+            ViewData["Exp_ST_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),ST_Date,23) as 'ST_Date' FROM [dbo].[order]
+                                                                        where [order-id]='{0}'",order));
+            ViewData["Exp_End_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),End_Date,23) as 'End_Date' FROM [dbo].[order]
+                                                                        where [order-id]='{0}'",order));
             if (status == "order")
             {
                 ViewData["Order_dis"] = "inline";
@@ -141,7 +185,7 @@ namespace MES_MVC.Controllers
                 judge = conn.Order_Repeat(order);            
             }                          
             ViewData["OrderID"] = order;  
-            ViewData["Product_Table"] = conn.Get_Information_Data(@"SELECT distinct [product-id]
+            ViewData["Product_Table"] = conn.Get_Information_Data(@"SELECT distinct TOP 5 [product-id]
                                                          FROM[MES-Table].[dbo].[product_Inf] order by [product-id]");
             ViewData["Process_Table"]=conn.Get_Information_Data(@"SELECT distinct [Process]
                                                          FROM[MES-Table].[dbo].[Process_Inf] order by [Process]");
@@ -278,7 +322,8 @@ namespace MES_MVC.Controllers
         public  IActionResult Get_ProductName(string productid)
         {
             conn = new SQL(this.configuration);
-            string  id = conn.Get_ProductName(productid);
+            string  id = conn.Get_ColumnData(string.Format(@"SELECT [product]      
+                            FROM [MES-Table].[dbo].[product_Inf] where[product-id] = {0}", productid));
             string time = conn.Get_ProductTime(productid);            
             item _item = new item()
             {

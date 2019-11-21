@@ -229,13 +229,15 @@ a.article:hover {
 
 /* Informatione_Page*/
 #Information_Contet {
-    width: calc(100% - 250px);
-    padding: 40px;
-    margin: 0 auto;
+    width: calc(100% - 15px);
+    padding: 10px;
+    margin: 0 auto;    
     /*min-height: 100vh;*/
     transition: all 0.3s;
     top: 0;
     right: 0;
+    border:1px solid;
+    border-color: #fff #dee2e6 #dee2e6 #dee2e6;
 }
 
 #card {
@@ -261,19 +263,28 @@ a.article:hover {
     height:100%;
 }
 
-
-
 #card-body #row {
     padding: 18px 25px;
     font-weight: bold;
     font-size: 1.5rem
 }
 
-#Order_Information {
+#Order_Nav {
     width: calc(100% - 15px);
     margin: 0 auto;
     font-size: 1.1rem;
     font-weight: bold;
+}
+
+#Order_Information {
+    width: calc(100% - 15px);
+    margin: 0 auto;
+    border: 1px solid;
+    border-color: #fff#dee2e6 #dee2e6 #dee2e6;
+}
+
+#Today_Table.hide, #History_Table.hide {
+    display: none;
 }
 
 /*
@@ -302,10 +313,10 @@ Table th,td{
     /*cursor: pointer;*/
 }
 
-#datagrid_process td, th {
-    text-align: center;
-    /*cursor: pointer;*/
-}
+/*#datagrid_process td, th {
+    text-align: center;    
+}*/
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */

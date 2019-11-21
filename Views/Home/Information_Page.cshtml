@@ -1,6 +1,8 @@
 ﻿@{
     @using System.Data;
-    Layout=null;
+    Layout=null;    
+    DataTable Today_dt = (DataTable)ViewData["Today_Table"];
+    DataTable History_dt = (DataTable)ViewData["History_Table"];
     DataTable dt = (DataTable)ViewData["Table"];
 }
 <!DOCTYPE html>
@@ -67,7 +69,7 @@
         <div class="card" id="card">
 
             <div class="card-body" id="card-title">
-                工單資訊
+                工令資訊
             </div>
             <div class="card-body" id="card-body">
                 <div class="row" id="row">
@@ -81,18 +83,18 @@
                     <div class="col-sm">生產數量:1245</div>
                 </div>
                 <div class="row" id="row">
-                    <div class="col-sm">預計開始時間:2019-01-01</div>
+                    <div class="col-sm">預計開始時間:@ViewData["Exp_ST_Date"]</div>
 
-                    <div class="col-sm">預計結束時間:2019-01-01</div>
+                    <div class="col-sm">預計結束時間:@ViewData["Exp_End_Date"]</div>
                 </div>
                 <div class="row" id="row">
-                    <div class="col-sm">實際開始時間:2019-01-01</div>
+                    <div class="col-sm">實際開始時間:@ViewData["Exp_ST_Date"]</div>
 
-                    <div class="col-sm">實際結束時間:2019-01-01</div>
+                    <div class="col-sm">實際結束時間:</div>
                 </div>
             </div>
         </div>
-        <div id="Order_Information">
+        <div id="Order_Nav">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">當日工令資訊</a>
@@ -100,10 +102,79 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">歷史工令資訊</a>
                 </li>
-                
+
             </ul>
         </div>
-        <div style="padding:20px;margin:0 auto;width:60%">
+        <div id="Information_Contet">
+            <!-- <asp:DataGrid ID="datagrid_process" CssClass="table  table-hover" ></asp:DataGrid>    -->
+
+            <!--當日工令資訊-->
+            <table id="Today_Table" class="table table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>工令編號</th>
+                        <th>產品名稱</th>
+                        <th>作業人員</th>
+                        <th>道次名稱</th>
+                        <th>使用機台</th>
+                        <th>目前使用時數(小時)</th>
+                        <th>派工數量</th>
+                        <th>生產數量</th>
+                        <th>完成進度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Today_dt.Rows.Count; i++)
+                    {
+                        <tr>
+                            <td>@Today_dt.Rows[i][1]</td>
+                            <td>@Today_dt.Rows[i][2]</td>
+                            <td>@Today_dt.Rows[i][3]</td>
+                            <td>@Today_dt.Rows[i][4]</td>
+                            <td>@Today_dt.Rows[i][5]</td>
+                            <td>0</td>
+                            <td>@Today_dt.Rows[i][6]</td>
+                            <td>0</td>
+                            <td><div class=progress><div style="width:0%;background-color:red" aria-valuemax=100 aria-valuemin=0 aria-valuenow=0 role=progressbar class="red progress-bar"><span>0%</span></div></div></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <!--歷史工令資訊-->
+            <table id="History_Table" class="table table-hover hide">
+                <thead class="thead-light">
+                    <tr>
+                        <th>工令編號</th>
+                        <th>產品名稱</th>
+                        <th>作業人員</th>
+                        <th>道次名稱</th>
+                        <th>使用機台</th>
+                        <th>派工數量</th>
+                        <th>生產數量</th>
+                        <th>開始作業時間</th>
+                        <th>完成作業時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < History_dt.Rows.Count; i++)
+                    {
+                        <tr>
+                            <td>@History_dt.Rows[i][1]</td>
+                            <td>@History_dt.Rows[i][2]</td>
+                            <td>@History_dt.Rows[i][3]</td>
+                            <td>@History_dt.Rows[i][4]</td>
+                            <td>@History_dt.Rows[i][5]</td>
+                            <td>@History_dt.Rows[i][6]</td>
+                            <td>@History_dt.Rows[i][6]</td>
+                            <td>@History_dt.Rows[i][7]</td>
+                            <td>@History_dt.Rows[i][8]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+        @*<div style="padding:20px;margin:0 auto;width:60%">
             <br>
             <table class="table table-hover table-pro">
                 <thead>
@@ -125,7 +196,7 @@
         <div class="line"></div>
         <h1 style="font-weight:bold;text-align:center">本日工令資訊</h1>
         <div id="Information_Contet">
-            <!-- <asp:DataGrid ID="datagrid_process" CssClass="table  table-hover" ></asp:DataGrid>    -->
+            
             <table id="datagrid_process" class="table table-hover">
                 <thead class="thead-light">
                     <tr>
@@ -147,7 +218,7 @@
                     }
                 </tbody>
             </table>
-        </div>
+        </div>*@
         <div class="line"></div>
     </div>
 
@@ -177,18 +248,25 @@
             //    })
             //})
             //簡易資料搜尋
-            $("#Information_Input").on("keyup", function () { //Table Filter
-                var value = $(this).val().toLowerCase();
-                $("#datagrid tbody tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
+            //$("#Information_Input").on("keyup", function () { //Table Filter
+            //    var value = $(this).val().toLowerCase();
+            //    $("#datagrid tbody tr").filter(function () {
+            //        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            //    });
+            //});
 
             $(".nav-item a").on('click', function () {
                 $(".nav-item a").removeClass("active");
                 $(this).addClass("active");
+                if ($(this).text() == "歷史工令資訊") {
+                    $("#Today_Table").addClass("hide");
+                    $("#History_Table").removeClass("hide");
+                }
+                else {
+                    $("#Today_Table").removeClass("hide");
+                    $("#History_Table").addClass("hide");
+                }
             });
-
         });
     </script>
 </body>
