@@ -287,6 +287,34 @@ a.article:hover {
     display: none;
 }
 
+/*WorkStatus_Page*/
+#col {    
+    height: 3vw;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin: 0px 30px 0px 0px;
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+}
+
+.green#col {
+    background: forestgreen;
+}
+
+.orange#col{
+    background:orange;
+}
+
+.gray#col{
+    background:gray;
+}
+
+.card.click{
+    cursor:pointer;
+}
+
 /*
     Td
 */

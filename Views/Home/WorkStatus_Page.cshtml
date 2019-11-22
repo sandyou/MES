@@ -1,9 +1,9 @@
 @{
-    ViewData["Title"]="產線派工情況";    
+    ViewData["Title"] = "當日產線即時情況";
     @using System.Data;
     DataTable dt = (DataTable)ViewData["WorkStatus_Table"];
 }
-   <input class="form-control" id="WorkStatus_Input" type="text" placeholder="請輸入工令編號..."><br>
+@*<input class="form-control" id="WorkStatus_Input" type="text" placeholder="請輸入工令編號..."><br>
     <table id="WorkStatus_Table" class="table table-hover tablesorter">
         <thead class="thead-light">
             <tr>
@@ -19,7 +19,7 @@
                 <th>目前狀態</th>
             </tr>
         </thead>
-        <tbody>                          
+        <tbody>
                @for(int i=0;i<dt.Rows.Count;i++)
                {
                 <tr>
@@ -36,5 +36,350 @@
                 </tr>
                }
         </tbody>
-    </table>
-    <div class="line"></div>
+    </table>*@
+
+@*<div class="row">
+        <div class="col-4" style="text-align:center">
+            <i class="fas fa-play"></i>
+        </div>
+        <div class="col-4" style="text-align:center">
+            <i class="fas fa-pause"></i>
+        </div>
+        <div class="col-4" style="text-align:center">
+            <i class="fas fa-power-off"></i>
+        </div>
+    </div>*@
+    <div class="row" style="margin: 0 auto;width: 42%;">
+        <div class="col green" id="col">
+            <i class="fas fa-play" style="font-size: 2.5rem;color: white;"></i>
+            <div style="width: 100%;text-align: center;">
+                運轉中
+            </div>
+        </div>
+        <div class="col orange" id="col">
+            <i class="fas fa-pause" style="font-size: 2.5rem;color: white;"></i>
+            <div style="width: 100%;text-align: center;">
+                待機中
+            </div>
+        </div>
+        <div class="col gray" id="col">
+            <i class="fas fa-power-off" style="font-size: 2.5rem;color: white;"></i>
+            <div style="width: 100%;text-align: center;">停機中</div>
+        </div>
+    </div>
+    <br>               
+
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: 1.5rem;font-weight: bold;">
+                A線機台生產狀態
+            </div>
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="font-size: 1.5rem;font-weight: bold;">
+                B線機台生產狀態
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="font-size: 1.5rem;font-weight: bold;">
+                C線機台生產狀態
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                    <div class="card-body" style="border:2.5px solid orange">
+                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
+                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+<div class="line"></div>
