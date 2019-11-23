@@ -226,33 +226,44 @@ namespace MES_MVC.Controllers
             //                                                        left join 
             //                                                        [MES-Table].[dbo].[Machine_Inf] c on b.Process = c.[Local-Process]
             //                                                        order by a.[order-id] desc");
-            ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"SELECT DISTINCT a.[order-id]
-            --,a.[Process-Num]
-            --,d.[Process-Name]
-            ,b.[product-id]
-            ,c.product
-            --,e.[Staff-Name]
-            --,a.[Schedule-Hour]
-            ,f.[Machine-Num]
-            ,f.[Machine-Name]
-            ,CONVERT(varchar(20),b.ST_Date,23) as 'ST_Date'
-            ,b.RequestQuantity
-            FROM [dbo].[Schedule-Inf] a
-            LEFT JOIN 
-            dbo.[order] b
-            on a.[order-id] = b.[order-id]
-            LEFT JOIN 
-            dbo.product_Inf c 
-            on b.[product-id] = c.[product-id]
-            LEFT JOIN 
-            dbo.Process_Inf d
-            on a.[Process-Num] = d.Process
-            LEFT JOIN 
-            dbo.[Staff-Inf] e
-            on a.[Staff-Num] = e.[Staff-Num]
-            LEFT JOIN 
-            dbo.Machine_Inf f
-            on a.[Process-Num] = f.[Local-Process]");
+            //ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"SELECT DISTINCT a.[order-id]
+            //--,a.[Process-Num]
+            //--,d.[Process-Name]
+            //,b.[product-id]
+            //,c.product
+            //--,e.[Staff-Name]
+            //--,a.[Schedule-Hour]
+            //,f.[Machine-Num]
+            //,f.[Machine-Name]
+            //,CONVERT(varchar(20),b.ST_Date,23) as 'ST_Date'
+            //,b.RequestQuantity
+            //FROM [dbo].[Schedule-Inf] a
+            //LEFT JOIN 
+            //dbo.[order] b
+            //on a.[order-id] = b.[order-id]
+            //LEFT JOIN 
+            //dbo.product_Inf c 
+            //on b.[product-id] = c.[product-id]
+            //LEFT JOIN 
+            //dbo.Process_Inf d
+            //on a.[Process-Num] = d.Process
+            //LEFT JOIN 
+            //dbo.[Staff-Inf] e
+            //on a.[Staff-Num] = e.[Staff-Num]
+            //LEFT JOIN 
+            //dbo.Machine_Inf f
+            //on a.[Process-Num] = f.[Local-Process]");
+            ViewData["Machine_Status_Table"] = conn.Get_Information_Data(@"SELECT b.Team,a.[Machine-Name]
+                                                                            ,CASE WHEN a.Status = N'待機中'
+                                                                            THEN 'orange'
+                                                                            WHEN a.Status = N'運轉中'
+                                                                            THEN 'green'
+                                                                            ELSE 'gray' 
+                                                                            END 'Status'
+                                                                            FROM [dbo].[Machine_Inf] a
+                                                                            LEFT JOIN 
+                                                                            dbo.Group_Inf b
+                                                                            on a.[Local-Process] = b.[Process-Num]");
             return View();
         }
 

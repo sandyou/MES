@@ -2,6 +2,7 @@
     ViewData["Title"] = "當日產線即時情況";
     @using System.Data;
     DataTable dt = (DataTable)ViewData["WorkStatus_Table"];
+    DataTable Machine_dt = (DataTable)ViewData["Machine_Status_Table"];
 }
 @*<input class="form-control" id="WorkStatus_Input" type="text" placeholder="請輸入工令編號..."><br>
     <table id="WorkStatus_Table" class="table table-hover tablesorter">
@@ -64,20 +65,22 @@
         </div>
         <div class="col gray" id="col">
             <i class="fas fa-power-off" style="font-size: 2.5rem;color: white;"></i>
-            <div style="width: 100%;text-align: center;">停機中</div>
+            <div style="width: 100%;text-align: center;">
+                停機中
+            </div>
         </div>
     </div>
     <br>               
 
     <div class="accordion" id="accordionExample">
         <div class="card">
-            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: 1.5rem;font-weight: bold;">
+            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
                 A線機台生產狀態
             </div>
             <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
                 <table class="table table-borderless">
                     <tbody>
-                        <tr>
+                        @*<tr>
                             <td>
                                 <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
                                     <div class="card-body" style="border:2.5px solid orange">
@@ -126,254 +129,216 @@
                                     </div>
                                 </div>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+                        </tr>*@
+                        @{ int cou = 0;int loop=0 ; bool flag = false; bool fla = false;bool wrap = false;}
+                        @while(flag==false)
+                        {
+                            <tr>
+                                @while(fla == false)
+                                {
+                                    @for (int i = loop; i < Machine_dt.Rows.Count; i++)
+                                    {                                        
+                                        if(Machine_dt.Rows[i][0].ToString()=="A")
+                                        {
+                                            if(cou%6==0 && cou!=0 && wrap==true)
+                                            {
+                                                fla = true;
+                                                wrap = false;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                wrap = true;
+                                                <td>
+                                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                                    <div class="card-body @Machine_dt.Rows[i][2].ToString()">
+                                                        <p class="card-text @Machine_dt.Rows[i][2].ToString()">@Machine_dt.Rows[i][1]</p>
+                                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                                    </div>
+                                                </div>
+                                                </td>                                                                         
+                                            }                                            
+                                            cou++;
+                                        }
+                                        if(i==Machine_dt.Rows.Count-1)
+                                        {
+                                            flag = true;
+                                            fla = true;
+                                            break;
+                                        }
+                                        loop++;
+                                    }
+                                }
+                            </tr>
+                            fla = false;
+                        }                        
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="card">
-            <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="font-size: 1.5rem;font-weight: bold;">
+            <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
                 B線機台生產狀態
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
+                            @{ cou = 0; loop = 0;  flag = false;  fla = false;  wrap = false;}
+                            @while (flag == false)
+                            {
+                                <tr>
+                                    @while (fla == false)
+                                    {
+                                        @for (int i = loop; i < Machine_dt.Rows.Count; i++)
+                                        {
+                                            if (Machine_dt.Rows[i][0].ToString() == "B")
+                                            {
+                                                if (cou % 6 == 0 && cou != 0 && wrap == true)
+                                                {
+                                                    fla = true;
+                                                    wrap = false;
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    wrap = true;
+                                                    <td>
+                                                        <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                                            <div class="card-body @Machine_dt.Rows[i][2].ToString()">
+                                                                <p class="card-text @Machine_dt.Rows[i][2].ToString()">@Machine_dt.Rows[i][1]</p>
+                                                                <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                }
+                                                cou++;
+                                            }
+                                            if (i == Machine_dt.Rows.Count - 1)
+                                            {
+                                                flag = true;
+                                                fla = true;
+                                                break;
+                                            }
+                                            loop++;
+                                        }
+                                    }
+                                </tr>
+                                fla = false;
+                            }
+                            </tr>
+                        </tbody>
                 </table>
             </div>
         </div>
         <div class="card">
-            <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="font-size: 1.5rem;font-weight: bold;">
+            <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
                 C線機台生產狀態
             </div>
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
+                            @{ cou = 0; loop = 0; flag = false; fla = false; wrap = false;}
+                            @while (flag == false)
+                            {
+                                <tr>
+                                    @while (fla == false)
+                                    {
+                                        @for (int i = loop; i < Machine_dt.Rows.Count; i++)
+                                        {
+                                            if (Machine_dt.Rows[i][0].ToString() == "C")
+                                            {
+                                                if (cou % 6 == 0 && cou != 0 && wrap == true)
+                                                {
+                                                    fla = true;
+                                                    wrap = false;
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    wrap = true;
+                                                    <td>
+                                                        <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                                            <div class="card-body @Machine_dt.Rows[i][2].ToString()">
+                                                                <p class="card-text @Machine_dt.Rows[i][2].ToString()">@Machine_dt.Rows[i][1]</p>
+                                                                <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                }
+                                                cou++;
+                                            }
+                                            if (i == Machine_dt.Rows.Count - 1)
+                                            {
+                                                flag = true;
+                                                fla = true;
+                                                break;
+                                            }
+                                            loop++;
+                                        }
+                                    }
+                                </tr>
+                                fla = false;
+                            }
                         </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
+                D線機台生產狀態
+            </div>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour">
+                <table class="table table-borderless">
+                    <tbody>
                         <tr>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
+                            @{ cou = 0; loop = 0; flag = false; fla = false; wrap = false;}
+                            @while (flag == false)
+                            {
+                                <tr>
+                                    @while (fla == false)
+                                    {
+                                        @for (int i = loop; i < Machine_dt.Rows.Count; i++)
+                                        {
+                                            if (Machine_dt.Rows[i][0].ToString() == "D")
+                                            {
+                                                if (cou % 6 == 0 && cou != 0 && wrap == true)
+                                                {
+                                                    fla = true;
+                                                    wrap = false;
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    wrap = true;
+                                                    <td>
+                                                        <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
+                                                            <div class="card-body @Machine_dt.Rows[i][2].ToString()">
+                                                                <p class="card-text @Machine_dt.Rows[i][2].ToString()">@Machine_dt.Rows[i][1]</p>
+                                                                <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                }
+                                                cou++;
+                                            }
+                                            if (i == Machine_dt.Rows.Count - 1)
+                                            {
+                                                flag = true;
+                                                fla = true;
+                                                break;
+                                            }
+                                            loop++;
+                                        }
+                                    }
+                                </tr>
+                                fla = false;
+                            }
                         </tr>
                     </tbody>
                 </table>

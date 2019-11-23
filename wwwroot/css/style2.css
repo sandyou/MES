@@ -228,15 +228,24 @@ a.article:hover {
 }
 
 /* Informatione_Page*/
-#Information_Contet {
+#Information_Product_Contet {
+    width: calc(100% - 400px);
+    padding: 10px;
+    margin: 0 auto;        
+    transition: all 0.3s;
+    top: 0;
+    right: 0;
+}
+
+#Information_Order_Contet {
     width: calc(100% - 15px);
     padding: 10px;
-    margin: 0 auto;    
+    margin: 0 auto;
     /*min-height: 100vh;*/
     transition: all 0.3s;
     top: 0;
     right: 0;
-    border:1px solid;
+    border: 1px solid;
     border-color: #fff #dee2e6 #dee2e6 #dee2e6;
 }
 
@@ -313,6 +322,45 @@ a.article:hover {
 
 .card.click{
     cursor:pointer;
+}
+
+.card-body.green {
+    border: 2.5px solid forestgreen;
+}
+
+.card-body.orange {
+    border: 2.5px solid orange;
+}
+
+.card-body.gray {
+    border: 2.5px solid gray;
+}
+
+.card-text.green {
+    text-align: center;
+    padding: 3px;
+    border: 1px solid forestgreen;
+    background: forestgreen;
+    color: white;
+    font-weight: bold
+}
+
+.card-text.orange {
+    text-align: center;
+    padding: 3px;
+    border: 1px solid orange;
+    background: orange;
+    color: white;
+    font-weight: bold
+}
+
+.card-text.gray {
+    text-align: center;
+    padding: 3px;
+    border: 1px solid gray;
+    background: gray;
+    color: white;
+    font-weight: bold
 }
 
 /*
