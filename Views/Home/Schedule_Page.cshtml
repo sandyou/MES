@@ -11,57 +11,57 @@
        function Get_Information_Data()
        {
            $.ajax(
-                          {
-                              url: "@Url.Action("Get_Information_Data","Home")",
-                             method: "post",
-                             contentType: 'application/json',                                                           
-                              data:
-                              {                                  
+                    {
+                        url: "@Url.Action("Get_Information_Data","Home")",
+                        method: "post",
+                        contentType: 'application/json',                                                           
+                        data:
+                        {                                  
                                   
-                              },
-                              //dataType: "text",
-                              success: function (data) {
-                                  var result = JSON.parse(data);
-                                   $.each(result, function (i, item) {
-                                       //測試用
-                                        var val = Math.floor(Math.random()*15);
-                                        var wid = $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width");
-                                        wid = wid.substr(0,wid.indexOf("p"));
-                                        console.log(val);
-                                        var num =  new Number(wid*0.007);           
-                                        console.log(num+'a');                              
-                                        var num =Math.floor((num .toFixed(2)*100))+val;
-                                        console.log(num);                      
-                                        if(wid>=110){
-                                                $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","0%");
-                                                $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("0%");    
-                                        }                                            
-                                        else{
-                                                if(num>100){
-                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","100%");
-                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("100%");  
-                                                }
-                                                else{
-                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width",num+"%");
-                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html(num+"%");  
-                                                }                                                
+                        },
+                        //dataType: "text",
+                        success: function (data) {
+                            var result = JSON.parse(data);
+                            $.each(result, function (i, item) {
+                                //測試用
+                                var val = Math.floor(Math.random()*15);
+                                var wid = $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width");
+                                wid = wid.substr(0,wid.indexOf("p"));
+                                console.log(val);
+                                var num =  new Number(wid*0.007);           
+                                console.log(num+'a');                              
+                                var num =Math.floor((num .toFixed(2)*100))+val;
+                                console.log(num);                      
+                                if(wid>=110){
+                                        $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","0%");
+                                        $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("0%");    
+                                }                                            
+                                else{
+                                        if(num>100){
+                                            $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","100%");
+                                            $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("100%");  
                                         }
-                                        //$("#Schedule_Table 6tbody tr:eq("+i+")").find("td").eq(8).css("width","20%");
-                                        //$(".progress .progress-bar").css("width","60%");
-                                        //$(".progress .progress-bar span").html("60%");
-                                        //$("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width",val+"%");
-                                        //$("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html(val+"%");
-                                    }); 
-                              }, error: function (d) {
-                                  /*console.log("error");*/
-                                  $.alert({
-                                    icon:"fas fa-exclamation-triangle",
-                                    title: "錯誤",
-                                    content: "404. Please wait until the File is Loaded.",
-                                });
-                                  //alert("404. Please wait until the File is Loaded.");
-                              }
-                          });
+                                        else{
+                                            $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width",num+"%");
+                                            $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html(num+"%");  
+                                        }                                                
+                                }
+                                //$("#Schedule_Table 6tbody tr:eq("+i+")").find("td").eq(8).css("width","20%");
+                                //$(".progress .progress-bar").css("width","60%");
+                                //$(".progress .progress-bar span").html("60%");
+                                //$("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width",val+"%");
+                                //$("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html(val+"%");
+                            }); 
+                        }, error: function (d) {
+                            /*console.log("error");*/
+                            $.alert({
+                            icon:"fas fa-exclamation-triangle",
+                            title: "錯誤",
+                            content: "404. Please wait until the File is Loaded.",
+                        });
+                            //alert("404. Please wait until the File is Loaded.");
+                        }
+                    });
        }
     </script>
     <!-- <h1 style="text-align:center">工令總進度</h1><br> -->
@@ -72,7 +72,8 @@
                 <th>工令編號</th>
                 <th>產品代號</th>
                 <th>產品名稱</th>
-                <th>總數量</th>
+                <th>預計生產總數量</th>
+                <th>實際生產總數量</th>
                 <th>預計使用時數</th>
                 <th>實際使用時數</th>
                 <th>預計結束日期</th>
@@ -89,8 +90,9 @@
                     <td id="product-id">@dt[0].Rows[i][1]</td>
                     <td id="product">@dt[0].Rows[i][2]</td>
                     <td>@dt[0].Rows[i][3]</td>
+                    <td>0</td>
                     <td>@dt[0].Rows[i][4]</td>
-                    <td>@dt[0].Rows[i][4]</td>
+                    <td>0</td>
                     <td>@dt[0].Rows[i][5]</td>
                     <td>@dt[0].Rows[i][6]</td>
                     <td><div class=progress><div style="width:0%;background-color:red" aria-valuemax=100 aria-valuemin=0 aria-valuenow=60 role=progressbar class="red progress-bar"><span>0%</span></div></div></td>
@@ -104,7 +106,7 @@
                 @if (list.Count != 0)
                 {                    
                     <tr class="_true" data-node="treetable-@cou" data-pnode="treetable-parent-@temp">
-                        <td colspan="9">
+                        <td colspan="10">
                             <table id="Process_Table" class="table table-borderless" style="background-color:#fafafa;">
                                 <thead class="thead-dark">
                                     <tr>
@@ -125,10 +127,10 @@
                                             <td>@list[j][2]</td>
                                             <td>@list[j][3]</td>
                                             <td>@list[j][4]</td>
-                                            <td>@list[j][5]</td>
-                                            <td>@list[j][6]</td>
+                                            <td>0</td>
+                                            <td>0</td>
                                             <td>@list[j][7]</td>
-                                            <td>@list[j][8]</td>
+                                            <td></td>
                                             <td><div class=progress><div style="width:0%;background-color:red" aria-valuemax=100 aria-valuemin=0 aria-valuenow=60 role=progressbar class="red progress-bar"><span>0%</span></div></div></td>
                                         </tr>
                                     }

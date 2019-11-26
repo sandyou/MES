@@ -145,7 +145,10 @@ namespace MES_MVC.Data
                     declare @S INT
                     set @S = (SELECT [Staff-Num] FROM dbo.[Staff-Inf] where [Staff-Name]=N'{4}')
                     INSERT INTO [dbo].[Schedule-Inf]([order-id],Quantity,[Process-Num],[Schedule-Hour],[Staff-Num])
-                    VALUES('{0}',{1}, '{2}', '{3}', @S)", list[i].order,list[i].quantity, list[i].process, list[i].time, list[i].staff), conn);
+                    VALUES('{0}',{1}, '{2}', '{3}', @S)
+                    update dbo.Machine_Inf 
+                    set Status = N'運轉中'
+                    where [Local-Process] = '{2}' ", list[i].order,list[i].quantity, list[i].process, list[i].time, list[i].staff), conn);
                 cmd.ExecuteNonQuery();
                 if(i==list.Count-1)
                 {

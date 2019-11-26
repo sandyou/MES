@@ -3352,73 +3352,73 @@
   "RootNamespace": "MES_MVC",
   "Documents": [
     {
-      "FilePath": "Views\\Shared\\Error.cshtml",
-      "TargetPath": "Views\\Shared\\Error.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "Views\\Home\\WorkStatus_Page.cshtml",
-      "TargetPath": "Views\\Home\\WorkStatus_Page.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "Views\\Home\\Staff_Inf_Page.cshtml",
-      "TargetPath": "Views\\Home\\Staff_Inf_Page.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "Views\\Home\\Machine_Inf_Page.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\Machine_Inf_Page.cshtml",
       "TargetPath": "Views\\Home\\Machine_Inf_Page.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views\\Home\\Schedule_Page.cshtml",
-      "TargetPath": "Views\\Home\\Schedule_Page.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
+      "TargetPath": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views\\_ViewImports.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\_ViewImports.cshtml",
       "TargetPath": "Views\\_ViewImports.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views\\Home\\Dispatch_Page.cshtml",
-      "TargetPath": "Views\\Home\\Dispatch_Page.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "Views\\Shared\\_Layout.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Shared\\_Layout.cshtml",
       "TargetPath": "Views\\Shared\\_Layout.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views\\Home\\Work_Page.cshtml",
-      "TargetPath": "Views\\Home\\Work_Page.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "Views\\_ViewStart.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\_ViewStart.cshtml",
       "TargetPath": "Views\\_ViewStart.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views\\Home\\OrderInsert_Page.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\Schedule_Page.cshtml",
+      "TargetPath": "Views\\Home\\Schedule_Page.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\OrderInsert_Page.cshtml",
       "TargetPath": "Views\\Home\\OrderInsert_Page.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views\\Shared\\_Layoutt.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Shared\\_Layoutt.cshtml",
       "TargetPath": "Views\\Shared\\_Layoutt.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views\\Home\\Information_Page.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\Dispatch_Page.cshtml",
+      "TargetPath": "Views\\Home\\Dispatch_Page.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\Work_Page.cshtml",
+      "TargetPath": "Views\\Home\\Work_Page.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Shared\\Error.cshtml",
+      "TargetPath": "Views\\Shared\\Error.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\Information_Page.cshtml",
       "TargetPath": "Views\\Home\\Information_Page.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
-      "TargetPath": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\Staff_Inf_Page.cshtml",
+      "TargetPath": "Views\\Home\\Staff_Inf_Page.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\WorkStatus_Page.cshtml",
+      "TargetPath": "Views\\Home\\WorkStatus_Page.cshtml",
       "FileKind": "mvc"
     }
   ],

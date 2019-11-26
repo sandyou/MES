@@ -156,6 +156,8 @@ namespace MES_MVC.Controllers
             ViewData["ProductId"] = productid;
             ViewData["ProductName"]= conn.Get_ColumnData(string.Format(@"SELECT [product]      
                                                                         FROM [MES-Table].[dbo].[product_Inf] where[product-id] = {0}",productid));
+            ViewData["RequestQuantity"] = conn.Get_ColumnData(string.Format(@"SELECT RequestQuantity FROM [dbo].[order]
+                                                                        where [order-id]='{0}'",order));
             ViewData["Exp_ST_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),ST_Date,23) as 'ST_Date' FROM [dbo].[order]
                                                                         where [order-id]='{0}'",order));
             ViewData["Exp_End_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),End_Date,23) as 'End_Date' FROM [dbo].[order]
@@ -253,7 +255,7 @@ namespace MES_MVC.Controllers
             //LEFT JOIN 
             //dbo.Machine_Inf f
             //on a.[Process-Num] = f.[Local-Process]");
-            ViewData["Machine_Status_Table"] = conn.Get_Information_Data(@"SELECT b.Team,a.[Machine-Name]
+            ViewData["Machine_Status_Table"] = conn.Get_Information_Data(@"SELECT b.Team,a.[Machine-Num],a.[Machine-Name]
                                                                             ,CASE WHEN a.Status = N'待機中'
                                                                             THEN 'orange'
                                                                             WHEN a.Status = N'運轉中'
