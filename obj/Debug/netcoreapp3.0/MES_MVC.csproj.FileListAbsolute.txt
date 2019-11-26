@@ -167,3 +167,5 @@ C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.dll
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.pdb
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.csprojAssemblyReference.cache
 C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\TEST.cshtml.g.cs
+C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\History_Page.cshtml.g.cs
+C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\Information_Page_.cshtml.g.cs

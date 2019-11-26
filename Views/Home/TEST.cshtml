@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "工令總進度";
+    ViewData["Title"] = "歷史紀錄";
     @using System.Data;
     DataTable[] dt = (DataTable[])ViewData["Table"];
     string judge = "";
@@ -65,9 +65,9 @@
        }
 </script>
 <!-- <h1 style="text-align:center">工令總進度</h1><br> -->
-<input class="form-control" id="Schedule_Input" type="text" placeholder="請輸入工令編號...">
-<br>
-<table id="Schedule_Table" class="table table-hover tablesorter">
+@*<input class="form-control" id="Schedule_Input" type="text" placeholder="請輸入工令編號...">
+<br>*@
+<table id="Schedule_Table_" class="table table-hover tablesorter">
     <thead class="thead-light">
         <tr>
             <th>工令編號</th>
@@ -102,7 +102,7 @@
                         where row.Field<string>("orderid") == dt[0].Rows[i][0].ToString()
                         select row;
             var list = query.ToList();
-            @if (list.Count != 0)
+            @*@if (list.Count != 0)
             {
                 <tr class="_true" data-node="treetable-@cou" data-pnode="treetable-parent-@temp">
                     <td colspan="9">
@@ -139,7 +139,7 @@
                 </tr>
 
                 cou++;
-            }
+            }*@
 
         }
     </tbody>
