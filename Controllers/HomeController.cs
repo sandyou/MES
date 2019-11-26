@@ -292,6 +292,136 @@ namespace MES_MVC.Controllers
             return View();
         }
 
+        public IActionResult TEST()
+        {
+            //string connectionstring =  configuration.GetConnectionString("DefaultConnectionStrings");
+            //SqlConnection con = new SqlConnection(connectionstring);
+            //con.Open();
+            //SqlCommand cmd = new SqlCommand(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+            //                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+            //                                    ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
+            //                                    ,b.Process from [MES-Table].[dbo].[order] a
+            //                                    left join 
+            //                                    [MES-Table].[dbo].[product_Inf] b
+            //                                    on a.[product-id] = b.[product-id] order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process ", con);
+            //SqlCommand cmd = new SqlCommand(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+            //                                ,SUM(b.ProductTime) as 'Time'
+            //                                ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+            //                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
+            //                                ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+            //                                    from [MES-Table].[dbo].[order] a
+            //                                left join 
+            //                                [MES-Table].[dbo].[product_Inf] b
+            //                                on a.[product-id] = b.[product-id] 
+            //                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+            //                                ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
+            //                                order by CONVERT(varchar(20),a.ST_Date,23) desc", con);
+            //SqlDataAdapter ada =new SqlDataAdapter();
+            //DataTable dt = new DataTable();  
+            //ada.SelectCommand = cmd;
+            //ada.Fill(dt);                        
+            //con.Close();
+            conn = new SQL(this.configuration);
+            DataTable[] dt = new DataTable[2];
+            dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+                                            ,SUM(b.ProductTime) as 'Time'
+                                            --,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+                                            ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
+                                            ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+                                                from [MES-Table].[dbo].[order] a
+                                            left join 
+                                            [MES-Table].[dbo].[product_Inf] b
+                                            on a.[product-id] = b.[product-id] 
+                                            where a.Dispatch != 0
+                                            GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+                                            ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
+                                            order by CONVERT(varchar(20),a.ST_Date,23) desc");
+            //要在修改
+            dt[1] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',
+                                                b.product,b.Process,c.[Process-Name],a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+                                                ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+                                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
+                                                from [MES-Table].[dbo].[order] a
+                                                left join 
+                                                [MES-Table].[dbo].[product_Inf] b
+                                                on a.[product-id] = b.[product-id] 
+                                                LEFT JOIN
+                                                [MES-Table].dbo.Process_Inf c
+                                                on b.Process = c.Process
+                                                where a.Dispatch != 0 
+                                                order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
+
+
+
+            ViewData["Table"] = dt;
+
+            return View();
+        }
+
+        //public IActionResult History_Page(string order, string productid, string status)
+        //{
+        //    conn = new SQL(this.configuration);
+        //    ViewData["Table"] = conn.Get_Information_Data(string.Format(
+        //                                                                @"select
+        //                                                                distinct
+        //                                                                a.[Process] as '道次編號',
+        //                                                                b.[Process-Name] as '道次名稱',
+        //                                                                c.[Machine-Num] as '機台編號',
+        //                                                                c.[Machine-Name] as '機台名稱'
+        //                                                                from dbo.product_Inf a
+        //                                                                left join 
+        //                                                                dbo.Process_Inf b
+        //                                                                on a.Process = b.Process
+        //                                                                left join 
+        //                                                                dbo.Machine_Inf c
+        //                                                                on b.[Machine-Num] = c.[Machine-Num]
+        //                                                                where a.[product-id]='{0}'
+        //                                                                order by a.Process", productid));
+        //    ViewData["History_Table"] = conn.Get_Information_Data(string.Format(@"SELECT DISTINCT a.[Schedule-Num],a.[order-id],c.product,f.[Staff-Name],d.[Process-Name],e.[Machine-Name],a.Quantity
+        //                                                                        ,CONVERT(nvarchar(20),b.ST_Date,23) as 'ST_Date'
+        //                                                                        ,CONVERT(nvarchar(20),b.End_Date,23) as 'End_Date'
+        //                                                                        ,a.[Process-Num] FROM [dbo].[Schedule-Inf] a
+        //                                                                        LEFT JOIN 
+        //                                                                        [order] b
+        //                                                                        on a.[order-id] = b.[order-id]
+        //                                                                        LEFT JOIN
+        //                                                                        product_Inf c
+        //                                                                        on b.[product-id] = c.[product-id]
+        //                                                                        LEFT JOIN
+        //                                                                        Process_Inf d
+        //                                                                        on a.[Process-Num] = d.Process
+        //                                                                        LEFT JOIN
+        //                                                                        Machine_Inf e
+        //                                                                        on d.[Machine-Num] = e.[Machine-Num]
+        //                                                                        LEFT JOIN
+        //                                                                        [Staff-Inf] f
+        //                                                                        on a.[Staff-Num] = f.[Staff-Num]
+        //                                                                        where a.[order-id]='{0}' and a.Status<>0
+        //                                                                        ORDER BY a.[Process-Num]", order));
+        //    ViewData["Order"] = order;
+        //    ViewData["ProductId"] = productid;
+        //    ViewData["ProductName"] = conn.Get_ColumnData(string.Format(@"SELECT [product]      
+        //                                                                FROM [MES-Table].[dbo].[product_Inf] where[product-id] = {0}", productid));
+        //    ViewData["Exp_ST_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),ST_Date,23) as 'ST_Date' FROM [dbo].[order]
+        //                                                                where [order-id]='{0}'", order));
+        //    ViewData["Exp_End_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),End_Date,23) as 'End_Date' FROM [dbo].[order]
+        //                                                                where [order-id]='{0}'", order));
+        //    if (status == "order")
+        //    {
+        //        ViewData["Order_dis"] = "inline";
+        //        ViewData["Product_dis"] = "none";
+        //    }
+        //    else
+        //    {
+        //        ViewData["Order_dis"] = "none";
+        //        ViewData["Product_dis"] = "inline";
+        //    }
+        //    return View();
+        //}
+
+
+
+
         [HttpPost]
         public IActionResult Get_Information_Data()
         {
@@ -440,6 +570,7 @@ namespace MES_MVC.Controllers
             //string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Json(json);
         }
+
 
         public  IActionResult Dispatch_Data(string data)
         {
