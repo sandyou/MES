@@ -116,7 +116,7 @@
                                         <th>目前完成數量</th>
                                         <th>目前使用時數</th>
                                         <th>開始作業時間</th>
-                                        <th>結束作業時間</th>
+                                        @*<th>結束作業時間</th>*@
                                         <th>完成度</th>
                                     </tr>                                    
                                 </thead>
@@ -127,10 +127,10 @@
                                             <td>@list[j][2]</td>
                                             <td>@list[j][3]</td>
                                             <td>@list[j][4]</td>
-                                            <td>0</td>
-                                            <td>0</td>
+                                            <td>@list[j][5]</td>
+                                            <td>@list[j][6]</td>
                                             <td>@list[j][7]</td>
-                                            <td></td>
+                                            @*<td></td>*@
                                             <td><div class=progress><div style="width:0%;background-color:red" aria-valuemax=100 aria-valuemin=0 aria-valuenow=60 role=progressbar class="red progress-bar"><span>0%</span></div></div></td>
                                         </tr>
                                     }

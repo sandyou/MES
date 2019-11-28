@@ -2,7 +2,7 @@
     ViewData["Title"]="當日派工";    
     @using System.Data;
     DataTable Order_dt = (DataTable)ViewData["Order_Table"];
-    DataTable Dispatch_dt = (DataTable)ViewData["Dispatch_Table"];
+    DataTable Dispatch_dt = (DataTable)ViewData["Dispatch_Table"];    
 }
     <div class="form-group">
     <label >工令編號</label>&nbsp;<span id="order-span" style="color:red;display:none">*工令編號必須選擇</span>
@@ -16,12 +16,12 @@
     </div>
     <table id="Dispatch_Table" class="table table-hover tablesorter">
         <thead class="thead-light">
-            <tr>
-                <!-- <th></th> -->
+            <tr>                
                 <th>道次流程</th>
                 <th>道次名稱</th>
                 <th>產品代號</th>
                 <th>產品名稱</th>
+                <th>今日預劃數量</th>
                 <th>作業人員</th>
                 <th>預計作業時間(小時)</th>
                 <th>預計作業數量</th>
@@ -45,10 +45,10 @@
                 <th>道次流程</th>
                 <th>道次名稱</th>
                 <th>產品代號</th>
-                <th>產品名稱</th>
-                <th>預計作業人員</th>
-                <th>預計作業時間(小時)</th>
-                <th>預計作業數量</th>
+                <th>產品名稱</th>                
+                <th>預劃作業人員</th>
+                <th>預劃作業時間(小時)</th>
+                <th>預劃作業數量</th>
             </tr>
         </thead>
         <tbody id="Dispatch_Y_Tbody">
@@ -89,55 +89,14 @@
                                 var str = '';
                                 $.each(result,function(i,item){
                                     console.log(i+"\t"+item.process+"\t"+item.processname+"\t"+item.productid+"\t"+item.product+"\t"+item.staff_name[0]+"\t"+item.quantity);
-                                    var cou = $("#Dispatch_Tbody tr").length;                             
-                                    //if(i!=0){
-                                    //    if(item.Process.toString().indexOf(str)==-1){
-                                    //        $("#Dispatch_Tbody").append(function(){
-                                    //        return "<tr role=\"row\">"+
-                                    //                    //"<td><input type=\"checkbox\"  class=\"form-check-input\" id=\"time\"  /></td>"+
-                                    //                    "<td>"+item.process+"</td>"+
-                                    //                    "<td>"+item.processname+"</td>"+
-                                    //                    "<td>"+item.productid+"</td>"+
-                                    //                    "<td>"+item.product+"</td>"+
-                                    //                    "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>" +
-                                    //                    "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>" +                                                        
-                                    //                    "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"quantity\"  step=\"1\" disabled=\"true\" placeholder=\"剩餘數量"+item.quantity+"個...\" /><span id=\"qn\" style=\"display:none\">"+item.Leave_Quantity+"</span></td>"+                                                        
-                                    //                    "</tr>";
-                                    //    });
-                                    //        if(item.StaffName!=''){
-                                    //            $("#Dispatch_Tbody tr:eq("+(cou)+") td select").append("<option>"+item.StaffName+"</option>");        
-                                    //            //$("tbody tr:eq("+(cou)+") td select").val("請選擇作業人員");                                                                                            
-                                    //        }
-                                    //    }
-                                    //    else{
-                                    //        $("#Dispatch_Tbody tr:eq("+(cou-1)+") td select").append("<option>"+item.StaffName+"</option>");                                            
-                                    //    }                                        
-                                    //} 
-                                    //else{             
-                                    //    $("#Dispatch_Tbody").append(function(){
-                                    //        return "<tr role=\"row\">"+
-                                    //                    //"<td><input type=\"checkbox\"  class=\"form-check-input\" id=\"time\"  /></td>"+
-                                    //                    "<td>"+item.process+"</td>"+
-                                    //                    "<td>"+item.processname+"</td>"+
-                                    //                    "<td>"+item.productid+"</td>"+
-                                    //                    "<td>"+item.product+"</td>"+
-                                    //                    "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>" +
-                                    //                    "<td style=\"width:200px\"><input type=\"number\"  class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>" +                                                        
-                                    //                    "<td style=\"width:200px\"><input type=\"number\" class=\"form-control\" id=\"quantity\"  step=\"1\" disabled=\"true\" placeholder=\"剩餘數量"+item.quantity+"個...\" /><span id=\"qn\" style=\"display:none\">"+item.Leave_Quantity+"</span></td>"+                                                        
-                                    //                    "</tr>";
-                                    //    });                                        
-                                    //    if(item.StaffName!=''){
-                                    //        $("#staff").append("<option>"+item.StaffName+"</option>");                                                
-                                    //    }
-                                    //}                                                            
-                                    //str = item.Process;  
-
+                                    var cou = $("#Dispatch_Tbody tr").length;                                                                 
                                     $("#Dispatch_Tbody").append(function(){
                                             return "<tr role=\"row\">"+                                                        
                                                         "<td>"+item.process+"</td>"+
                                                         "<td>"+item.processname+"</td>"+
                                                         "<td>"+item.productid+"</td>"+
-                                                        "<td>"+item.product+"</td>"+
+                                                        "<td>"+item.product+"</td>" +
+                                                        "<td>"+item.requestquantity+"</td>"+
                                                         "<td style=\"width:350px\"><select class=\"custom-select\" id=\"staff\" selected=\"selected\"><option selected>請選擇作業人員</option></td>" +
                                                         "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"time\"  step=\"0.5\" disabled=\"true\" placeholder=\"請輸入作業時數...\" /></td>" +                                                        
                                                         "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"quantity\"  step=\"1\" disabled=\"true\" placeholder=\"剩餘數量"+item.quantity+"個...\" /><span id=\"qn\" style=\"display:none\">"+item.quantity+"</span></td>"+                                                        
@@ -212,14 +171,14 @@
                         //return c.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
                     });                    
                     if(value == '請選擇作業人員'){
-                        $("tbody tr:eq("+ind+") td:eq(5) input").attr('disabled','true');
-                        $("tbody tr:eq(" + ind + ") td:eq(5) input").val('');
                         $("tbody tr:eq("+ind+") td:eq(6) input").attr('disabled','true');
+                        $("tbody tr:eq("+ind+") td:eq(6) input").val('');
+                        $("tbody tr:eq("+ind+") td:eq(7) input").attr('disabled','true');
                         $("tbody tr:eq("+ind+") td:eq(7) input").val('');
                     }
                     else{
-                        $("tbody tr:eq("+ind+") td:eq(5) input").removeAttr('disabled');
                         $("tbody tr:eq("+ind+") td:eq(6) input").removeAttr('disabled');
+                        $("tbody tr:eq("+ind+") td:eq(7) input").removeAttr('disabled');
                     }
                     //this.value = this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
                 });
@@ -242,9 +201,9 @@
                         var processname = item.children[j].children[1].innerText;
                         var productid = item.children[j].children[2].innerText;
                         var product = item.children[j].children[3].innerText;
-                        var staff = item.children[j].children[4].children[0].value;
-                        var time = item.children[j].children[5].children[0].value;
-                        var quantity = item.children[j].children[6].children[0].value;
+                        var staff = item.children[j].children[5].children[0].value;
+                        var time = item.children[j].children[6].children[0].value;
+                        var quantity = item.children[j].children[7].children[0].value;
                         
                         /*
                         var process = item.children[0].innerText;

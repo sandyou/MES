@@ -1,5 +1,228 @@
 @{
-    ViewData["Title"]="作業人員報工";    
+    ViewData["Title"] = "作業人員報工";
+    @using System.Data;
+    DataTable staff_dt = (DataTable)ViewData["staff_name"];
 }
-   
-    <div class="line"></div>
+<div class="form-group">
+    <label>作業人員</label>&nbsp;<span id="staff-span" style="color:red;display:none">*人員名稱必須選擇</span>
+    <select class="custom-select" id="staff">
+        <option selected>請選擇人員名稱</option>
+        @for (int i = 0; i < staff_dt.Rows.Count; i++)
+        {
+            <option value=@staff_dt.Rows[i][0]>@staff_dt.Rows[i][0]</option>
+        }
+    </select>
+</div>
+<table id="Work_Table" class="table table-hover tablesorter">
+    <thead class="thead-light">
+        <tr>
+            <th>工令編號</th>
+            <th>道次流程</th>
+            <th>道次名稱</th>
+            <th>產品代號</th>
+            <th>產品名稱</th>
+            <th>使用機台</th>            
+            <th>今日預劃作業時數</th>
+            <th>今日預劃數量</th>
+            <th>使用作業時間(小時)</th>
+            <th>今日完成數量</th>
+        </tr>
+    </thead>
+    <tbody id="Work_Tbody">
+    </tbody>
+</table>
+<div style="text-align:center">
+    <button type="button" id="Data_Work_btn" class="btn btn-secondary btn-lg" style="width:150px">報工</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" id="Data_Clear_btn" class="btn btn-secondary btn-lg" style="width:150px">清除</button>
+</div>
+<div class="line"></div>
+<script>
+    $("#staff").on('change', function () {
+        var staff = document.getElementById("staff").value;
+        var Work_Table = $("#Work_Table").tablesorter({ sortList: [[0, 0], [1, 0]] });
+        judge("staff-span", staff);
+        if (staff != "請選擇人員名稱") {
+            $.ajax(
+            {
+                url: "@Url.Action("Get_Wrok_Data","Home")",
+                method: "get",
+                contentType: 'application/json',                                                                                 
+                data:
+                {                          
+                    staff:staff
+                },  
+                success:function(data){
+                $("#Work_Tbody").html("");
+                var result = JSON.parse(data);
+                $.each(result, function (i, item) {
+                     $("#Work_Tbody").append(function(){
+                        return "<tr role=\"row\">"+       
+                                    "<td>"+item.orderid+"</td>"+
+                                    "<td>"+item.process+"</td>"+
+                                    "<td>"+item.processname+"</td>"+
+                                    "<td>"+item.productid+"</td>"+
+                                    "<td>"+item.product+"</td>"+
+                                    "<td>" + item.machinename + "</td>" +
+                                    "<td>" + item.schedulehour + "</td>" +
+                                    "<td>"+item.quantity+"</td>" +
+                                    "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"time\"  step=\"0.5\" placeholder=\"請輸入作業時數...\" /></td>" +                                                        
+                                    "<td style=\"width:200px\"><input  type=\"number\" class=\"form-control\" id=\"quantity\"  step=\"1\" placeholder=\"請輸入完成數量...\" /></td>"+                                                        
+                                    "</tr>";
+                     });
+                });
+                var resort = true,
+                callback = function(){ console.log('table updated'); };
+                Work_Table.trigger("update", [ resort, callback ]);                                                            
+                },
+                error:function(d){
+                    $.alert({
+                        icon:"fas fa-exclamation-triangle",
+                        title: "錯誤",
+                        content: "404. Please wait until the File is Loaded.",
+                    });                    
+                    $("#Work_Tbody").html("");
+                }
+            });
+        }
+        else {
+            $("#Work_Tbody").html("");
+        }
+    });
+
+    $("#Work_Tbody").on("input", "td", function () {                            
+        var ind = $(this).parent("tr").index();          
+        var ID = $(this).find("input").attr("id");
+        $(this).find("input").val(function(n,c){         
+            c = c.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g, '');
+            if (ID == "time") {                
+                if(c!='' && c<=12){
+                    return c; 
+                }           
+                else  if(c>12){
+                    $.alert({
+                        icon:"fas fa-exclamation-triangle",
+                        title: "錯誤",
+                        content: "作業時數不可超過12小時",
+                    });                                
+                    return '';
+                }
+                else{
+                    return '';
+                } 
+            }
+            else {
+                c = parseInt(c);
+                if(c!=''){
+                    return c; 
+                }                           
+                else{
+                    return '';
+                } 
+            }                                           
+        });                        
+    });
+
+    $("#Data_Work_btn").on('click',function(){                
+    var val = $("#Work_Tbody");
+    var staff = document.getElementById("staff").value;                          
+    if(staff != '請選擇人員名稱'){
+        var arr = new Array();
+        $.each(val,function(i,item){                              
+            for(j=0;j<item.childElementCount;j++)
+            {
+                var order = item.children[j].children[0].innerText;
+                var process = item.children[j].children[1].innerText;
+                var processname = item.children[j].children[2].innerText;
+                var productid = item.children[j].children[3].innerText;
+                var product = item.children[j].children[4].innerText;
+                var machine = item.children[j].children[5].innerText;                
+                var time = item.children[j].children[8].children[0].value;
+                var quantity = item.children[j].children[9].children[0].value;
+                        
+                if(staff != '請選擇作業人員' && time !='' && quantity != ''){
+                    var obj = new Object();
+                    obj.order = order;
+                    obj.process = process;
+                    obj.processname = processname;
+                    obj.productid = productid;
+                    obj.product = product;
+                    obj.machine = machine;
+                    obj.staff = staff;
+                    obj.time = time;
+                    obj.quantity = quantity;
+                    arr = arr.concat(obj);
+                }
+                else{
+                    $.alert({
+                        icon:"fas fa-exclamation-triangle",
+                        title: "錯誤",
+                        content: "有資料尚未輸入完成,請確認",
+                    });                    
+                    exit;
+                }                    
+                console.log(order+'\t'+process+'\t'+processname+'\t'+productid+'\t'+product+'\t'+machine+'\t'+staff+'\t'+time+'\t'+quantity);
+            }                                                               
+        });   
+        $.confirm({
+            title: "報工資料確認",
+            content: "請確認報工資料是否正確",
+            buttons: {
+                "報工": function () {
+                    $.ajax(
+                    {
+                        url: "@Url.Action("Work_Data","Home")",
+                        method: "get",
+                        contentType: 'application/json',      
+                        data:
+                        {
+                            data:JSON.stringify(arr)
+                        },
+                        success:function(data){                                
+                            $.alert({
+                                title: "報工結果",
+                                content: data,
+                            });
+                            setTimeout(function ()
+                            {
+                                location.reload();
+                            }, 2000); 
+                        },
+                        error:function(d){
+                            $.alert({
+                                icon:"fas fa-exclamation-triangle",
+                                title: "錯誤",
+                                content: "404. Please wait until the File is Loaded.",
+                            });
+                        }
+                    }); 
+                },
+                "取消": function () {
+
+                }
+            }
+        });                                                                             
+    }
+    else{
+        $.alert({
+                icon:"fas fa-exclamation-triangle",
+                title: "錯誤",
+                content: "請選擇欲報工之作業人員名稱",
+            });        
+    }
+            
+});
+
+    $("#Data_Clear_btn").click(function(){
+            document.getElementById("staff").value = '請選擇人員名稱';
+            $("#staff").trigger("change");
+        });
+
+    function judge(id,val) {
+              if (val == '' || val == '請選擇人員名稱' ) {                  
+                  $("span[id=" + id + "]").show();
+              } else {
+                  $("span[id=" + id + "]").hide();
+              }
+          }
+</script>

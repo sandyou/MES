@@ -110,6 +110,9 @@ C:\Users\ai-pc11\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\Microsoft.Code
 C:\Users\ai-pc11\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\Microsoft.DotNet.PlatformAbstractions.dll
 C:\Users\ai-pc11\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\Microsoft.Extensions.DependencyModel.dll
 C:\Users\ai-pc11\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\Newtonsoft.Json.Bson.dll
+C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\TEST.cshtml.g.cs
+C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\History_Page.cshtml.g.cs
+C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\Information_Page_.cshtml.g.cs
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\appsettings.Development.json
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\appsettings.json
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\bin\Debug\netcoreapp3.0\Properties\launchSettings.json
@@ -146,6 +149,7 @@ C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.TagHel
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.TagHelpers.output.cache
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.RazorCoreGenerate.cache
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\Dispatch_Page.cshtml.g.cs
+C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\History_Page.cshtml.g.cs
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\Information_Page.cshtml.g.cs
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\Machine_Inf_Page.cshtml.g.cs
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\OrderInsert_Page.cshtml.g.cs
@@ -166,6 +170,3 @@ C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.csproj
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.dll
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.pdb
 C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\MES_MVC.csprojAssemblyReference.cache
-C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\TEST.cshtml.g.cs
-C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\History_Page.cshtml.g.cs
-C:\Users\ai-pc11\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\Information_Page_.cshtml.g.cs

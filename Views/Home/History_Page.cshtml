@@ -1,236 +1,147 @@
 ﻿@{
+    ViewData["Title"] = "歷史紀錄";
     @using System.Data;
-    Layout = null;
-    DataTable History_dt = (DataTable)ViewData["History_Table"];
-    DataTable dt = (DataTable)ViewData["Table"];
+    DataTable[] dt = (DataTable[])ViewData["Table"];
+    string judge = "";
+    int cou = 1;
+    int parent_cou = 1;
 }
-<!DOCTYPE html>
+<script>
+       //var a = self.setInterval('Get_Information_Data();', 2000);
+       function Get_Information_Data()
+       {
+           $.ajax(
+                          {
+                              url: "@Url.Action("Get_Information_Data","Home")",
+                             method: "post",
+                             contentType: 'application/json',
+                              data:
+                              {
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="~/lib/bootstrap-4.3.1/dist/css/bootstrap.min.css" />
-    <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="~/css/style2.css" />
-    <!-- Scrollbar Custom CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" />
-    <title>各類資訊</title>
-</head>
-<body>
-    <!--產品道次資訊-->
-    <div style="display:@ViewData["Product_dis"]">
-        <div style="padding:20px;margin:0 auto;width:60%">
-            <br>
-            <table class="table table-hover table-pro">
-                <tbody>
-                    <tr>
-                        <th>產品代號</th>
-                        <td>@ViewData["ProductId"]</td>
-                    </tr>
-                    <tr>
-                        <th>產品名稱</th>
-                        <td>@ViewData["ProductName"]</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="line"></div>
-        <h1 style="font-weight:bold;text-align:center">產品道次資訊</h1>
-        <div id="Information_Product_Contet">
-            <!-- <asp:DataGrid ID="datagrid_process" CssClass="table  table-hover" ></asp:DataGrid>    -->
-            <table id="datagrid_process" class="table table-hover">
-                <thead class="thead-light">
-                    <tr>
-                        <th>道次編號</th>
-                        <th>道次名稱</th>
-                        <th>機台編號</th>
-                        <th>機台名稱</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        <tr>
-                            <td>@dt.Rows[i][0]</td>
-                            <td>@dt.Rows[i][1]</td>
-                            <td>@dt.Rows[i][2]</td>
-                            <td>@dt.Rows[i][3]</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="line"></div>
-    </div>
+                              },
+                              //dataType: "text",
+                              success: function (data) {
+                                  var result = JSON.parse(data);
+                                   $.each(result, function (i, item) {
+                                       //測試用
+                                        var val = Math.floor(Math.random()*15);
+                                        var wid = $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width");
+                                        wid = wid.substr(0,wid.indexOf("p"));
+                                        console.log(val);
+                                        var num =  new Number(wid*0.007);
+                                        console.log(num+'a');
+                                        var num =Math.floor((num .toFixed(2)*100))+val;
+                                        console.log(num);
+                                        if(wid>=110){
+                                                $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","0%");
+                                                $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("0%");
+                                        }
+                                        else{
+                                                if(num>100){
+                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width","100%");
+                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html("100%");
+                                                }
+                                                else{
+                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width",num+"%");
+                                                    $("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html(num+"%");
+                                                }
+                                        }
+                                        //$("#Schedule_Table 6tbody tr:eq("+i+")").find("td").eq(8).css("width","20%");
+                                        //$(".progress .progress-bar").css("width","60%");
+                                        //$(".progress .progress-bar span").html("60%");
+                                        //$("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar").css("width",val+"%");
+                                        //$("#Schedule_Table tbody tr:eq("+i+") td .progress .progress-bar span").html(val+"%");
+                                    });
+                              }, error: function (d) {
+                                  /*console.log("error");*/
+                                  $.alert({
+                                    icon:"fas fa-exclamation-triangle",
+                                    title: "錯誤",
+                                    content: "404. Please wait until the File is Loaded.",
+                                });
+                                  //alert("404. Please wait until the File is Loaded.");
+                              }
+                          });
+       }
+</script>
+<!-- <h1 style="text-align:center">工令總進度</h1><br> -->
+@*<input class="form-control" id="Schedule_Input" type="text" placeholder="請輸入工令編號...">
+<br>*@
+<table id="Schedule_Table_" class="table table-hover tablesorter">
+    <thead class="thead-light">
+        <tr>
+            <th>工令編號</th>
+            <th>產品代號</th>
+            <th>產品名稱</th>
+            <th>總數量</th>
+            <th>預計使用時數</th>
+            <th>實際使用時數</th>
+            <th>預計結束日期</th>
+            <th>工令建立日期</th>
+            <th>完成度</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < dt[0].Rows.Count; i++)
+        {
+            var temp = cou;
+            <tr data-node="treetable-@cou">
+                <td id="order-id">@dt[0].Rows[i][0]</td>
+                <td id="product-id">@dt[0].Rows[i][1]</td>
+                <td id="product">@dt[0].Rows[i][2]</td>
+                <td>@dt[0].Rows[i][3]</td>
+                <td>@dt[0].Rows[i][4]</td>
+                <td>@dt[0].Rows[i][4]</td>
+                <td>@dt[0].Rows[i][5]</td>
+                <td>@dt[0].Rows[i][6]</td>
+                <td><div class=progress><div style="width:0%;background-color:red" aria-valuemax=100 aria-valuemin=0 aria-valuenow=60 role=progressbar class="red progress-bar"><span>0%</span></div></div></td>
+            </tr>
 
-    <!--工令詳細當日及歷史資訊-->
-    <div style="display:@ViewData["Order_dis"]">
-        <div class="card" id="card">
+            cou++;
+            var query = from row in dt[1].AsEnumerable()
+                        where row.Field<string>("orderid") == dt[0].Rows[i][0].ToString()
+                        select row;
+            var list = query.ToList();
+            @*@if (list.Count != 0)
+            {
+                <tr class="_true" data-node="treetable-@cou" data-pnode="treetable-parent-@temp">
+                    <td colspan="9">
+                        <table id="Process_Table" class="table table-borderless" style="background-color:#fafafa;">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>產品名稱</th>
+                                    <th>道次編號</th>
+                                    <th>道次名稱</th>
+                                    <th>目前完成數量</th>
+                                    <th>目前使用時數</th>
+                                    <th>開始作業時間</th>
+                                    <th>結束作業時間</th>
+                                    <th>完成度</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int j = 0; j < list.Count; j++)
+                                {
+                                    <tr>
+                                        <td>@list[j][2]</td>
+                                        <td>@list[j][3]</td>
+                                        <td>@list[j][4]</td>
+                                        <td>@list[j][5]</td>
+                                        <td>@list[j][6]</td>
+                                        <td>@list[j][7]</td>
+                                        <td>@list[j][8]</td>
+                                        <td><div class=progress><div style="width:50%;background-color:red" aria-valuemax=100 aria-valuemin=0 aria-valuenow=60 role=progressbar class="red progress-bar"><span>50%</span></div></div></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
 
-            <div class="card-body" id="card-title">
-                工令資訊
-            </div>
-            <div class="card-body" id="card-body">
-                <div class="row" id="row">
-                    <div class="col-sm">工令編號:@ViewData["Order"]</div>
+                cou++;
+            }*@
 
-                    <div class="col-sm">產品名稱:@ViewData["ProductName"]</div>
-                </div>
-                <div class="row" id="row">
-                    <div class="col-sm">產品代號:@ViewData["ProductId"]</div>
-
-                    <div class="col-sm">預計生產數量:1245</div>
-                </div>
-                <div class="row" id="row">
-                    <div class="col-sm">預計開始時間:@ViewData["Exp_ST_Date"]</div>
-
-                    <div class="col-sm">預計結束時間:@ViewData["Exp_End_Date"]</div>
-                </div>
-                <div class="row" id="row">
-                    <div class="col-sm">實際開始時間:@ViewData["Exp_ST_Date"]</div>
-
-                    <div class="col-sm">實際結束時間:</div>
-                </div>
-            </div>
-        </div>
-        <div id="Order_Nav">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">歷史工令資訊</a>
-                </li>
-
-            </ul>
-        </div>
-        <div id="Information_Order_Contet">
-            <!-- <asp:DataGrid ID="datagrid_process" CssClass="table  table-hover" ></asp:DataGrid>    -->
-            <!--歷史工令資訊-->
-            <table id="History_Table" class="table table-hover hide">
-                <thead class="thead-light">
-                    <tr>
-                        <th>工令編號</th>
-                        <th>產品名稱</th>
-                        <th>作業人員</th>
-                        <th>道次名稱</th>
-                        <th>使用機台</th>
-                        <th>派工數量</th>
-                        <th>生產數量</th>
-                        <th>開始作業時間</th>
-                        <th>完成作業時間</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < History_dt.Rows.Count; i++)
-                    {
-                        <tr>
-                            <td>@History_dt.Rows[i][1]</td>
-                            <td>@History_dt.Rows[i][2]</td>
-                            <td>@History_dt.Rows[i][3]</td>
-                            <td>@History_dt.Rows[i][4]</td>
-                            <td>@History_dt.Rows[i][5]</td>
-                            <td>@History_dt.Rows[i][6]</td>
-                            <td>@History_dt.Rows[i][6]</td>
-                            <td>@History_dt.Rows[i][7]</td>
-                            <td>@History_dt.Rows[i][8]</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        @*<div style="padding:20px;margin:0 auto;width:60%">
-                <br>
-                <table class="table table-hover table-pro">
-                    <thead>
-                        <tr>
-                            <th>工令編號</th>
-                            <th>產品代號</th>
-                            <th>產品名稱</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>@ViewData["Order"]</td>
-                            <td>@ViewData["ProductId"]</td>
-                            <td>@ViewData["ProductName"]</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="line"></div>
-            <h1 style="font-weight:bold;text-align:center">本日工令資訊</h1>
-            <div id="Information_Contet">
-
-                <table id="datagrid_process" class="table table-hover">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>道次編號</th>
-                            <th>道次名稱</th>
-                            <th>機台編號</th>
-                            <th>機台名稱</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < dt.Rows.Count; i++)
-                        {
-                            <tr>
-                                <td>@dt.Rows[i][0]</td>
-                                <td>@dt.Rows[i][1]</td>
-                                <td>@dt.Rows[i][2]</td>
-                                <td>@dt.Rows[i][3]</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>*@
-        <div class="line"></div>
-    </div>
-
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    @*<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>*@
-    <script src="~/lib/jquery/dist/jquery-3.3.1.min.js"></script>
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="~/lib/bootstrap-4.3.1/dist/js/bootstrap.min.js"></script>
-    <!-- jQuery Custom Scroller CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            //增加表頭
-            //$("#datagrid tr:first,#datagrid_process tr:first").wrap("<thead></thead>");
-            //$("#datagrid thead").insertBefore("#datagrid tbody").addClass("thead-light");
-            //$("#datagrid_process thead").insertBefore("#datagrid_process tbody").addClass("thead-light");
-            //$("#datagrid,#datagrid_process").removeAttr("style rules cellspacing border");
-            //$("#datagrid_process tbody").addClass("process_body");
-            $("#content").css({ "position": "static", "margin": "0 auto" });
-            //表頭標籤替換
-            //$('.thead-light td').replaceWith(function () {
-            //    return $('<th/>', {
-            //        html: this.innerHTML
-            //    })
-            //})
-            //簡易資料搜尋
-            //$("#Information_Input").on("keyup", function () { //Table Filter
-            //    var value = $(this).val().toLowerCase();
-            //    $("#datagrid tbody tr").filter(function () {
-            //        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            //    });
-            //});
-
-            $(".nav-item a").on('click', function () {
-                $(".nav-item a").removeClass("active");
-                $(this).addClass("active");
-                if ($(this).text() == "歷史工令資訊") {
-                    $("#Today_Table").addClass("hide");
-                    $("#History_Table").removeClass("hide");
-                }
-                else {
-                    $("#Today_Table").removeClass("hide");
-                    $("#History_Table").addClass("hide");
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+        }
+    </tbody>
+</table>
+<div class="line"></div>

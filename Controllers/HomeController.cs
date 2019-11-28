@@ -76,19 +76,30 @@ namespace MES_MVC.Controllers
                                             ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
                                             order by CONVERT(varchar(20),a.ST_Date,23) desc");
             //要在修改
-            dt[1] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',
-                                                b.product,b.Process,c.[Process-Name],a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
-                                                ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
-                                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
-                                                from [MES-Table].[dbo].[order] a
-                                                left join 
-                                                [MES-Table].[dbo].[product_Inf] b
-                                                on a.[product-id] = b.[product-id] 
-                                                LEFT JOIN
-                                                [MES-Table].dbo.Process_Inf c
-                                                on b.Process = c.Process
-                                                --where a.Dispatch <> 0
-                                                order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
+            //dt[1] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',
+            //                                    b.product,b.Process,c.[Process-Name],a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
+            //                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+            //                                    ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
+            //                                    from [MES-Table].[dbo].[order] a
+            //                                    left join 
+            //                                    [MES-Table].[dbo].[product_Inf] b
+            //                                    on a.[product-id] = b.[product-id] 
+            //                                    LEFT JOIN
+            //                                    [MES-Table].dbo.Process_Inf c
+            //                                    on b.Process = c.Process
+            //                                    where a.Dispatch <> 0
+            //                                    order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
+            dt[1] = conn.Get_Information_Data(@"SELECT distinct a.[order-id] as 'orderid',a.[product-id] as 'productid',c.product,d.Process,d.[Process-Name],b.Finish_Quantity,'0',convert(nvarchar(20),b.Act_ST_Date,23) as 'Act_ST_Date' FROM dbo.[order] a
+                                                INNER JOIN  
+                                                dbo.[Schedule-Inf] b
+                                                on a.[order-id] = b.[order-id]
+                                                LEFT JOIN 
+                                                dbo.product_Inf c
+                                                on a.[product-id] = c.[product-id]
+                                                LEFT JOIN 
+                                                dbo.Process_Inf d
+                                                on b.[Process-Num] = d.[Process]
+                                                ");
             ViewData["Table"]=dt;
 
             return View();
@@ -162,6 +173,10 @@ namespace MES_MVC.Controllers
                                                                         where [order-id]='{0}'",order));
             ViewData["Exp_End_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),End_Date,23) as 'End_Date' FROM [dbo].[order]
                                                                         where [order-id]='{0}'",order));
+            ViewData["Act_ST_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),Act_ST_Date,23) as 'Act_ST_Date' FROM [dbo].[order]
+                                                                        where [order-id]='{0}'", order));
+            ViewData["Act_End_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),Act_End_Date,23) as 'Act_End_Date' FROM [dbo].[order]
+                                                                        where [order-id]='{0}'", order));
             if (status == "order")
             {
                 ViewData["Order_dis"] = "inline";
@@ -217,67 +232,49 @@ namespace MES_MVC.Controllers
         public IActionResult WorkStatus_Page()
         {
             conn = new SQL(this.configuration);
-            //ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product
-            //                                                        ,c.[Machine-Num] as 'MachineNum'
-            //                                                        ,c.[Machine-Name] as 'MachineName'
-            //                                                        ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'        
-            //                                                        ,a.RequestQuantity                                                                                         
-            //                                                        from [MES-Table].[dbo].[order] a
-            //                                                        left join 
-            //                                                        [MES-Table].[dbo].[product_Inf] b on a.[product-id] = b.[product-id] 
-            //                                                        left join 
-            //                                                        [MES-Table].[dbo].[Machine_Inf] c on b.Process = c.[Local-Process]
-            //                                                        order by a.[order-id] desc");
-            //ViewData["WorkStatus_Table"] = conn.Get_Information_Data(@"SELECT DISTINCT a.[order-id]
-            //--,a.[Process-Num]
-            //--,d.[Process-Name]
-            //,b.[product-id]
-            //,c.product
-            //--,e.[Staff-Name]
-            //--,a.[Schedule-Hour]
-            //,f.[Machine-Num]
-            //,f.[Machine-Name]
-            //,CONVERT(varchar(20),b.ST_Date,23) as 'ST_Date'
-            //,b.RequestQuantity
-            //FROM [dbo].[Schedule-Inf] a
-            //LEFT JOIN 
-            //dbo.[order] b
-            //on a.[order-id] = b.[order-id]
-            //LEFT JOIN 
-            //dbo.product_Inf c 
-            //on b.[product-id] = c.[product-id]
-            //LEFT JOIN 
-            //dbo.Process_Inf d
-            //on a.[Process-Num] = d.Process
-            //LEFT JOIN 
-            //dbo.[Staff-Inf] e
-            //on a.[Staff-Num] = e.[Staff-Num]
-            //LEFT JOIN 
-            //dbo.Machine_Inf f
-            //on a.[Process-Num] = f.[Local-Process]");
-            ViewData["Machine_Status_Table"] = conn.Get_Information_Data(@"SELECT b.Team,a.[Machine-Num],a.[Machine-Name]
-                                                                            ,CASE WHEN a.Status = N'待機中'
-                                                                            THEN 'orange'
-                                                                            WHEN a.Status = N'運轉中'
-                                                                            THEN 'green'
-                                                                            ELSE 'gray' 
-                                                                            END 'Status'
-                                                                            FROM [dbo].[Machine_Inf] a
-                                                                            LEFT JOIN 
-                                                                            dbo.Group_Inf b
-                                                                            on a.[Local-Process] = b.[Process-Num]");
+            //ViewData["Machine_Status_Table"] = conn.Get_Information_Data(@"SELECT b.Team,a.[Machine-Num],a.[Machine-Name]
+            //                                                                ,CASE WHEN a.Status = N'待機中'
+            //                                                                THEN 'orange'
+            //                                                                WHEN a.Status = N'運轉中'
+            //                                                                THEN 'green'
+            //                                                                ELSE 'gray' 
+            //                                                                END 'Status'
+            //                                                                FROM [dbo].[Machine_Inf] a
+            //                                                                LEFT JOIN 
+            //                                                                dbo.Group_Inf b
+            //                                                                on a.[Local-Process] = b.[Process-Num]");
+            ViewData["Machine_Status_Table"] = conn.Get_Information_Data(@"SELECT DISTINCT b.Team,a.[Machine-Num],a.[Machine-Name]
+                                                                        ,CASE WHEN a.Status = N'待機中'
+                                                                        THEN 'orange'
+                                                                        WHEN a.Status = N'運轉中'
+                                                                        THEN 'green'
+                                                                        ELSE 'gray' 
+                                                                        END 'Status'
+                                                                        ,a.[order],d.product,c.RequestQuantity
+                                                                        FROM [dbo].[Machine_Inf] a
+                                                                        LEFT JOIN 
+                                                                        dbo.Group_Inf b
+                                                                        on a.[Local-Process] = b.[Process-Num]
+                                                                        LEFT JOIN
+                                                                        dbo.[order] c
+                                                                        on a.[order] = c.[order-id]
+                                                                        LEFT JOIN
+                                                                        dbo.product_Inf d
+                                                                        on c.[product-id] = d.[product-id]");
             return View();
         }
 
         public IActionResult Work_Page()
         {
+            conn = new SQL(this.configuration);
+            ViewData["staff_name"] = conn.Get_Information_Data(@"SELECT [Staff-Name] FROM [dbo].[Staff-Inf] where Status=N'工作中'");
             return View();
         }
 
         public IActionResult Machine_Inf_Page()
         {
             conn = new SQL(this.configuration);            
-            ViewData["Table"] = conn.Get_Information_Data(@"  SELECT * FROM [MES-Table ].[dbo].[Machine_Inf] ");                                                                                                                            
+            ViewData["Table"] = conn.Get_Information_Data(@"  SELECT [Machine-Num],[Machine-Name],[Local-Process],Status FROM [MES-Table ].[dbo].[Machine_Inf] ");                                                                                                                            
             return View();
         }
 
@@ -285,14 +282,14 @@ namespace MES_MVC.Controllers
         {
             conn = new SQL(this.configuration);
             ViewData["Table"]=conn.Get_Information_Data(@"SELECT [Staff-Num]
-                                                                                                                ,[Staff-Name]
-                                                                                                                ,[Process]
-                                                                                                                ,[Status]
-                                                                                                            FROM [MES-Table ].[dbo].[Staff-Inf]");
+                                                        ,[Staff-Name]
+                                                        ,[Process]
+                                                        ,[Status]
+                                                    FROM [MES-Table ].[dbo].[Staff-Inf]");
             return View();
         }
 
-        public IActionResult TEST()
+        public IActionResult History_Page()
         {
             //string connectionstring =  configuration.GetConnectionString("DefaultConnectionStrings");
             //SqlConnection con = new SqlConnection(connectionstring);
@@ -356,71 +353,7 @@ namespace MES_MVC.Controllers
             ViewData["Table"] = dt;
 
             return View();
-        }
-
-        //public IActionResult History_Page(string order, string productid, string status)
-        //{
-        //    conn = new SQL(this.configuration);
-        //    ViewData["Table"] = conn.Get_Information_Data(string.Format(
-        //                                                                @"select
-        //                                                                distinct
-        //                                                                a.[Process] as '道次編號',
-        //                                                                b.[Process-Name] as '道次名稱',
-        //                                                                c.[Machine-Num] as '機台編號',
-        //                                                                c.[Machine-Name] as '機台名稱'
-        //                                                                from dbo.product_Inf a
-        //                                                                left join 
-        //                                                                dbo.Process_Inf b
-        //                                                                on a.Process = b.Process
-        //                                                                left join 
-        //                                                                dbo.Machine_Inf c
-        //                                                                on b.[Machine-Num] = c.[Machine-Num]
-        //                                                                where a.[product-id]='{0}'
-        //                                                                order by a.Process", productid));
-        //    ViewData["History_Table"] = conn.Get_Information_Data(string.Format(@"SELECT DISTINCT a.[Schedule-Num],a.[order-id],c.product,f.[Staff-Name],d.[Process-Name],e.[Machine-Name],a.Quantity
-        //                                                                        ,CONVERT(nvarchar(20),b.ST_Date,23) as 'ST_Date'
-        //                                                                        ,CONVERT(nvarchar(20),b.End_Date,23) as 'End_Date'
-        //                                                                        ,a.[Process-Num] FROM [dbo].[Schedule-Inf] a
-        //                                                                        LEFT JOIN 
-        //                                                                        [order] b
-        //                                                                        on a.[order-id] = b.[order-id]
-        //                                                                        LEFT JOIN
-        //                                                                        product_Inf c
-        //                                                                        on b.[product-id] = c.[product-id]
-        //                                                                        LEFT JOIN
-        //                                                                        Process_Inf d
-        //                                                                        on a.[Process-Num] = d.Process
-        //                                                                        LEFT JOIN
-        //                                                                        Machine_Inf e
-        //                                                                        on d.[Machine-Num] = e.[Machine-Num]
-        //                                                                        LEFT JOIN
-        //                                                                        [Staff-Inf] f
-        //                                                                        on a.[Staff-Num] = f.[Staff-Num]
-        //                                                                        where a.[order-id]='{0}' and a.Status<>0
-        //                                                                        ORDER BY a.[Process-Num]", order));
-        //    ViewData["Order"] = order;
-        //    ViewData["ProductId"] = productid;
-        //    ViewData["ProductName"] = conn.Get_ColumnData(string.Format(@"SELECT [product]      
-        //                                                                FROM [MES-Table].[dbo].[product_Inf] where[product-id] = {0}", productid));
-        //    ViewData["Exp_ST_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),ST_Date,23) as 'ST_Date' FROM [dbo].[order]
-        //                                                                where [order-id]='{0}'", order));
-        //    ViewData["Exp_End_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),End_Date,23) as 'End_Date' FROM [dbo].[order]
-        //                                                                where [order-id]='{0}'", order));
-        //    if (status == "order")
-        //    {
-        //        ViewData["Order_dis"] = "inline";
-        //        ViewData["Product_dis"] = "none";
-        //    }
-        //    else
-        //    {
-        //        ViewData["Order_dis"] = "none";
-        //        ViewData["Product_dis"] = "inline";
-        //    }
-        //    return View();
-        //}
-
-
-
+        }        
 
         [HttpPost]
         public IActionResult Get_Information_Data()
@@ -561,6 +494,7 @@ namespace MES_MVC.Controllers
                     processname = dt_dis.Rows[i][2].ToString(),
                     productid = dt_dis.Rows[i][3].ToString(),
                     product = dt_dis.Rows[i][4].ToString(),
+                    requestquantity = dt_dis.Rows[i][5].ToString(),
                     quantity = dt_dis.Rows[i][7].ToString(),
                     staff_name = dt_staff.Rows.OfType<DataRow>().Select(k => k[0].ToString()).ToArray()
                 });
@@ -578,6 +512,41 @@ namespace MES_MVC.Controllers
             conn = new SQL(this.configuration);
             List<Dispatch_Item> item = JsonConvert.DeserializeObject<List<Dispatch_Item>>(data);            
             return Content(conn.Dispatch_Data(item));
+        }
+
+        public IActionResult Get_Wrok_Data(string staff)
+        {
+            conn = new SQL(this.configuration);
+            DataTable dt = conn.Get_Information_Data(string.Format(@"
+                                                                    DECLARE @S nvarchar(12)
+                                                                    set @S = (SELECT [Staff-Num] FROM dbo.[Staff-Inf] where [Staff-Name] = N'{0}')
+                                                                    SELECT c.[order-id] as 'orderid',e.Process as 'process' ,e.[Process-Name] as 'processname',d.[product-id] as 'productid',d.product,f.[Machine-Name] as 'machinename',a.Quantity as 'quantity',b.[Staff-Name] as 'staffname',b.[Staff-Num] as 'staffnum',a.[Schedule-Hour] as 'schedulehour' FROM dbo.[Schedule-Inf] a
+                                                                    INNER JOIN
+                                                                    dbo.[Staff-Inf] b
+                                                                    on a.[Staff-Num] = b.[Staff-Num] AND CONVERT(VARCHAR(20),a.Dispatch_Time,23) = CONVERT(VARCHAR(20),GETDATE(),23)
+                                                                    LEFT JOIN
+                                                                    dbo.[order] c
+                                                                    on a.[order-id] = c.[order-id]
+                                                                    LEFT JOIN 
+                                                                    dbo.product_Inf d
+                                                                    on c.[product-id] = d.[product-id] and d.Process = b.Process
+                                                                    LEFT JOIN
+                                                                    dbo.Process_Inf e
+                                                                    on a.[Process-Num] = e.Process
+                                                                    LEFT JOIN 
+                                                                    dbo.Machine_Inf f
+                                                                    on b.Process = f.[Local-Process]
+                                                                    where b.[Staff-Num] = @S
+                                                                    ORDER BY e.Process", staff));
+            string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Json(json);
+        }
+
+        public IActionResult Work_Data(string data)
+        {            
+            conn = new SQL(this.configuration);
+            List<Work_Data_Item> item = JsonConvert.DeserializeObject<List<Work_Data_Item>>(data);
+            return Content(conn.Work_Data(item));
         }
 
         public IActionResult Uptate_Machine_Inf(string machine_num,string machine_name,string process,string status)

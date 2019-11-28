@@ -153,6 +153,10 @@
                                                 <div class="card click" data-toggle="modal" data-target="#exampleModalCenter" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
                                                     <div class="card-body @Machine_dt.Rows[i][3].ToString()">
                                                         <span id="machine-num" style="display:none">@Machine_dt.Rows[i][1]</span>
+                                                        <span id="order" style="display:none">@Machine_dt.Rows[i][4]</span>
+                                                        <span id="product" style="display:none">@Machine_dt.Rows[i][5]</span>
+                                                        <span id="quantity" style="display:none">@Machine_dt.Rows[i][6]</span>
+                                                        <span id="requestquantity" style="display:none">@Machine_dt.Rows[i][6]</span>
                                                         <p class="card-text @Machine_dt.Rows[i][3].ToString()">@Machine_dt.Rows[i][2]</p>
                                                         <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
                                                     </div>
@@ -208,6 +212,10 @@
                                                         <div class="card click" data-toggle="modal" data-target="#exampleModalCenter" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
                                                             <div class="card-body @Machine_dt.Rows[i][3].ToString()">
                                                                 <span id="machine-num" style="display:none">@Machine_dt.Rows[i][1]</span>
+                                                                <span id="order" style="display:none">@Machine_dt.Rows[i][4]</span>
+                                                                <span id="product" style="display:none">@Machine_dt.Rows[i][5]</span>
+                                                                <span id="quantity" style="display:none">@Machine_dt.Rows[i][6]</span>
+                                                                <span id="requestquantity" style="display:none">@Machine_dt.Rows[i][6]</span>
                                                                 <p class="card-text @Machine_dt.Rows[i][3].ToString()">@Machine_dt.Rows[i][2]</p>
                                                                 <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
                                                             </div>
@@ -265,6 +273,10 @@
                                                         <div class="card click" data-toggle="modal" data-target="#exampleModalCenter" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
                                                             <div class="card-body @Machine_dt.Rows[i][3].ToString()">
                                                                 <span id="machine-num" style="display:none">@Machine_dt.Rows[i][1]</span>
+                                                                <span id="order" style="display:none">@Machine_dt.Rows[i][4]</span>
+                                                                <span id="product" style="display:none">@Machine_dt.Rows[i][5]</span>
+                                                                <span id="quantity" style="display:none">@Machine_dt.Rows[i][6]</span>
+                                                                <span id="requestquantity" style="display:none">@Machine_dt.Rows[i][6]</span>
                                                                 <p class="card-text @Machine_dt.Rows[i][3].ToString()">@Machine_dt.Rows[i][2]</p>
                                                                 <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
                                                             </div>
@@ -322,6 +334,10 @@
                                                         <div class="card click" data-toggle="modal" data-target="#exampleModalCenter" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
                                                             <div class="card-body @Machine_dt.Rows[i][3].ToString()">
                                                                 <span id="machine-num" style="display:none">@Machine_dt.Rows[i][1]</span>
+                                                                <span id="order" style="display:none">@Machine_dt.Rows[i][4]</span>
+                                                                <span id="product" style="display:none">@Machine_dt.Rows[i][5]</span>
+                                                                <span id="quantity" style="display:none">@Machine_dt.Rows[i][6]</span>
+                                                                <span id="requestquantity" style="display:none">@Machine_dt.Rows[i][6]</span>
                                                                 <p class="card-text @Machine_dt.Rows[i][3].ToString()">@Machine_dt.Rows[i][2]</p>
                                                                 <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
                                                             </div>
@@ -353,24 +369,32 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">當前生產工令</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle" style="font-weight:bold">機台生產資訊</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <table id="Process_Table" class="table table-borderless" style="background-color:#fafafa;">
+                    <table id="Process_Table" class="table table-bordered">
                         <tbody>
                             <tr>
                                 <th>機台名稱</th>
                                 <td></td>
                             </tr>
                             <tr>
-                                <th>產品代號</th>
+                                <th>當前工令</th>
                                 <td></td>
                             </tr>
                             <tr>
                                 <th>產品名稱</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>目前生產數</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>預劃生產數</th>
                                 <td></td>
                             </tr>
                         </tbody>                        
@@ -389,7 +413,16 @@
 <script>
     $(document).ready(function () {        
         $(".click").on('click', function () {
-            
+            var machine = $(this).find("p").text();
+            var order = $(this).find("span").eq(1).text();
+            var product = $(this).find("span").eq(2).text();
+            var quantity = $(this).find("span").eq(3).text();
+            var requestquantity = $(this).find("span").eq(4).text();            
+            $("#Process_Table").find("td").eq(0).text(machine);     
+            $("#Process_Table").find("td").eq(1).text(order);     
+            $("#Process_Table").find("td").eq(2).text(product);     
+            $("#Process_Table").find("td").eq(3).text("0");     
+            $("#Process_Table").find("td").eq(4).text(requestquantity);     
         });
     });
 </script>

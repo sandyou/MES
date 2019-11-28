@@ -46,7 +46,7 @@
         </div>   -->
         <div class="form-group">
             <label >開始日期</label>&nbsp;<span id="st-date-span" style="color:red;display:none">*開始日期不可為空</span>
-            <input type="date"  class="form-control" id="st_date"  style="width:500px"/>
+            <input type="date"  class="form-control" id="st_date" disabled="disabled"  style="width:500px"/>
         </div>
         <div class="form-group">
             <label >結束日期</label>&nbsp;<span id="end-date-span" style="color:red;display:none">*結束日期不可為空</span>
@@ -60,7 +60,8 @@
       
       <script>      
           var date = new  Date();
-          var today_date = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+          var today_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+          document.getElementById("st_date").value = today_date;
           $("#product-id").change(function () {
               var checkText = $("#product-id").find("option:selected").text();
               judge("product-id-span",checkText,"*產品代號必須選擇");
@@ -264,7 +265,7 @@
                                 document.getElementById("quantity").value = '';
                                 document.getElementById("time").value = 0;
                                 //document.getElementById("process-id").value = '請選擇道次流程';
-                                document.getElementById("st_date").value = '';
+                                //document.getElementById("st_date").value = '';
                                 document.getElementById("end_date").value = '';
                                 $(".form_img").hide();
                                 $("span[id!='CT']").hide();
@@ -291,7 +292,7 @@
               document.getElementById("quantity").value = '';
               document.getElementById("time").value = 0;
               //document.getElementById("process-id").value = '請選擇道次流程';
-              document.getElementById("st_date").value = '';
+              //document.getElementById("st_date").value = '';
               document.getElementById("end_date").value = '';
               $(".form_img").hide();
               $("span[id!='CT']").hide();
