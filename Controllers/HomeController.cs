@@ -24,13 +24,13 @@ namespace MES_MVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration configuration;
         SQL conn;
-        
-        public HomeController(ILogger<HomeController> logger,IConfiguration config)
+
+        public HomeController(ILogger<HomeController> logger, IConfiguration config)
         {
-            _logger = logger;            
+            _logger = logger;
             this.configuration = config;
         }
-        
+
         public IActionResult Schedule_Page()
         {
             //string connectionstring =  configuration.GetConnectionString("DefaultConnectionStrings");
@@ -100,15 +100,15 @@ namespace MES_MVC.Controllers
                                                 dbo.Process_Inf d
                                                 on b.[Process-Num] = d.[Process]
                                                 ");
-            ViewData["Table"]=dt;
+            ViewData["Table"] = dt;
 
             return View();
         }
 
-        public IActionResult Information_Page(string  order,string productid,string status)
-        {        
-            conn = new SQL(this.configuration);               
-            ViewData["Table"] =conn.Get_Information_Data(string.Format(
+        public IActionResult Information_Page(string order, string productid, string status)
+        {
+            conn = new SQL(this.configuration);
+            ViewData["Table"] = conn.Get_Information_Data(string.Format(
                                                                         @"select
                                                                         distinct
                                                                         a.[Process] as '道次編號',
@@ -162,17 +162,17 @@ namespace MES_MVC.Controllers
                                                                                 [Staff-Inf] f
                                                                                 on a.[Staff-Num] = f.[Staff-Num]
                                                                                 where a.[order-id]='{0}' and a.Status<>0
-                                                                                ORDER BY a.[Process-Num]",order));
+                                                                                ORDER BY a.[Process-Num]", order));
             ViewData["Order"] = order;
             ViewData["ProductId"] = productid;
-            ViewData["ProductName"]= conn.Get_ColumnData(string.Format(@"SELECT [product]      
-                                                                        FROM [MES-Table].[dbo].[product_Inf] where[product-id] = {0}",productid));
+            ViewData["ProductName"] = conn.Get_ColumnData(string.Format(@"SELECT [product]      
+                                                                        FROM [MES-Table].[dbo].[product_Inf] where[product-id] = {0}", productid));
             ViewData["RequestQuantity"] = conn.Get_ColumnData(string.Format(@"SELECT RequestQuantity FROM [dbo].[order]
-                                                                        where [order-id]='{0}'",order));
+                                                                        where [order-id]='{0}'", order));
             ViewData["Exp_ST_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),ST_Date,23) as 'ST_Date' FROM [dbo].[order]
-                                                                        where [order-id]='{0}'",order));
+                                                                        where [order-id]='{0}'", order));
             ViewData["Exp_End_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),End_Date,23) as 'End_Date' FROM [dbo].[order]
-                                                                        where [order-id]='{0}'",order));
+                                                                        where [order-id]='{0}'", order));
             ViewData["Act_ST_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),Act_ST_Date,23) as 'Act_ST_Date' FROM [dbo].[order]
                                                                         where [order-id]='{0}'", order));
             ViewData["Act_End_Date"] = conn.Get_ColumnData(string.Format(@"SELECT CONVERT(nvarchar(10),Act_End_Date,23) as 'Act_End_Date' FROM [dbo].[order]
@@ -192,19 +192,19 @@ namespace MES_MVC.Controllers
 
         public IActionResult OrderInsert_Page()
         {
-            conn = new SQL(this.configuration);            
+            conn = new SQL(this.configuration);
             DateTime time = DateTime.Now;
-            string order  = time.ToString("yyyy-MM-dd HH:mm:ss").Replace("-","").Replace(":","").Replace(" ","");
-            order = order.Substring(2,order.Length-2);
-            string judge = conn.Order_Repeat(order);            
-            while(judge!="Success"){
-                order  = time.ToString("yyyy-MM-dd HH:mm:ss").Replace("-","").Replace(":","").Replace(" ","");
-                judge = conn.Order_Repeat(order);            
-            }                          
-            ViewData["OrderID"] = order;  
+            string order = time.ToString("yyyy-MM-dd HH:mm:ss").Replace("-", "").Replace(":", "").Replace(" ", "");
+            order = order.Substring(2, order.Length - 2);
+            string judge = conn.Order_Repeat(order);
+            while (judge != "Success") {
+                order = time.ToString("yyyy-MM-dd HH:mm:ss").Replace("-", "").Replace(":", "").Replace(" ", "");
+                judge = conn.Order_Repeat(order);
+            }
+            ViewData["OrderID"] = order;
             ViewData["Product_Table"] = conn.Get_Information_Data(@"SELECT distinct TOP 5 [product-id]
                                                          FROM[MES-Table].[dbo].[product_Inf] order by [product-id]");
-            ViewData["Process_Table"]=conn.Get_Information_Data(@"SELECT distinct [Process]
+            ViewData["Process_Table"] = conn.Get_Information_Data(@"SELECT distinct [Process]
                                                          FROM[MES-Table].[dbo].[Process_Inf] order by [Process]");
             return View();
         }
@@ -273,15 +273,15 @@ namespace MES_MVC.Controllers
 
         public IActionResult Machine_Inf_Page()
         {
-            conn = new SQL(this.configuration);            
-            ViewData["Table"] = conn.Get_Information_Data(@"  SELECT [Machine-Num],[Machine-Name],[Local-Process],Status FROM [MES-Table ].[dbo].[Machine_Inf] ");                                                                                                                            
+            conn = new SQL(this.configuration);
+            ViewData["Table"] = conn.Get_Information_Data(@"  SELECT [Machine-Num],[Machine-Name],[Local-Process],Status FROM [MES-Table ].[dbo].[Machine_Inf] ");
             return View();
         }
 
         public IActionResult Staff_Inf_Page()
         {
             conn = new SQL(this.configuration);
-            ViewData["Table"]=conn.Get_Information_Data(@"SELECT [Staff-Num]
+            ViewData["Table"] = conn.Get_Information_Data(@"SELECT [Staff-Num]
                                                         ,[Staff-Name]
                                                         ,[Process]
                                                         ,[Status]
@@ -353,7 +353,7 @@ namespace MES_MVC.Controllers
             ViewData["Table"] = dt;
 
             return View();
-        }        
+        }
 
         [HttpPost]
         public IActionResult Get_Information_Data()
@@ -370,7 +370,7 @@ namespace MES_MVC.Controllers
             //                                                                                    GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,120)
             //                                                                                    ,CONVERT(varchar(20),a.End_Date,120)
             //                                                                                    order by a.[order-id] desc");
-            
+
             //測試用
             DataTable dt = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
                                                     ,SUM(b.ProductTime) as 'Time'
@@ -392,43 +392,43 @@ namespace MES_MVC.Controllers
                                                     on a.[product-id] = b.[product-id] ");
             string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             //string json = JsonConvert.SerializeObject(_item);
-            return  Json(json);
+            return Json(json);
         }
 
-        public  IActionResult Get_ProductName(string productid)
+        public IActionResult Get_ProductName(string productid)
         {
             conn = new SQL(this.configuration);
-            string  id = conn.Get_ColumnData(string.Format(@"SELECT [product]      
+            string id = conn.Get_ColumnData(string.Format(@"SELECT [product]      
                             FROM [MES-Table].[dbo].[product_Inf] where[product-id] = {0}", productid));
-            string time = conn.Get_ProductTime(productid);            
+            string time = conn.Get_ProductTime(productid);
             item _item = new item()
             {
-                productname=id,
+                productname = id,
                 producttime = time
-            };            
+            };
             string json = JsonConvert.SerializeObject(_item);
-            return  Json(json);
-        }       
+            return Json(json);
+        }
 
-        public IActionResult Insert_Order_Data(string order,string productid,string productname,string quantity,string time ,string st_date,string end_date)
-        {            
-            conn = new SQL(this.configuration);  
+        public IActionResult Insert_Order_Data(string order, string productid, string productname, string quantity, string time, string st_date, string end_date)
+        {
+            conn = new SQL(this.configuration);
             string response = conn.Insert(order, productid, productname, quantity, time, st_date, end_date);
             DateTime timeid = DateTime.Now;
-            string orderid  = timeid.ToString("yyyy-MM-dd HH:mm:ss").Replace("-","").Replace(":","").Replace(" ","");               
-            if(response=="工令新增成功"){
-                orderid = orderid.Substring(2,orderid.Length-2);
-                string judge = conn.Order_Repeat(orderid);            
-                while(judge!="Success"){
-                    orderid  = timeid.ToString("yyyy-MM-dd HH:mm:ss").Replace("-","").Replace(":","").Replace(" ","");
-                    judge = conn.Order_Repeat(orderid);            
-                }      
-            }            
-            return Content(response+","+orderid);
+            string orderid = timeid.ToString("yyyy-MM-dd HH:mm:ss").Replace("-", "").Replace(":", "").Replace(" ", "");
+            if (response == "工令新增成功") {
+                orderid = orderid.Substring(2, orderid.Length - 2);
+                string judge = conn.Order_Repeat(orderid);
+                while (judge != "Success") {
+                    orderid = timeid.ToString("yyyy-MM-dd HH:mm:ss").Replace("-", "").Replace(":", "").Replace(" ", "");
+                    judge = conn.Order_Repeat(orderid);
+                }
+            }
+            return Content(response + "," + orderid);
         }
 
         public IActionResult Get_Dispatch_Data(string order)
-        {            
+        {
             conn = new SQL(this.configuration);
             //DataTable dt = conn.Get_Information_Data(string.Format(@"SELECT * FROM
             //(
@@ -483,11 +483,11 @@ namespace MES_MVC.Controllers
             )aa
             WHERE aa.Leave_Quantity > 0 
             order by aa.Process ", order));
-            for(int i = 0;i<dt_dis.Rows.Count;i++)
+            for (int i = 0; i < dt_dis.Rows.Count; i++)
             {
                 DataTable dt_staff = conn.Get_Information_Data(string.Format(@"SELECT [Staff-Name] FROM [dbo].[Staff-Inf]
-                where Process={0}",dt_dis.Rows[i][1]));                
-                list.Add(new Dispatch_Item() 
+                where Process={0}", dt_dis.Rows[i][1]));
+                list.Add(new Dispatch_Item()
                 {
                     order = dt_dis.Rows[i][0].ToString(),
                     process = dt_dis.Rows[i][1].ToString(),
@@ -506,11 +506,11 @@ namespace MES_MVC.Controllers
         }
 
 
-        public  IActionResult Dispatch_Data(string data)
+        public IActionResult Dispatch_Data(string data)
         {
             //json = JsonConvert.SerializeObject(data);
             conn = new SQL(this.configuration);
-            List<Dispatch_Item> item = JsonConvert.DeserializeObject<List<Dispatch_Item>>(data);            
+            List<Dispatch_Item> item = JsonConvert.DeserializeObject<List<Dispatch_Item>>(data);
             return Content(conn.Dispatch_Data(item));
         }
 
@@ -538,6 +538,22 @@ namespace MES_MVC.Controllers
                                                                     on b.Process = f.[Local-Process]
                                                                     where b.[Staff-Num] = @S
                                                                     ORDER BY e.Process", staff));
+            string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Json(json);
+        }
+
+        public IActionResult Get_Machine_Data(string machine)
+        {
+            conn = new SQL(this.configuration);
+            DataTable dt = conn.Get_Information_Data(string.Format(@"select [Machine-Num] as 'machinenum',[Machine-Name] as 'machinename' ,[Local-Process] as 'localprocess' ,Status from dbo.Machine_Inf where [Machine-Num] = '{0}'",machine));
+            string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Json(json);
+        }
+
+        public IActionResult Get_Staff_Data(string staff)
+        {
+            conn = new SQL(this.configuration);
+            DataTable dt = conn.Get_Information_Data(string.Format(@"select [Staff-Num] as 'staffnum',[Staff-Name] as 'staffname' ,[Process] as 'process' ,Status from dbo.[Staff-Inf] where [Staff-Num] = '{0}'", staff));
             string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Json(json);
         }
