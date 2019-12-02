@@ -1,0 +1,34 @@
+﻿@{
+    @using System.Data;
+    DataTable machine_ = (DataTable)ViewData["machine_index_Table"];
+}
+
+<table id="Staff_Table" class="table table-hover tablesorter">
+
+    <thead class="thead-light">
+        <tr>
+            <th>日期</th>
+            <th>工單</th>
+            <th>完成件數</th>
+            <th>時數</th>
+        </tr>
+    </thead>
+    <tbody id="staff_body">
+        @for (int i = 0; i < machine_.Rows.Count; i++)
+        {
+            <tr>
+                <td>@machine_.Rows[i][0]</td>
+                <td>@machine_.Rows[i][1]</td>
+                <td>@machine_.Rows[i][2]</td>
+                <td>@machine_.Rows[i][3]</td>
+                @*<td>@machine_index.Rows[i][4]</td>
+                <td>@machine_index.Rows[i][5]</td>
+                <td>@machine_index.Rows[i][6]</td>
+                <td>@machine_index.Rows[i][7]</td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+
+</script>
