@@ -2,14 +2,25 @@
     ViewData["Title"] = "機台資訊";
     @using System.Data;
     DataTable dt = (DataTable)ViewData["Table"];
+    DataTable Machine_Table = (DataTable)ViewData["Machine_Table"];
 }
     <table class="table">
         <tbody>
             <tr>
+                <div class="form-group">
+                    <label>機台代號</label>&nbsp;<span id="product-id-span" style="color:red;display:none">機台代號必須選擇</span>
+                    <select class="custom-select" id="product-id">
+                        <option selected>請選擇產品代號</option>
+                        @for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            <option value=@dt.Rows[i][0]>@dt.Rows[i][0]</option>
+                        }
+                    </select>
+                </div>
                 <td>機台編號:<input type="text" /></td>
                 <td>機台名稱:<input type="text" /></td>
                 <td>目前道次:<input type="text" /></td>
-                <td>目前狀態:<input type="text" /></td>
+
             </tr>            
         </tbody>
     </table>    
@@ -29,8 +40,8 @@
                 <th>目前狀態</th>
             </tr>
         </thead>
-        <tbody>
-            @for (int i = 0; i < dt.Rows.Count; i++)
+        <tbody id="machine_body">
+            @*@for (int i = 0; i < dt.Rows.Count; i++)
             {
                 <tr>
                     <td>@dt.Rows[i][0]</td>
@@ -38,11 +49,47 @@
                     <td>@dt.Rows[i][2]</td>
                     <td>@dt.Rows[i][3]</td>
                 </tr>
-            }
+            }*@
         </tbody>        
     </table>
 <div class="line"></div>
 <script>
+    $("#product-id").change(function () {
+        var machine = document.getElementById("product-id").value;        
+        $.ajax(
+            {
+                url: "@Url.Action("Get_Machine_Data","Home")",
+                method: "get",
+                contenType: 'application/json',
+                data:
+                {
+                    machine:machine
+                },
+                success: function (data) {
+                    $("#machine_body").html("");
+                    var result = JSON.parse(data);
+                    $.each(result, function (i, item) {
+                        $("#machine_body").append(function () {
+                            return "<tr>" +
+                                "<td>" + item.machinenum + "</td>" +
+                                "<td>" + item.machinename + "</td>" +
+                                "<td>" + item.localprocess + "</td>" +
+                                "<td>" + item.Status + "</td>" +
+                                "</tr>";
+                        });
+                    });
+                },
+                error: function (e) {
+                    $.alert({
+                        icon:"fas fa-exclamation-triangle",
+                        title: "錯誤",
+                        content: "404. Please wait until the File is Loaded.",
+                    });
+                    $("#machine_body").html("");
+                }
+
+            });
+    });
     $("#Data_Insert_btn").on('click', function () {
         var num = $("input").eq(0).val();
         var name = $("input").eq(1).val();
@@ -51,7 +98,7 @@
         $.confirm(
         {
             title: "資料確認",
-            content: "請確認資料是否正確<br>機台編號:" + num + "<br>機台名稱:" + name + "<br>目前道次:" + process + "<br>目前狀態:" + status,
+            content: "請確認資料是否正確<br>機台編號:" + num + "<br>機台名稱:" + name + "<br>目前道次:" + process ,
             buttons:
             {
                 "新增": function () {
@@ -96,3 +143,4 @@
     });
     
 </script>
+
