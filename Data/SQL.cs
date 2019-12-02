@@ -97,7 +97,7 @@ namespace MES_MVC.Data
             if(judge=="")
             {
                 SqlCommand cmd = new SqlCommand(string.Format(
-                @"insert into [dbo].[order]([order-id],[product-id],RequestQuantity,ST_Date,End_Date,Act_ST_Date) values('{0}','{1}','{2}','{3}','{4}','{3}')", order, productid, quantity, st_date, end_date), conn);
+                @"insert into [dbo].[order]([order-id],[product-id],RequestQuantity,ST_Date,End_Date,Act_ST_Date,Place) values('{0}','{1}','{2}','{3}','{4}','{3}',N'自槍所')", order, productid, quantity, st_date, end_date), conn);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 return "工令新增成功";

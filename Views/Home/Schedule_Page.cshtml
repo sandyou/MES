@@ -68,7 +68,7 @@
     <input class="form-control" id="Schedule_Input" type="text" placeholder="請輸入工令編號..."><br>
     <table id="Schedule_Table" class="table table-hover tablesorter">
         <thead class="thead-light">
-            <tr>
+            <tr>                
                 <th>工令編號</th>
                 <th>產品代號</th>
                 <th>產品名稱</th>
@@ -76,8 +76,13 @@
                 <th>實際生產總數量</th>
                 <th>預計使用時數</th>
                 <th>實際使用時數</th>
+                <th>預計開始日期</th>
                 <th>預計結束日期</th>
+                <th>實際開始日期</th>
+                <th>實際結束日期</th>
                 <th>工令建立日期</th>
+                <th>受令單位</th>
+                <th>目前狀態</th>
                 <th>完成度</th>
             </tr>
         </thead>
@@ -90,11 +95,16 @@
                     <td id="product-id">@dt[0].Rows[i][1]</td>
                     <td id="product">@dt[0].Rows[i][2]</td>
                     <td>@dt[0].Rows[i][3]</td>
-                    <td>0</td>
                     <td>@dt[0].Rows[i][4]</td>
-                    <td>0</td>
                     <td>@dt[0].Rows[i][5]</td>
+                    <td>0</td>
+                    <td>@dt[0].Rows[i][7]</td>
                     <td>@dt[0].Rows[i][6]</td>
+                    <td>@dt[0].Rows[i][7]</td>
+                    <td></td>
+                    <td>@dt[0].Rows[i][7]</td>
+                    <td>@dt[0].Rows[i][8]</td>
+                    <td>下所</td>
                     <td><div class=progress><div style="width:0%;background-color:red" aria-valuemax=100 aria-valuemin=0 aria-valuenow=60 role=progressbar class="red progress-bar"><span>0%</span></div></div></td>
                 </tr>
 
@@ -106,7 +116,7 @@
                 @if (list.Count != 0)
                 {                    
                     <tr class="_true" data-node="treetable-@cou" data-pnode="treetable-parent-@temp">
-                        <td colspan="10">
+                        <td colspan="15">
                             <table id="Process_Table" class="table table-borderless" style="background-color:#fafafa;">
                                 <thead class="thead-dark">
                                     <tr>

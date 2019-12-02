@@ -62,17 +62,18 @@ namespace MES_MVC.Controllers
             //con.Close();
             conn = new SQL(this.configuration);
             DataTable[] dt = new DataTable[2];
-            dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+            dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,a.Act_Quantity
                                             ,SUM(b.ProductTime) as 'Time'
                                             --,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
                                             ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
                                             ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+                                            ,a.Place
                                                 from [MES-Table].[dbo].[order] a
                                             left join 
                                             [MES-Table].[dbo].[product_Inf] b
                                             on a.[product-id] = b.[product-id] 
                                             --where a.Dispatch <> 0 
-                                            GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+                                            GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,a.Act_Quantity,CONVERT(varchar(20),a.ST_Date,23),a.Place
                                             ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
                                             order by CONVERT(varchar(20),a.ST_Date,23) desc");
             //要在修改
