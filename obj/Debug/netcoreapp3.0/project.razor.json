@@ -3420,6 +3420,11 @@
       "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\WorkStatus_Page.cshtml",
       "TargetPath": "Views\\Home\\WorkStatus_Page.cshtml",
       "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\ai-pc10\\Desktop\\致廷檔案\\MES\\Views\\Home\\History_Page.cshtml",
+      "TargetPath": "Views\\Home\\History_Page.cshtml",
+      "FileKind": "mvc"
     }
   ],
   "SerializationFormat": "0.2"
