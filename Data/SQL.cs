@@ -97,7 +97,7 @@ namespace MES_MVC.Data
             if(judge=="")
             {
                 SqlCommand cmd = new SqlCommand(string.Format(
-                @"insert into [dbo].[order]([order-id],[product-id],RequestQuantity,ST_Date,End_Date,Act_ST_Date,Place) values('{0}','{1}','{2}','{3}','{4}','{3}',N'自槍所')", order, productid, quantity, st_date, end_date), conn);
+                @"insert into [dbo].[order]([order-id],[product-id],RequestQuantity,ST_Date,End_Date,Act_ST_Date,Place) values('{0}','{1}','{2}','{3}','{4}','{3}',N'A所')", order, productid, quantity, st_date, end_date), conn);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 return "工令新增成功";
@@ -207,9 +207,50 @@ namespace MES_MVC.Data
                                             UPDATE dbo.[Staff-Inf]
                                             SET Status = N'閒置中' WHERE [Staff-Num]=@S
                                             UPDATE dbo.Machine_Inf
-                                            SET Status = N'待機中',[order] = '' WHERE [Machine-Num] =@M  
+                                            SET Status = N'待機中',[order] = '' WHERE [Machine-Num] =@M                                              
                                             ", list[i].staff,list[i].machine,list[i].quantity,list[i].time,list[i].order), conn);
                 cmd.ExecuteNonQuery();
+                SqlCommand _cmd = new SqlCommand(string.Format(@"
+                                            DECLARE @C INT
+                                            SET @C = 
+                                            (
+                                            SELECT COUNT(*) FROM
+                                            (
+                                            SELECT a.*,b.RequestQuantity
+                                            ,CASE WHEN b.RequestQuantity-a.Finish_Quantity <= 0 
+                                            THEN 1
+                                            ELSE 0
+                                            END 'Final' 
+                                            FROM dbo.[Schedule-Inf] a
+                                            LEFT JOIN 
+                                            dbo.[order] b
+                                            on a.[order-id] = b.[order-id]
+                                            where a.[order-id] = '{0}' and a.Status=1
+                                            )aa
+                                            )
+                                            DECLARE @C_Total INT
+                                            SET @C_Total = 
+                                            (
+                                            SELECT COUNT(*) FROM
+                                            (
+                                            SELECT a.*,b.RequestQuantity
+                                            ,CASE WHEN b.RequestQuantity-a.Finish_Quantity <= 0 
+                                            THEN 1
+                                            ELSE 0
+                                            END 'Final' 
+                                            FROM dbo.[Schedule-Inf] a
+                                            LEFT JOIN 
+                                            dbo.[order] b
+                                            on a.[order-id] = b.[order-id]
+                                            where a.[order-id] = '{0}' 
+                                            )aa 
+                                            )
+                                            IF @C = @C_Total
+                                            BEGIN
+	                                            UPDATE dbo.[order] SET Act_End_Date = GETDATE(),Act_Quantity = '{1}',Finish=1 where [order-id] = {0}
+                                            END
+                ",list[i].order,list[i].quantity),conn);
+                _cmd.ExecuteNonQuery();
             }            
             conn.Close();
             return "報工成功";

@@ -4,52 +4,6 @@
     DataTable dt = (DataTable)ViewData["WorkStatus_Table"];
     DataTable Machine_dt = (DataTable)ViewData["Machine_Status_Table"];
 }
-@*<input class="form-control" id="WorkStatus_Input" type="text" placeholder="請輸入工令編號..."><br>
-    <table id="WorkStatus_Table" class="table table-hover tablesorter">
-        <thead class="thead-light">
-            <tr>
-                <th>工令編號</th>
-                <th>產品代號</th>
-                <th>產品名稱</th>
-                <th>機台編號</th>
-                <th>機台名稱</th>
-                <th>發派作業時間</th>
-                <th>實際作業時間</th>
-                <th>發派產出數量</th>
-                <th>實際產出數量</th>
-                <th>目前狀態</th>
-            </tr>
-        </thead>
-        <tbody>
-               @for(int i=0;i<dt.Rows.Count;i++)
-               {
-                <tr>
-                    <td>@dt.Rows[i][0]</td>
-                    <td>@dt.Rows[i][1]</td>
-                    <td>@dt.Rows[i][2]</td>
-                    <td>@dt.Rows[i][3]</td>
-                    <td>@dt.Rows[i][4]</td>
-                    <td>@dt.Rows[i][5]</td>
-                    <td>@dt.Rows[i][5]</td>
-                    <td>@dt.Rows[i][6]</td>
-                    <td>@dt.Rows[i][6]</td>
-                    <td><div class="Yellow"></div></td>
-                </tr>
-               }
-        </tbody>
-    </table>*@
-
-@*<div class="row">
-        <div class="col-4" style="text-align:center">
-            <i class="fas fa-play"></i>
-        </div>
-        <div class="col-4" style="text-align:center">
-            <i class="fas fa-pause"></i>
-        </div>
-        <div class="col-4" style="text-align:center">
-            <i class="fas fa-power-off"></i>
-        </div>
-    </div>*@
     <div class="row" style="margin: 0 auto;width: 42%;">
         <div class="col green" id="col">
             <i class="fas fa-play" style="font-size: 2.5rem;color: white;"></i>
@@ -77,59 +31,9 @@
             <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
                 A線機台生產狀態
             </div>
-            <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
                 <table class="table table-borderless">
-                    <tbody>
-                        @*<tr>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card click" style="width: 18rem;margin: 0 auto;border:0.5px solid #fafafa">
-                                    <div class="card-body" style="border:2.5px solid orange">
-                                        <p class="card-text" style="text-align: center;padding:3px;border: 1px solid orange;background:orange;color:white;font-weight:bold">TEST</p>
-                                        <img class="card-img-top" src="~/img/CNC.png" data-holder-rendered="true" style="height: 180px;width: 100%;">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>*@
+                    <tbody>                        
                         @{ int cou = 0;int loop=0 ; bool flag = false; bool fla = false;bool wrap = false;}
                         @while(flag==false)
                         {
@@ -182,10 +86,10 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
+            <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
                 B線機台生產狀態
             </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
+            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
@@ -243,10 +147,10 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
+            <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
                 C線機台生產狀態
             </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree">
+            <div id="collapseThree" class="collapse show" aria-labelledby="headingThree">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
@@ -304,10 +208,10 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-header" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
+            <div class="card-header" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour" style="font-size: 1.5rem;font-weight: bold;cursor:pointer">
                 D線機台生產狀態
             </div>
-            <div id="collapseFour" class="collapse" aria-labelledby="headingFour">
+            <div id="collapseFour" class="collapse show" aria-labelledby="headingFour">
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
@@ -400,10 +304,6 @@
                         </tbody>                        
                     </table>
                 </div>
-                @*<div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>*@
             </div>
         </div>
     </div>
@@ -422,7 +322,7 @@
             $("#Process_Table").find("td").eq(1).text(order);     
             $("#Process_Table").find("td").eq(2).text(product);     
             $("#Process_Table").find("td").eq(3).text("0");     
-            $("#Process_Table").find("td").eq(4).text(requestquantity);     
+            $("#Process_Table").find("td").eq(4).text(requestquantity);    
         });
     });
 </script>

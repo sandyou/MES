@@ -33,64 +33,60 @@ namespace MES_MVC.Controllers
 
         public IActionResult Schedule_Page()
         {
-            //string connectionstring =  configuration.GetConnectionString("DefaultConnectionStrings");
-            //SqlConnection con = new SqlConnection(connectionstring);
-            //con.Open();
-            //SqlCommand cmd = new SqlCommand(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
-            //                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
-            //                                    ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
-            //                                    ,b.Process from [MES-Table].[dbo].[order] a
-            //                                    left join 
-            //                                    [MES-Table].[dbo].[product_Inf] b
-            //                                    on a.[product-id] = b.[product-id] order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process ", con);
-            //SqlCommand cmd = new SqlCommand(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+            conn = new SQL(this.configuration);
+            DataTable[] dt = new DataTable[2];
+            //dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,a.Act_Quantity
             //                                ,SUM(b.ProductTime) as 'Time'
-            //                                ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+            //                                --,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
             //                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
             //                                ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+            //                                ,a.Place
             //                                    from [MES-Table].[dbo].[order] a
             //                                left join 
             //                                [MES-Table].[dbo].[product_Inf] b
             //                                on a.[product-id] = b.[product-id] 
-            //                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+            //                                --where a.Dispatch <> 0 
+            //                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,a.Act_Quantity,CONVERT(varchar(20),a.ST_Date,23),a.Place
             //                                ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
-            //                                order by CONVERT(varchar(20),a.ST_Date,23) desc", con);
-            //SqlDataAdapter ada =new SqlDataAdapter();
-            //DataTable dt = new DataTable();  
-            //ada.SelectCommand = cmd;
-            //ada.Fill(dt);                        
-            //con.Close();
-            conn = new SQL(this.configuration);
-            DataTable[] dt = new DataTable[2];
+            //                                order by CONVERT(varchar(20),a.ST_Date,23) desc");
             dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity,a.Act_Quantity
-                                            ,SUM(b.ProductTime) as 'Time'
-                                            --,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
-                                            ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
-                                            ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
-                                            ,a.Place
-                                                from [MES-Table].[dbo].[order] a
-                                            left join 
-                                            [MES-Table].[dbo].[product_Inf] b
-                                            on a.[product-id] = b.[product-id] 
-                                            --where a.Dispatch <> 0 
-                                            GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,a.Act_Quantity,CONVERT(varchar(20),a.ST_Date,23),a.Place
-                                            ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
-                                            order by CONVERT(varchar(20),a.ST_Date,23) desc");
-            //要在修改
-            //dt[1] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',
-            //                                    b.product,b.Process,c.[Process-Name],a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
-            //                                    ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
-            //                                    ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'
-            //                                    from [MES-Table].[dbo].[order] a
-            //                                    left join 
-            //                                    [MES-Table].[dbo].[product_Inf] b
-            //                                    on a.[product-id] = b.[product-id] 
-            //                                    LEFT JOIN
-            //                                    [MES-Table].dbo.Process_Inf c
-            //                                    on b.Process = c.Process
-            //                                    where a.Dispatch <> 0
-            //                                    order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
-            dt[1] = conn.Get_Information_Data(@"SELECT distinct a.[order-id] as 'orderid',a.[product-id] as 'productid',c.product,d.Process,d.[Process-Name],b.Finish_Quantity,'0',convert(nvarchar(20),b.Act_ST_Date,23) as 'Act_ST_Date' FROM dbo.[order] a
+                                                ,SUM(b.ProductTime) as 'Time'                                                
+                                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
+                                                ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+                                                ,CONVERT(varchar(20),a.Act_End_Date,23) as 'Act_End_Date'
+                                                ,a.Place
+                                                ,CASE WHEN a.Finish = 1
+                                                THEN N'完工'
+                                                ELSE N'下所'
+                                                END 'Status'
+                                                ,CONVERT(FLOAT,(a.Act_Quantity/a.RequestQuantity))*100 as 'progress'
+	                                                from [MES-Table].[dbo].[order] a
+                                                left join 
+                                                [MES-Table].[dbo].[product_Inf] b
+                                                on a.[product-id] = b.[product-id] 
+                                                --where a.Dispatch <> 0 
+                                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,a.Act_Quantity,CONVERT(varchar(20),a.ST_Date,23),a.Place
+                                                ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23),CONVERT(varchar(20),a.Act_End_Date,23) 
+                                                ,CASE WHEN a.Finish = 1
+                                                THEN N'完工'
+                                                ELSE N'下所'
+                                                END 
+                                                ,CONVERT(FLOAT,(a.Act_Quantity/a.RequestQuantity))*100
+                                                order by CONVERT(varchar(20),a.ST_Date,23) desc
+                                                ");
+            
+            //dt[1] = conn.Get_Information_Data(@"SELECT distinct a.[order-id] as 'orderid',a.[product-id] as 'productid',c.product,d.Process,d.[Process-Name],b.Finish_Quantity,'0',convert(nvarchar(20),b.Act_ST_Date,23) as 'Act_ST_Date' FROM dbo.[order] a
+            //                                    INNER JOIN  
+            //                                    dbo.[Schedule-Inf] b
+            //                                    on a.[order-id] = b.[order-id]
+            //                                    LEFT JOIN 
+            //                                    dbo.product_Inf c
+            //                                    on a.[product-id] = c.[product-id]
+            //                                    LEFT JOIN 
+            //                                    dbo.Process_Inf d
+            //                                    on b.[Process-Num] = d.[Process]
+            //                                    ");
+            dt[1] = conn.Get_Information_Data(@"SELECT distinct a.[order-id] as 'orderid',a.[product-id] as 'productid',c.product,d.Process,d.[Process-Name],b.Finish_Quantity,'8',convert(nvarchar(20),b.Act_ST_Date,23) as 'Act_ST_Date',CONVERT(FLOAT,(b.Finish_Quantity/a.RequestQuantity))*100 as 'progress' FROM dbo.[order] a
                                                 INNER JOIN  
                                                 dbo.[Schedule-Inf] b
                                                 on a.[order-id] = b.[order-id]
@@ -100,7 +96,7 @@ namespace MES_MVC.Controllers
                                                 LEFT JOIN 
                                                 dbo.Process_Inf d
                                                 on b.[Process-Num] = d.[Process]
-                                                ");
+                                                ");            
             ViewData["Table"] = dt;
 
             return View();
@@ -125,24 +121,24 @@ namespace MES_MVC.Controllers
                                                                         on b.[Machine-Num] = c.[Machine-Num]
                                                                         where a.[product-id]='{0}'
                                                                         order by a.Process", productid));
-            ViewData["Today_Table"] = conn.Get_Information_Data(string.Format(@"SELECT DISTINCT a.[Schedule-Num],a.[order-id],c.product,f.[Staff-Name],d.[Process-Name],e.[Machine-Name],a.Quantity,a.[Process-Num] FROM [dbo].[Schedule-Inf] a
-                                                                                LEFT JOIN 
-                                                                                [order] b
-                                                                                on a.[order-id] = b.[order-id]
-                                                                                LEFT JOIN
-                                                                                product_Inf c
-                                                                                on b.[product-id] = c.[product-id]
-                                                                                LEFT JOIN
-                                                                                Process_Inf d
-                                                                                on a.[Process-Num] = d.Process
-                                                                                LEFT JOIN
-                                                                                Machine_Inf e
-                                                                                on d.[Machine-Num] = e.[Machine-Num]
-                                                                                LEFT JOIN
-                                                                                [Staff-Inf] f
-                                                                                on a.[Staff-Num] = f.[Staff-Num]
-                                                                                where a.[order-id]='{0}' and a.Status=0
-                                                                                order by a.[Process-Num]", order));
+            ViewData["Today_Table"] = conn.Get_Information_Data(string.Format(@"SELECT DISTINCT a.[Schedule-Num],a.[order-id],c.product,f.[Staff-Name],d.[Process-Name],e.[Machine-Name],a.Act_Work_Hour,a.Quantity,a.Finish_Quantity,a.[Process-Num],a.Act_ST_Date,CONVERT(FLOAT,(a.Finish_Quantity/a.Quantity))*100 as 'Progress' FROM [dbo].[Schedule-Inf] a
+                                                                        LEFT JOIN 
+                                                                        [order] b
+                                                                        on a.[order-id] = b.[order-id]
+                                                                        LEFT JOIN
+                                                                        product_Inf c
+                                                                        on b.[product-id] = c.[product-id]
+                                                                        LEFT JOIN
+                                                                        Process_Inf d
+                                                                        on a.[Process-Num] = d.Process
+                                                                        LEFT JOIN
+                                                                        Machine_Inf e
+                                                                        on d.[Machine-Num] = e.[Machine-Num]
+                                                                        LEFT JOIN
+                                                                        [Staff-Inf] f
+                                                                        on a.[Staff-Num] = f.[Staff-Num]
+                                                                        where a.[order-id]='{0}' and CONVERT(VARCHAR(20),GETDATE(),23) = a.Act_ST_Date
+                                                                        order by a.[Process-Num]", order));
             ViewData["History_Table"] = conn.Get_Information_Data(string.Format(@"SELECT DISTINCT a.[Schedule-Num],a.[order-id],c.product,f.[Staff-Name],d.[Process-Name],e.[Machine-Name],a.Quantity
                                                                                 ,CONVERT(nvarchar(20),b.ST_Date,23) as 'ST_Date'
                                                                                 ,CONVERT(nvarchar(20),b.End_Date,23) as 'End_Date'
@@ -559,7 +555,7 @@ namespace MES_MVC.Controllers
                                                                     LEFT JOIN 
                                                                     dbo.Machine_Inf f
                                                                     on b.Process = f.[Local-Process]
-                                                                    where b.[Staff-Num] = @S
+                                                                    where b.[Staff-Num] = @S and a.Status = 0
                                                                     ORDER BY e.Process", staff));
             string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Json(json);
