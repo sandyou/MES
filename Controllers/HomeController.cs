@@ -292,6 +292,28 @@ namespace MES_MVC.Controllers
             return View();
         }
 
+        public IActionResult Machine_Inf_Page2(string machine_num)
+        {
+            conn = new SQL(this.configuration);
+            DataTable machine_index = conn.Get_Information_Data(string.Format(@"SELECT *     
+                            FROM [MES-Table].[dbo].[Machine_Inf] where[Machine-Num] = '{0}'", machine_num));
+            ViewData["machine_index_Table"] = machine_index;
+            return View();
+            
+        }
+
+
+        public IActionResult Staff_lnf_Page2(string staff_num)
+        {
+            conn = new SQL(this.configuration);
+            DataTable staff_index = conn.Get_Information_Data(string.Format(@"SELECT *     
+                            FROM [MES-Table].[dbo].[Staff-Inf] where[Staff-Num] = '{0}'", staff_num));
+            ViewData["staff_index_Table"] = staff_index;
+            return View();
+
+        }
+
+
         [HttpPost]
         public IActionResult Get_Information_Data()
         {
@@ -515,11 +537,12 @@ namespace MES_MVC.Controllers
             conn.Insert_Staff_Inf(staff_num, staff_name, process, status);
             return Content("新增成功");
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
     }
 }
