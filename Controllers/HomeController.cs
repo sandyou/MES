@@ -504,7 +504,16 @@ namespace MES_MVC.Controllers
         public IActionResult Get_Machine_Data(string machine)
         {
             conn = new SQL(this.configuration);
-            DataTable dt = conn.Get_Information_Data(string.Format(@"select [Machine-Num] as 'machinenum',[Machine-Name] as 'machinename' ,[Local-Process] as 'localprocess' ,Status from dbo.Machine_Inf where [Machine-Num] = '{0}'",machine));
+            DataTable dt = new DataTable();
+            if(machine=="All")
+            {
+                dt = conn.Get_Information_Data(string.Format(@"select [Machine-Num] as 'machinenum',[Machine-Name] as 'machinename' ,[Local-Process] as 'localprocess' ,Status from dbo.Machine_Inf ", machine));
+            }
+            else
+            {
+                dt = conn.Get_Information_Data(string.Format(@"select [Machine-Num] as 'machinenum',[Machine-Name] as 'machinename' ,[Local-Process] as 'localprocess' ,Status from dbo.Machine_Inf where [Machine-Num] = '{0}'", machine));
+            }
+            
             string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Json(json);
         }
@@ -512,7 +521,15 @@ namespace MES_MVC.Controllers
         public IActionResult Get_Staff_Data(string staff)
         {
             conn = new SQL(this.configuration);
-            DataTable dt = conn.Get_Information_Data(string.Format(@"select [Staff-Num] as 'staffnum',[Staff-Name] as 'staffname' ,[Process] as 'process' ,Status from dbo.[Staff-Inf] where [Staff-Num] = '{0}'", staff));
+            DataTable dt = new DataTable();
+            if (staff == "All")
+            {
+                dt = conn.Get_Information_Data(string.Format(@"select [Staff-Num] as 'staffnum',[Staff-Name] as 'staffname' ,[Process] as 'process' ,Status from dbo.[Staff-Inf] ", staff));
+            }
+            else
+            {
+                dt = conn.Get_Information_Data(string.Format(@"select [Staff-Num] as 'staffnum',[Staff-Name] as 'staffname' ,[Process] as 'process' ,Status from dbo.[Staff-Inf] where [Staff-Num] = '{0}'", staff));
+            }            
             string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Json(json);
         }

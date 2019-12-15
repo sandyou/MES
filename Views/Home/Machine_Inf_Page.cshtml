@@ -10,7 +10,8 @@
                 <div class="form-group">
                     <label>機台代號</label>&nbsp;<span id="product-id-span" style="color:red;display:none">機台代號必須選擇</span>
                     <select class="custom-select" id="product-id">
-                        <option selected>請選擇產品代號</option>
+                        <option selected>請選擇機台代號</option>
+                        <option>All</option>
                         @for (int i = 0; i < dt.Rows.Count; i++)
                         {
                             <option value=@dt.Rows[i][0]>@dt.Rows[i][0]</option>

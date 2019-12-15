@@ -1,23 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\MES_MVC.csproj": {}
+    "C:\\Users\\user\\Desktop\\MES系統\\MES\\MES_MVC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\MES_MVC.csproj": {
+    "C:\\Users\\user\\Desktop\\MES系統\\MES\\MES_MVC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\MES_MVC.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Desktop\\MES系統\\MES\\MES_MVC.csproj",
         "projectName": "MES_MVC",
-        "projectPath": "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\MES_MVC.csproj",
-        "packagesPath": "C:\\Users\\ai-pc11\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ai-pc11\\Desktop\\致廷檔案\\MES\\obj\\",
+        "projectPath": "C:\\Users\\user\\Desktop\\MES系統\\MES\\MES_MVC.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\Desktop\\MES系統\\MES\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\ai-pc11\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],

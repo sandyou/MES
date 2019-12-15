@@ -9,9 +9,10 @@
                 <tbody>
                     <tr>
                         <div class="form-group">
-                            <label>人員編號</label>&nbsp;<span id="product-id-span" style="color:red;display:none">機台代號必須選擇</span>
+                            <label>人員編號</label>&nbsp;<span id="product-id-span" style="color:red;display:none">人員編號必須選擇</span>
                             <select class="custom-select" id="product-id">
-                                <option selected>請選擇產品代號</option>
+                                <option selected>請選擇人員編號</option>
+                                <option>All</option>
                                 @for (int i = 0; i < dt.Rows.Count; i++)
                                 {
                                     <option value=@dt.Rows[i][0]>@dt.Rows[i][0]</option>
@@ -96,11 +97,12 @@
         var num = $("input").eq(0).val();
         var name = $("input").eq(1).val();
         var process = $("input").eq(2).val();
-        var status = $("input").eq(3).val();
+        //var status = $("input").eq(3).val();
+        var status = "閒置中 ";
         $.confirm(
         {
             title: "資料確認",
-            content: "請確認資料是否正確<br>人員編號:" + num + "<br>姓名:" + name + "<br>執行道次:" + process + "<br>假況:" + status,
+            content: "請確認資料是否正確<br>人員編號:" + num + "<br>姓名:" + name + "<br>執行道次:" + process + "<br>假況:閒置中" ,
             buttons:
             {
                 "新增": function () {
