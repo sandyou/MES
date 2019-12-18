@@ -44,55 +44,47 @@
                     </tr>
                 </thead>
                 <tbody id="staff_body">
-                    @*@for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        <tr>
-                            <td>@dt.Rows[i][0]</td>
-                            <td>@dt.Rows[i][1]</td>
-                            <td>@dt.Rows[i][2]</td>
-                            <td>@dt.Rows[i][3]</td>
-                        </tr>
-                    }*@
+
                 </tbody>
             </table>
             <div class="line"></div>
             <script>
-                $("#product-id").change(function () {
-        var staff = document.getElementById("product-id").value;        
-        $.ajax(
-            {
-                url: "@Url.Action("Get_Staff_Data","Home")",
-                method: "get",
-                contenType: 'application/json',
-                data:
-                {
-                    staff:staff
-                },
-                success: function (data) {
-                    $("#staff_body").html("");
-                    var result = JSON.parse(data);
-                    $.each(result, function (i, item) {
-                        $("#staff_body").append(function () {
-                            return "<tr>" +
-                                "<td>" + item.staffnum + "</td>" +
-                                "<td>" + item.staffname + "</td>" +
-                                "<td>" + item.process + "</td>" +
-                                "<td>" + item.Status + "</td>" +
-                                "</tr>";
-                        });
-                    });
-                },
-                error: function (e) {
-                    $.alert({
-                        icon:"fas fa-exclamation-triangle",
-                        title: "錯誤",
-                        content: "404. Please wait until the File is Loaded.",
-                    });
-                    $("#staff_body").html("");
-                }
+            $("#product-id").change(function () {
+                var staff = document.getElementById("product-id").value;        
+                $.ajax(
+                    {
+                        url: "@Url.Action("Get_Staff_Data","Home")",
+                        method: "get",
+                        contenType: 'application/json',
+                        data:
+                        {
+                            staff:staff
+                        },
+                        success: function (data) {
+                            $("#staff_body").html("");
+                            var result = JSON.parse(data);
+                            $.each(result, function (i, item) {
+                                $("#staff_body").append(function () {
+                                    return "<tr>" +
+                                        "<td>" + item.staffnum + "</td>" +
+                                        "<td>" + item.staffname + "</td>" +
+                                        "<td>" + item.process + "</td>" +
+                                        "<td>" + item.Status + "</td>" +
+                                        "</tr>";
+                                });
+                            });
+                        },
+                        error: function (e) {
+                            $.alert({
+                                icon:"fas fa-exclamation-triangle",
+                                title: "錯誤",
+                                content: "404. Please wait until the File is Loaded.",
+                            });
+                            $("#staff_body").html("");
+                        }
 
+                    });
             });
-    });
     $("#Data_Insert_btn").on('click', function () {
         var num = $("input").eq(0).val();
         var name = $("input").eq(1).val();

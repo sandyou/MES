@@ -74,7 +74,6 @@ namespace MES_MVC.Controllers
                                                 on b.[Process-Num] = d.[Process]
                                                 ");            
             ViewData["Table"] = dt;
-
             return View();
         }
 
@@ -230,7 +229,9 @@ namespace MES_MVC.Controllers
         public IActionResult Work_Page()
         {
             conn = new SQL(this.configuration);
-            ViewData["staff_name"] = conn.Get_Information_Data(@"SELECT [Staff-Name] FROM [dbo].[Staff-Inf] where Status=N'工作中'");
+            ViewData["staff_name"] = conn.Get_Information_Data(@"SELECT [Staff-Name] 
+                                                                FROM [dbo].[Staff-Inf] 
+                                                                where Status=N'工作中'");
             return View();
         }
 
@@ -257,20 +258,41 @@ namespace MES_MVC.Controllers
         {
             conn = new SQL(this.configuration);
             DataTable[] dt = new DataTable[2];
-            dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
-                                            ,SUM(b.ProductTime) as 'Time'
-                                            --,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
-                                            ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
-                                            ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
-                                                from [MES-Table].[dbo].[order] a
-                                            left join 
-                                            [MES-Table].[dbo].[product_Inf] b
-                                            on a.[product-id] = b.[product-id] 
-                                            where a.Dispatch != 0
-                                            GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
-                                            ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
-                                            order by CONVERT(varchar(20),a.ST_Date,23) desc");
-            //要在修改
+            //dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.RequestQuantity
+            //                                ,SUM(b.ProductTime) as 'Time'
+            //                                --,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
+            //                                ,CONVERT(varchar(20),a.End_Date,23) as 'End_Date'  
+            //                                ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+            //                                    from [MES-Table].[dbo].[order] a
+            //                                left join 
+            //                                [MES-Table].[dbo].[product_Inf] b
+            //                                on a.[product-id] = b.[product-id] 
+            //                                where a.Dispatch != 0
+            //                                GROUP BY a.[order-id],a.[product-id],b.product,a.RequestQuantity,CONVERT(varchar(20),a.ST_Date,23)
+            //                                ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23)
+            //                                order by CONVERT(varchar(20),a.ST_Date,23) desc");            
+            dt[0] = conn.Get_Information_Data(@"select  a.[order-id] as 'orderid',a.[product-id] as 'productid',b.product,a.Act_Quantity
+                                                ,SUM(b.ProductTime) as 'Time'                                                
+                                                ,CONVERT(varchar(20),a.Create_Date,23) as 'Create_Date'
+                                                ,CONVERT(varchar(20),a.Act_End_Date,23) as 'Act_End_Date'
+                                                ,a.Place
+                                                ,CASE WHEN a.Finish = 1
+                                                THEN N'完工'
+                                                ELSE N'下所'
+                                                END 'Status'
+	                                                from [MES-Table].[dbo].[order] a
+                                                left join 
+                                                [MES-Table].[dbo].[product_Inf] b
+                                                on a.[product-id] = b.[product-id] 
+                                                WHERE a.Finish = 1
+                                                GROUP BY a.[order-id],a.[product-id],b.product,a.Act_Quantity,CONVERT(varchar(20),a.ST_Date,23),a.Place
+                                                ,CONVERT(varchar(20),a.End_Date,23),CONVERT(varchar(20),a.Create_Date,23),CONVERT(varchar(20),a.Act_End_Date,23) 
+                                                ,CASE WHEN a.Finish = 1
+                                                THEN N'完工'
+                                                ELSE N'下所'
+                                                END 
+                                                ,CONVERT(FLOAT,(a.Act_Quantity/a.RequestQuantity))*100
+                                                order by CONVERT(varchar(20),a.ST_Date,23) desc");
             dt[1] = conn.Get_Information_Data(@"select a.[order-id] as 'orderid',a.[product-id] as 'productid',
                                                 b.product,b.Process,c.[Process-Name],a.RequestQuantity,round(b.ProductTime*a.RequestQuantity ,2) as Time
                                                 ,CONVERT(varchar(20),a.ST_Date,23) as 'ST_Date'
@@ -284,11 +306,7 @@ namespace MES_MVC.Controllers
                                                 on b.Process = c.Process
                                                 where a.Dispatch != 0 
                                                 order by CONVERT(varchar(20),a.ST_Date,23) desc,b.Process");
-
-
-
             ViewData["Table"] = dt;
-
             return View();
         }
 

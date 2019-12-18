@@ -286,3 +286,5 @@ C:\Users\user\Desktop\MES系統\MES\obj\Debug\netcoreapp3.0\MES_MVC.Views.pdb
 C:\Users\user\Desktop\MES系統\MES\obj\Debug\netcoreapp3.0\MES_MVC.csproj.CopyComplete
 C:\Users\user\Desktop\MES系統\MES\obj\Debug\netcoreapp3.0\MES_MVC.dll
 C:\Users\user\Desktop\MES系統\MES\obj\Debug\netcoreapp3.0\MES_MVC.pdb
+C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\Machine_inf_Page2.cshtml.g.cs
+C:\Users\ai-pc10\Desktop\致廷檔案\MES\obj\Debug\netcoreapp3.0\Razor\Views\Home\Staff_lnf_Page2.cshtml.g.cs
